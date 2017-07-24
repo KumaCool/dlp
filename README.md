@@ -1,11 +1,12 @@
-[TOCM]
-
 **此仓库为项目前端**
 
 **负责人**：熊俊杰
 
+[TOC]
+
 ##相关文档
 [API文档](https://www.apiview.com/p/5156#/api/list "API文档") 联系负责人查看
+
 [架构分析图](https://www.processon.com/view/link/596c804ce4b064b2bffd4598 "架构分析图")
 
 ##使用环境
@@ -21,7 +22,9 @@
 
 ##命令行
 `npm i` 初始化安装模块
+
 `npm run dev` or `npm run start` 开发环境
+
 `npm run build` 打包
 
 ##项目结构
