@@ -9,7 +9,8 @@ import App from './App'
 import router from './router'
 import ComMiddle from './components/com-middle.vue'
 
-Vue.use(ElementUI, VueAxios, axios)
+Vue.use(ElementUI)
+Vue.use(VueAxios, axios)
 Vue.component('com-middle', ComMiddle)
 
 Vue.config.productionTip = false
