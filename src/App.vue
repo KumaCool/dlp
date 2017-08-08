@@ -32,7 +32,7 @@ export default {
       dialog: [
         {name: 'Hello', title: '您好', zIndex: 0, checked: false},
         {name: 'Hello', title: '测试', zIndex: 1, checked: false},
-        {name: 'Hello', title: '测试2', zIndex: 2, checked: true}
+        {name: 'login', title: '测试2', zIndex: 2, checked: true}
       ],
       shuju: [
         {name: '栏目1', icon: 'a', winProperty: 'a1', item: [
@@ -55,11 +55,15 @@ export default {
   methods: {
     /**
      * 关闭指定组件窗口
-     * @param  {string} name 组件名
+     * @param  {number} index 要关闭窗口所在层级
      */
-    comClose: function (index) { // 关闭组件
+    comClose: function (index) {
       this.dialog.splice(index, 1)
     },
+    /**
+     * 变更窗口层级
+     * @param  {number} index 选中的窗口所在层级
+     */
     comChecked: function (index) {
       let leng = this.dialog.length
       for (let i = 0; i < leng; i++) {

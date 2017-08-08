@@ -14,7 +14,7 @@
 /**
  * 组件调用的中间件
  * @param {number} index 组件标识
- * @param {string} window 窗口大小 tiny/small(默认)/large/full
+ * @param {string} window 窗口大小 small(默认)/full
  * @param {string} name 调用组件名
  * @param {string} title 窗口标题
  * @param {number} zIndex 窗口层级
@@ -29,7 +29,16 @@ export default {
   },
   computed: {
     com: function () { // 调用组件
-      return require(`./${this.name}`)
+      try {
+        return require(`./${this.name}`)
+      } catch (e) {
+        try {
+          return require(`../function/${this.name}`)
+        } catch (e) {
+          this.$message.error(`没有找到 ${this.name} 组件`)
+          this.close()
+        }
+      }
     }
   },
   methods: {
