@@ -2,7 +2,7 @@
   <el-row class="H100 window">
     <el-col :span="24">444</el-col>
     <el-col :span="4" class="H100 menu">
-      <left-menu :data="shuju"></left-menu>
+      <left-menu :data="$store.state.columnData"></left-menu>
     </el-col>
     <el-col :span="20" class="H100 main">
       <com-middle window="full" name="Hello"></com-middle>
@@ -33,21 +33,6 @@ export default {
         {name: 'Hello', title: '您好', zIndex: 0, checked: false},
         {name: 'Hello', title: '测试', zIndex: 1, checked: false},
         {name: 'login', title: '测试2', zIndex: 2, checked: true}
-      ],
-      shuju: [
-        {name: '栏目1', icon: 'a', winProperty: 'a1', item: [
-          {name: '二级1', icon: 'a', winProperty: 'b1', item: [
-            {name: '三级1', icon: 'a', winProperty: 'c1', item: [
-              {name: '四级1', icon: 'a', winProperty: 'd1', item: null},
-              {name: '四级1', icon: 'a', winProperty: 'd2', item: null},
-            ]},
-            {name: '三级2', icon: 'a', winProperty: 'c2', item: null}
-          ]},
-          {name: '二级2', icon: 'a', winProperty: 'b2', item: null},
-          {name: '二级3', icon: 'a', winProperty: 'b3', item: null}
-        ]},
-        {name: '管理', icon: 'a', winProperty: 'a2', item: null},
-        {name: '栏目3', icon: 'a', winProperty: 'a3', item: null}
       ]
       /* eslint-enable */
     }
