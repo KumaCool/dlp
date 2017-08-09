@@ -1,5 +1,5 @@
 <template>
-  <el-row class="H100 window" v-if="columnData !== ''">
+  <el-row class="H100 window" v-if="$store.state.columnData !== ''">
     <el-col :span="24">444</el-col>
     <el-col :span="4" class="H100 menu">
       <left-menu :data="$store.state.columnData"></left-menu>
@@ -20,12 +20,13 @@
       </template>
     </el-col>
   </el-row>
-  <login @check="check" v-else></login>
+  <login v-else></login>
 </template>
 
 <script>
 import leftMenu from '@/components/menu'
-import login from './components/login'
+import login from '@/function/login'
+
 export default {
   name: 'app',
   data () {
@@ -35,8 +36,7 @@ export default {
         {name: 'Hello', title: '您好', zIndex: 0, checked: false},
         {name: 'Hello', title: '测试', zIndex: 1, checked: false},
         {name: 'login', title: '测试2', zIndex: 2, checked: true}
-      ],
-      columnData: ''
+      ]
       /* eslint-enable */
     }
   },
@@ -60,12 +60,9 @@ export default {
       }
       this.dialog[index].zIndex = leng - 1
       this.dialog[index].checked = true
-    },
-    check: function (param) {
-      this.columnData = param
     }
   },
-  components: {leftMenu,login}
+  components: {leftMenu, login}
 }
 </script>
 <style lang="less">

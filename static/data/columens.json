@@ -1,0 +1,46 @@
+{
+  "rtnCode": 200,
+  "rtnStr": "success",
+  "data": [
+    {
+      "id": "1",
+      "name": "实时监控",
+      "url": null,
+      "icon": "a",
+      "winProperty": "a1",
+      "isTool": 0,
+      "item":
+      [
+        {
+          "id": "12",
+          "name": "旱情监控",
+          "url": null,
+          "icon": "a",
+          "winProperty": "a1-2",
+          "isTool": 0,
+          "item":
+          [
+            {
+              "id": "26",
+              "name": "水情1",
+              "url": null,
+              "icon": "a",
+              "winProperty": "a1-2-1",
+              "isTool": 0,
+              "item": null
+            },
+            {
+              "id": "21",
+              "name": "水位监控",
+              "url": null,
+              "icon": "a",
+              "winProperty": "a1-2-2",
+              "isTool": 0,
+              "item": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
