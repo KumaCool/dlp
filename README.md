@@ -7,7 +7,8 @@
 ##相关文档
 [API文档](https://www.apiview.com/p/5156#/api/list "API文档") 联系负责人查看
 
-[架构分析图](https://www.processon.com/view/link/596c804ce4b064b2bffd4598 "架构分析图")
+[架构分析图](https://www.processon.com/view/link/598abc74e4b02783dc34f58a "架构分析图")
+[开发平台页面原型图](https://www.processon.com/view/link/598abcb7e4b0d7c12dfd6b03 "开发平台页面原型图")
 
 ##使用环境
 - node 6+
@@ -32,7 +33,7 @@
 
 ##项目结构
 + src / *开发目录*
- + asset / *静态资源*
+ + asset / *资源*
    + css /
    + images /
  + components / *公共组件*
@@ -40,5 +41,8 @@
    - menu.vue *左导航*
  + function / *功能组件*
  + router / *路由*
+ + store / *状态管理*
  - App.vue *主框架*
  - main.js *入口文件*
++ static / *静态资源*
+ + data / *模拟数据*
