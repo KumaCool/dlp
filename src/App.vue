@@ -6,7 +6,7 @@
     </el-col>
     <el-col :span="20" class="H100 main">
       <com-middle window="full" name="Hello"></com-middle>
-      <template v-for="(item, index) in dialog">
+      <template v-for="(item, index) in windowCom">
         <com-middle
           window="small"
           :index="index"
@@ -32,12 +32,23 @@ export default {
   data () {
     return {
       /* eslint-disable */
-      dialog: [
-        {name: 'Hello', title: '您好', zIndex: 0, checked: false},
-        {name: 'Hello', title: '测试', zIndex: 1, checked: false},
-        {name: 'login', title: '测试2', zIndex: 2, checked: true}
-      ]
+      windowCom: this.$store.state.window,
+      // [
+      //   {name: 'Hello', title: '您好', zIndex: 0, checked: false},
+      //   {name: 'Hello', title: '测试', zIndex: 1, checked: false},
+      //   {name: 'login', title: '测试2', zIndex: 2, checked: true}
+      // ]
       /* eslint-enable */
+    }
+  },
+  computed: {
+    url: function () { // 路由用,暂无用的方法
+      let path = new Array(this.windowCom.length)
+      this.windowCom.forEach(function (v) {
+        path[v.zIndex] = v.name
+      })
+      console.log(this.$store)
+      return path.join('/')
     }
   },
   methods: {
@@ -46,20 +57,20 @@ export default {
      * @param  {number} index 要关闭窗口所在层级
      */
     comClose: function (index) {
-      this.dialog.splice(index, 1)
+      this.windowCom.splice(index, 1)
     },
     /**
      * 变更窗口层级
      * @param  {number} index 选中的窗口所在层级
      */
     comChecked: function (index) {
-      let leng = this.dialog.length
+      let leng = this.windowCom.length
       for (let i = 0; i < leng; i++) {
-        if (this.dialog[i].zIndex > this.dialog[index].zIndex) this.dialog[i].zIndex--
-        this.dialog[i].checked = false
+        if (this.windowCom[i].zIndex > this.windowCom[index].zIndex) this.windowCom[i].zIndex--
+        this.windowCom[i].checked = false
       }
-      this.dialog[index].zIndex = leng - 1
-      this.dialog[index].checked = true
+      this.windowCom[index].zIndex = leng - 1
+      this.windowCom[index].checked = true
     }
   },
   components: {leftMenu, login}

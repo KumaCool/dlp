@@ -5,13 +5,18 @@
       <item-menu :data="obj"></item-menu>
     </template>
   </el-submenu>
-  <el-menu-item :index="data.winProperty" v-else>{{data.name}}</el-menu-item>
+  <el-menu-item :index="data.winProperty" @click="click(data.url)" v-else>{{data.name}}</el-menu-item>
 </template>
 <script>
 import itemMenu from './item-menu'
 export default {
   name: 'itemMenu',
   props: ['data'],
+  methods: {
+    click: function (com) {
+      this.$store.commit('openWindow', com)
+    }
+  },
   components: {itemMenu}
 }
 </script>

@@ -23,7 +23,7 @@
             {
               "id": "26",
               "name": "水情1",
-              "url": null,
+              "url": "Hello",
               "icon": "a",
               "winProperty": "a1-2-1",
               "isTool": 0,
@@ -32,7 +32,7 @@
             {
               "id": "21",
               "name": "水位监控",
-              "url": null,
+              "url": "login",
               "icon": "a",
               "winProperty": "a1-2-2",
               "isTool": 0,
