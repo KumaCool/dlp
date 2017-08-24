@@ -1,0 +1,55 @@
+{
+    "rtnCode": 200,
+    "rtnStr": "success",
+    "data": {
+        "permissionList": [{
+            "id": "2233",
+            "perName": "栏目管理",
+            "perType": "",
+            "columnIdList": ["2233"],
+            "actionIdList": ["000", "233"]
+        }, {
+            "id": "233",
+            "perName": "栏目管理",
+            "perType": "",
+            "columnIdList": ["233"],
+            "actionIdList": []
+        }],
+        "columnList": [{
+            "id": "233",
+            "parentId": "0",
+            "name": "栏目管理",
+            "url": null,
+            "isParent": 1,
+            "icon": null,
+            "isTool": null,
+            "winProperty": "a1",
+            "sortOrder": 1,
+            "status": 1,
+            "createTime": null,
+            "updateTime": null
+        }, {
+            "id": "2233",
+            "parentId": "233",
+            "name": "添加栏目",
+            "url": null,
+            "isParent": 1,
+            "icon": null,
+            "isTool": null,
+            "winProperty": "a1-2",
+            "sortOrder": null,
+            "status": 1,
+            "createTime": null,
+            "updateTime": null
+        }],
+        "actionList": [{
+            "id": "000",
+            "name": "删除",
+            "act": null
+        }, {
+            "id": "233",
+            "name": "增加",
+            "act": "column:add"
+        }]
+    }
+}

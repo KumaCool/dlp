@@ -2,7 +2,7 @@
   <el-row class="H100 window" v-if="$store.state.columnData !== ''">
     <el-col :span="24">444</el-col>
     <el-col :span="4" class="H100 menu">
-      <left-menu :data="$store.state.columnData"></left-menu>
+      <left-menu :data="$store.getters.columnTree"></left-menu>
     </el-col>
     <el-col :span="20" class="H100 main">
       <com-middle window="full" name="Hello"></com-middle>

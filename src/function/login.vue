@@ -31,8 +31,8 @@
         password: ''
       }
     },
-    created () { // 初始化加载栏目数据
-      this.ajax('static/data/columens.json')
+    created () {
+      this.ajax('static/data/getUserPerColAcList.json')
     },
     methods: {
       submit: function () { // 登录
@@ -43,23 +43,29 @@
           })
           return
         }
-        this.ajax('static/data/columens.json', true)
+        this.ajax('static/data/login.json', response => {
+          this.$message({message: response.rtnStr, type: 'success'})
+          this.ajax('static/data/getUserPerColAcList.json')
+        })
       },
       /**
-       * 请求栏目数据
+       * ajax简单的封装主要用于登录后拉取数据
        * @param  {string} url        请求地址
-       * @param  {boolean} messageBox 是否显示提示
+       * @param  {function} callback 回调,第一参数为ajax返回的数据
        */
-      ajax: function (url, messageBox) {
+      ajax: function (url, callback) {
         this.$http.get(url).then(response => {
-          let result = response.data
-          let msg = result.rtnStr
-          let type = 'error'
-          if (result.rtnCode === 200) {
-            type = 'success'
-            this.$store.commit('set_state', {columnData: result.data})
+          if (response.data.rtnCode !== 200) return this.$message({message: response.data.rtnStr, type: 'error'})
+          if (callback !== undefined) {
+            callback(response.data)
+          } else {
+            this.$store.commit('set_state', {
+              columnData: response.data.data.columnList,
+              permission: response.data.data.permissionList
+            })
           }
-          if (messageBox) this.$message({message: msg, type: type})
+        }).catch(error => {
+          this.$message({message: error, type: 'error'})
         })
       }
     }
