@@ -14,6 +14,9 @@ Vue.use(ElementUI)
 Vue.use(VueAxios, axios)
 Vue.component('com-middle', ComMiddle)
 
+// 设置API路径
+axios.defaults.baseURL = 'http://116.62.225.78:8180'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

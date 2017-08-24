@@ -32,20 +32,26 @@
       }
     },
     created () {
-      this.ajax('static/data/getUserPerColAcList.json')
+      this.ajax('/per/col/ac/get')
     },
     methods: {
       submit: function () { // 登录
-        if (this.usercode === '' || this.password === '') {
+        if (this.usercode === '') {
           this.$message({
             message: '账号或密码为空！',
             type: 'error'
           })
           return
         }
-        this.ajax('static/data/login.json', response => {
+        this.ajax('/sys/login', {
+          method: 'post',
+          params: {
+            usercode: this.usercode,
+            password: this.password
+          }
+        }, response => {
           this.$message({message: response.rtnStr, type: 'success'})
-          this.ajax('static/data/getUserPerColAcList.json')
+          this.ajax('/sys/getUserPerColAcList')
         })
       },
       /**
@@ -53,8 +59,10 @@
        * @param  {string} url        请求地址
        * @param  {function} callback 回调,第一参数为ajax返回的数据
        */
-      ajax: function (url, callback) {
-        this.$http.get(url).then(response => {
+      ajax: function (url, option = {}, callback) {
+        let log = console.log.bind(console)
+        option.url = url
+        this.$http.request(option).then(response => {
           if (response.data.rtnCode !== 200) return this.$message({message: response.data.rtnStr, type: 'error'})
           if (callback !== undefined) {
             callback(response.data)
@@ -66,6 +74,7 @@
           }
         }).catch(error => {
           this.$message({message: error, type: 'error'})
+          log(error)
         })
       }
     }
