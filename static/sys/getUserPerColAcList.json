@@ -32,7 +32,7 @@
             "id": "2233",
             "parentId": "233",
             "name": "添加栏目",
-            "url": null,
+            "url": "login",
             "isParent": 1,
             "icon": null,
             "isTool": null,

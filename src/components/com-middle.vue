@@ -1,14 +1,16 @@
 <template>
-  <div class="wrapper" :class="window" :style="[{zIndex: zIndex}, offset]" @mousedown="checked">
-    <div class="dialog_header"
+  <el-row :class="comClass" :style="[{zIndex: zIndex}, offset]" @mousedown="checked">
+    <el-col :span="24" class="dialog_header"
       :class="checkedClass ? 'checked' : ''"
       v-if="window !== 'full'"
       v-drag="positionUpdate"
     >
       {{title}}<i class="el-icon-close" @click="close"></i>
-    </div>
-    <component :is="com"></component>
-  </div>
+    </el-col>
+    <el-col :span="24">
+      <component :is="com"></component>
+    </el-col>
+  </el-row>
 </template>
 <script>
 /**
@@ -28,6 +30,9 @@ export default {
     }
   },
   computed: {
+    comClass: function () { // 本中间件组件的主框架样式名
+      return this.window === 'full' ? 'full' : 'wrapper small'
+    },
     com: function () { // 调用组件
       try {
         return require(`./${this.name}`)
@@ -57,7 +62,7 @@ export default {
   },
   directives: {
     drag: { // 拖拽指令
-      inserted: (el, binding, vnode) => {
+      inserted: (el, {value}, vnode) => {
         el.onmousedown = (e) => {
           document.onselectstart = () => false
           let params = {
@@ -67,7 +72,7 @@ export default {
             disX: e.clientX
           }
           document.onmousemove = (e) => {
-            binding.value({
+            value({
               top: e.clientY - params.disY + params.top,
               left: e.clientX - params.disX + params.left
             })
@@ -98,7 +103,7 @@ export default {
     background: #58B7FF;
     color: #FFF;
     cursor: move;
-    &>i{
+    & > i{
       position: absolute;
       top: 10px;
       right: 10px;
