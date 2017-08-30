@@ -115,6 +115,8 @@ export default {
   .full{
     .W100;
     .H100;
+    z-index: 0;
+    .el-col{.H100;}
   }
   .small{
     top: 50%;

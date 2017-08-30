@@ -51,7 +51,6 @@
       ajax: function (url, option = {}, callback) {
         option.url = url
         this.$http.request(option).then(response => {
-          log(response)
           if (response.status !== 200) return this.$message({message: `页面错误: ${response.status}`, type: 'error'})
           if (response.data.rtnCode === 200 && callback === undefined) {
             this.$store.commit('set_state', {

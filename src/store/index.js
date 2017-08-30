@@ -49,7 +49,7 @@ const store = {
      * @param  {string} com   要打开的组件名
      */
     openWindow: (state, com) => {
-      console.log(com)
+      // console.log(com)
       let length = state.window.length
       // 判断该组件是否已经打开
       for (var i = 0; i < length; i++) {

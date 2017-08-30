@@ -1,0 +1,32 @@
+{
+    "rtnCode": 200,
+    "rtnStr": "success",
+    "data": {
+        "paginationList": [{
+            "id": "233",
+            "username": "allen",
+            "usercode": "allen",
+            "password": null,
+            "email": "allen@me.com",
+            "phone": "233",
+            "status": 1,
+            "isDelete": 0,
+            "orgId": null,
+            "createTime": null,
+            "updateTime": null
+        }, {
+            "id": "546123d7c754448382febbb934f4bbd5",
+            "username": "alex",
+            "usercode": "alex",
+            "password": null,
+            "email": null,
+            "phone": null,
+            "status": 1,
+            "isDelete": 0,
+            "orgId": null,
+            "createTime": 1502333245000,
+            "updateTime": 1502333245000
+        }],
+        "paginationTotal": 5
+    }
+}

@@ -31,8 +31,8 @@
         }, {
             "id": "2233",
             "parentId": "233",
-            "name": "添加栏目",
-            "url": "login",
+            "name": "用户管理",
+            "url": "user",
             "isParent": 1,
             "icon": null,
             "isTool": null,

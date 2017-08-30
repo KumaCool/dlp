@@ -1,0 +1,18 @@
+{
+    "rtnCode": 200,
+    "rtnStr": "success",
+    "data": {
+        "id": "233",
+        "username": "allen",
+        "usercode": "allen",
+        "password": null,
+        "email": "allen@me.com",
+        "phone": "233",
+        "status": 1,
+        "isDelete": 0,
+        "orgId": "c0b661629e93482a938aaf4155c1151f",
+        "userType": null,
+        "createTime": null,
+        "updateTime": null
+    }
+}

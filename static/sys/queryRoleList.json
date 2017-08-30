@@ -1,0 +1,29 @@
+{
+    "rtnCode": 200,
+    "rtnStr": "success",
+    "data": {
+        "paginationTotal": 7,
+        "paginationList": [{
+            "id": "0bf746f460c64deb8687135839a880c3",
+            "roleName": "测试人员"
+        }, {
+            "id": "233",
+            "roleName": "allenRole"
+        }, {
+            "id": "28455dbb0c074a1f85a6cbd6d4fda1d8",
+            "roleName": "普通用户"
+        }, {
+            "id": "2a78e5f46b6c490caa4eba63b1bf7ec4",
+            "roleName": "管理员"
+        }, {
+            "id": "3fac016da3d641b4a8d4004646d8247d",
+            "roleName": "开发人员"
+        }, {
+            "id": "c0b661629e93482a938aaf4155c1151f",
+            "roleName": "超级管理员"
+        }, {
+            "id": "e39ec1b50a574a939fc04b03cd16bd94",
+            "roleName": "管理员"
+        }]
+    }
+}

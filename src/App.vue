@@ -1,14 +1,14 @@
 <template>
   <el-row class="H100" v-if="$store.state.columnData !== ''">
     <el-row class="body-head">
-      <el-col :span="24">444</el-col>
+      <el-col :span="24"></el-col>
     </el-row>
     <el-row class="body-main">
       <el-col :span="4" class="body-left-menu">
         <left-menu :data="$store.getters.columnTree"></left-menu>
       </el-col>
       <el-col :span="20" class="body-window">
-        <com-middle window="full" name="Hello"></com-middle>
+        <com-middle window="full" name="map"></com-middle>
         <template v-for="(item, index) in windowCom">
           <com-middle
             window="small"
@@ -82,9 +82,11 @@ export default {
 </script>
 <style lang="less">
   @import './assets/css/style';
-  @bodyHeadHeight: 7%; // 框架头部的高
+  @bodyHeadHeight: 8%; // 框架头部的高
   .body-head{
     height: @bodyHeadHeight;
+    background: url('./assets/images/header.jpg') no-repeat;
+    background-size: contain;
   }
   .body-main{
     height: 100 - @bodyHeadHeight;
