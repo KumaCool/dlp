@@ -1,5 +1,5 @@
 <template>
-  <el-form class="login" ref="form" :model="form" :rules="rules" label-width="80px">
+  <el-form class="login" ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="onSubmit('form')">
     <el-form-item prop="usercode" label="账号"><el-input v-model="form.usercode" placeholder="请输入账号"></el-input></el-form-item>
     <el-form-item prop="password" label="密码"><el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input></el-form-item>
     <el-form-item><el-button type="primary" @click="onSubmit('form')">登录</el-button></el-form-item>
@@ -23,7 +23,7 @@
       }
     },
     created () {
-      this.ajax('/sys/getUserPerColAcList.json')
+      this.ajax('/per/col/ac/get')
     },
     methods: {
       /**
@@ -33,12 +33,12 @@
       onSubmit: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.ajax('/sys/login.json', {
+            this.ajax('/sys/login', {
               method: 'post',
               params: this.form
             }, response => {
               this.$message({message: response.rtnStr, type: 'success'})
-              this.ajax('/sys/getUserPerColAcList.json')
+              this.ajax('/per/col/ac/get')
             })
           } else return false
         })

@@ -2,25 +2,25 @@
   <el-row>
     <el-col :span="24"></el-col>
     <el-col :span="24">
-      <el-form>
+      <el-form :model="formData">
         <el-form-item>
           <el-button type="primary" @click="onSubmit" icon="upload2">保存</el-button>
         </el-form-item>
-        <template v-for="(item, index) in config.data">
-          <el-form-item :label="item[0]" label-width="100px">
-            <el-input v-if="item[1] === 'text' || item[1] === 'textarea' || item[1] === 'password'"
-                      :type="item[1]"
-                      v-model="formData[index]"
-            ></el-input>
-            <el-select v-else-if="item[1] === 'select'" v-model="formData[index]">
-              <el-option v-for="opt in roleListData"
-                         :key="opt.value"
-                         :label="opt.label"
-                         :value="opt.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </template>
+        <el-form-item v-for="(item, index) in config.data"
+                      :key="index"
+                      :label="item.name"
+                      label-width="100px">
+          <el-input v-if="item.formType === 'text' || item.formType === 'textarea' || item.formType === 'password'"
+                    :type="item.formType"
+                    v-model="formData[index]"></el-input>
+          <el-select v-else-if="item.formType === 'select'" v-model="formData[index]">
+            <el-option v-for="opt in dictionary[item.dictionary]"
+                       :key="opt.value"
+                       :label="opt.label"
+                       :value="opt.value"
+                       ></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
     </el-col>
   </el-row>
@@ -31,15 +31,15 @@ export default {
   props: ['config', 'tempStatus'],
   data () {
     return {
-      formData: {}, // 表单数据
-      roleListData: []
+      formData: {orgId: ''}, // 表单数据
+      dictionary: {}
     }
   },
   created () {
     this.request()
     for (var k in this.config.data) {
-      if (this.config.data[k][1] === 'select') {
-        let actionName = this.config.data[k][2]
+      if (this.config.data[k].formType === 'select') {
+        let actionName = this.config.data[k].dictionary
         this[actionName]()
       }
     }
@@ -48,9 +48,9 @@ export default {
     onSubmit: function () { // 表单提交
       log(this.formData)
       this.$http.post(this.config.response, this.formData).then(response => {
-        // log(response)
-        if (response.rtnCode === 200) {
-          this.$message({message: response.rtnStr, type: 'success'})
+        if (response.data.rtnCode === 200) {
+          this.$message({message: response.data.rtnStr, type: 'success'})
+          // log('ok')
           this.$emit('update')
         }
       })
@@ -68,7 +68,7 @@ export default {
       }
     },
     roleList: function () { // 请求角色列表方法
-      this.$http.get('/sys/queryRoleList.json').then(response => {
+      this.$http.get('/role/queryRoleList').then(response => {
         let result = response.data
         if (result.rtnCode === 200) {
           let roleList = []
@@ -78,7 +78,7 @@ export default {
               label: result.data.paginationList[k].roleName
             })
           }
-          this.roleListData = roleList
+          this.$set(this.dictionary, 'roleList', roleList)
         }
       })
     }

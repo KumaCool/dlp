@@ -3,8 +3,24 @@
   <head>
     <meta charset="utf-8">
     <title>develop</title>
+    <style type="text/css">
+    	#app{
+    		display: none;
+    	}
+    	.loading{
+    		width: 100%;
+    		height: 100%;
+    		background: #181E25 url(./static/img/loading.gif) no-repeat center center;
+    	}
+    </style>
+	<script type="text/javascript"> 
+		window.onload = function () { 
+			document.getElementsByClassName('loading')[0].style.display = "none"
+		}
+	</script>
   </head>
   <body>
+  	<div class="loading"></div>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

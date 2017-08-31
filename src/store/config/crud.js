@@ -5,12 +5,14 @@
  *     <string: list | created | edit | delete>: { // 列表型 | 创建型 | 修改型 | 删除型
  *       request: <string> // 请求URL
  *       response: <string> // 提交URL
+ *       select: <string> // 查询URL
+ *       selectValue: <array> // 需要查询的字段
  *       data: { // 要显示的数据字段格式
- *         <string: keyName>: [
- *           <string: chineseName>, // 字段中文名
- *           <string: formType>, // 非list下的表单类型
- *           <string: action> // 绑定事件
- *         ]
+ *         <string: keyName>: {
+ *           name: <string>, // 字段中文名
+ *           formType: <string>, // 非 list 类下的表单类型
+ *           dictionary: <string>, // 字典函数
+ *         }
  *       }
  *     }
  *   }
@@ -19,27 +21,38 @@
 const config = {
   '用户管理': {
     list: {
-      request: '/sys/queryUser4PageWithCriteria.json',
+      request: '/user/query/page/criteria',
+      select: '/user/query/page/criteria',
+      selectValue: ['username'],
       data: {
-        // id: ['序号'],
-        username: ['用户名'],
-        orgId: ['角色']
+        usercode: {name: '帐号'},
+        username: {name: '用户名'},
+        orgId: {name: '角色', dictionary: 'roleList'}
       }
     },
     edit: {
-      request: '/sys/getUser.json',
-      response: '/sys/updateUser.json',
+      request: '/user/getUser',
+      response: '/user/updateUser',
       data: {
-        username: ['用户名', 'text']
+        usercode: {name: '帐号', formType: 'text'},
+        username: {name: '用户名', formType: 'text'},
+        password: {name: '密码', formType: 'password'},
+        orgId: {name: '角色', formType: 'select', dictionary: 'roleList'}
       }
     },
     created: {
-      // request: '/sys/getUser.json',
-      response: '/sys/addUser.json',
+      response: '/user/addUser',
       data: {
-        usercode: ['帐号', 'text'],
-        password: ['密码', 'password'],
-        orgId: ['角色', 'select', 'roleList']
+        usercode: {name: '帐号', formType: 'text'},
+        username: {name: '用户名', formType: 'text'},
+        password: {name: '密码', formType: 'password'},
+        orgId: {name: '角色', formType: 'select', dictionary: 'roleList'}
+      }
+    },
+    delete: {
+      response: '/user/deleteUser',
+      data: {
+        id: []
       }
     }
   }

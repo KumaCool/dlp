@@ -1,7 +1,7 @@
 <template>
   <el-row class="H100" v-if="$store.state.columnData !== ''">
     <el-row class="body-head">
-      <el-col :span="24"></el-col>
+      <el-col :span="24" class="head-bg"><img src="./assets/images/header.jpg"></el-col>
     </el-row>
     <el-row class="body-main">
       <el-col :span="4" class="body-left-menu">
@@ -45,6 +45,9 @@ export default {
       /* eslint-enable */
     }
   },
+  created () {
+    document.getElementById('app').style.display = 'block'
+  },
   computed: {
     url: function () { // 路由用,暂无用的方法
       let path = new Array(this.windowCom.length)
@@ -82,11 +85,12 @@ export default {
 </script>
 <style lang="less">
   @import './assets/css/style';
-  @bodyHeadHeight: 8%; // 框架头部的高
+  @bodyHeadHeight: 7%; // 框架头部的高
   .body-head{
     height: @bodyHeadHeight;
-    background: url('./assets/images/header.jpg') no-repeat;
-    background-size: contain;
+    line-height: 0;
+    .head-bg{background: url('./assets/images/header_bg.jpg') repeat-x;}
+    // background-size: 100px;
   }
   .body-main{
     height: 100 - @bodyHeadHeight;
