@@ -20,7 +20,7 @@ export default {
       // draggable: true,
       attributionControl: false
     }).setView([30.510597, 114.438742], 13)
-    L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYTExMzcyMTA3MCIsImEiOiJjajZyYWFoZ3gwN2llMnByMTNydm5qbW5lIn0.PPYc3gIUiapIg1y1H7LOlQ').addTo(tt)
+    L.tileLayer('https://api.mapbox.com/styles/v1/mayahw/cj7043o68chyg2ro3pzfy0qru/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWF5YWh3IiwiYSI6IlhnVzlOb0EifQ.S_tK2JCpZMDshhJN5KNCYQ').addTo(tt)
     // https://116.62.225.78:6443/arcgis/rest/services/hubei/MapServer
   },
   data () {

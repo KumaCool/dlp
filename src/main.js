@@ -9,6 +9,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import ComMiddle from './components/com-middle.vue'
+import './assets/css/ionicons.less'
 
 Vue.use(ElementUI)
 Vue.use(VueAxios, axios)

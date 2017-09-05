@@ -14,27 +14,33 @@
       </el-form>
     </el-col>
     <el-col :span="24">
-      <el-table max-height="700" :data="tableData" highlight-current-row @current-change="edit">
-        <template v-for="(item, index) in tableColumn">
-          <el-table-column :prop="index" :label="item.name"></el-table-column>
+      <el-table max-height="700" :data="dataset" highlight-current-row @current-change="edit">
+        <template v-for="(item, key) in tableColumn">
+          <el-table-column :prop="key" :label="item.name"></el-table-column>
         </template>
       </el-table>
     </el-col>
   </el-row>
 </template>
 <script>
-let log = console.log.bind(console)
+// let log = console.log.bind(console)
+/**
+ * CRUD下的表格操作组件
+ * 用于数据以常规的表格形式操作或显示
+ * @param {object} config CRUD中 created 或 edit 的配置信息
+ * @param {boolean} tempStatus 数据变动的状态提示,如状态改变就将重新加载新数据
+ */
+import mixin from '@/mixins/crud'
 export default {
-  props: ['config', 'listStatus'],
+  props: ['config', 'tempStatus'],
+  mixins: [mixin],
   data () {
     return {
       selectValue: '',
-      tableData: [], // 列表数据
-      deleteTable: {}
+      dataset: [], // 列表数据
+      deleteTable: {}, // 预删除数据
+      dictionary: {} // 字典数据
     }
-  },
-  created () {
-    this.request()
   },
   computed: {
     tableColumn: function () { // 列表栏目
@@ -42,14 +48,14 @@ export default {
     }
   },
   methods: {
-    add: function () {
+    add: function () { // 触发父组件添加事件
       this.$emit('to-form', 'created')
     },
-    edit: function (val) {
+    edit: function (val) { // 触发父组件修改事件
       this.deleteTable = val
       this.$emit('to-form', 'edit', val)
     },
-    del: function () {
+    del: function () { // 触发父组件删除事件
       this.$confirm('删除后将无法恢复,是否要继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -57,9 +63,8 @@ export default {
       }).then(() => {
         this.$emit('del', this.deleteTable)
       }).catch(() => {})
-      log(1)
     },
-    select: function () {
+    select: function () { // 查询事件
       let param = {}
       for (var k in this.config.selectValue) {
         param[this.config.selectValue[k]] = this.selectValue
@@ -69,36 +74,10 @@ export default {
     request: function (param) { // 拉取列表数据
       param = param !== undefined ? {params: param} : {}
       this.$http.get(this.config.request, param).then(response => {
-        this.tableData = response.data.data.paginationList
-        // log('d')
-        for (var k in this.config.data) {
-          if (this.config.data[k].dictionary !== undefined) {
-            let actionName = this.config.data[k].dictionary
-            this[actionName]()
-          }
-        }
+        this.dataset = response.data.data.paginationList
+        // 触发事件
+        this.fnForeach()
       })
-    },
-    roleList: function () { // 请求角色列表方法
-      this.$http.get('/role/queryRoleList').then(response => {
-        let result = response.data
-        if (result.rtnCode === 200) {
-          let roleList = {}
-          result = result.data.paginationList
-          for (var k in result) {
-            roleList[result[k].id] = result[k].roleName
-          }
-          for (k in this.tableData) {
-            var roleName = this.tableData[k].orgId
-            this.$set(this.tableData[k], 'orgId', roleList[roleName])
-          }
-        }
-      })
-    }
-  },
-  watch: {
-    listStatus: function () {
-      this.request()
     }
   }
 }

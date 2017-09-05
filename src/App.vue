@@ -29,7 +29,7 @@
 
 <script>
 import leftMenu from '@/components/menu'
-import login from '@/function/login'
+import login from '@/actions/login'
 
 export default {
   name: 'app',

@@ -1,5 +1,5 @@
 <template>
-  <el-row :class="comClass" :style="[{zIndex: zIndex}, offset]" @mousedown="checked">
+  <el-row :class="comClass" :style="[{zIndex: zIndex}, offset]" @mousedown.native="checked">
     <el-col :span="24" class="dialog_header"
       :class="checkedClass ? 'checked' : ''"
       v-if="window !== 'full'"
@@ -38,7 +38,7 @@ export default {
         return require(`./${this.name}`)
       } catch (e) {
         try {
-          return require(`../function/${this.name}`)
+          return require(`../actions/${this.name}`)
         } catch (e) {
           this.$message.error(`没有找到 ${this.name} 组件`)
           this.close()
