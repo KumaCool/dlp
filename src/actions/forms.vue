@@ -47,17 +47,23 @@ export default {
   },
   methods: {
     onSubmit: function () { // 表单提交
+      // log(this.dataset)
       this.$http.post(this.config.response, this.dataset).then(response => {
+        let type = 'error'
         if (response.data.rtnCode === 200) {
-          this.$message({message: response.data.rtnStr, type: 'success'})
+          type = 'success'
           this.$emit('update')
         }
+        this.$message({message: response.data.rtnStr, type: type})
       })
     },
     request: function () { // 请求表单数据
+      // log(this.$route)
       if (this.config.request !== undefined) {
         this.$http.get(this.config.request, {params: this.config.param}).then(response => {
-          this.dataset = response.data.data
+          if (response.data.rtnCode === 200) {
+            this.dataset = response.data.data
+          }
         })
       } else {
         // 初始化表单

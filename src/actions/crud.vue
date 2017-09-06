@@ -1,10 +1,11 @@
 <template>
   <el-row class="user" :gutter="10">
-    <el-col :span="10">
-      <list :config="config.list"
-            :listStatus="listStatus"
-            @to-form="toForm"
-            @del="del"></list>
+    <el-col :span="span">
+      <component :is="comp"
+                 :config="config.tables"
+                 :tempStatus="listStatus"
+                 @to-form="toForm"
+                 @del="del"></component>
     </el-col>
     <el-col v-if="config.forms !== ''" :span="14">
       <forms :config="config.forms" :tempStatus="tempStatus" @update="update"></forms>
@@ -14,17 +15,31 @@
 <script>
 // let log = console.log.bind(console)
 import crud from '@/store/config/crud-config'
-import list from '@/actions/column-list'
-import forms from '@/actions/forms'
+
 export default {
+  props: ['com-param'],
   data () {
     return {
-      config: {
-        list: crud['column'].list,
-        forms: '' // 表单配置
+      config: { // 配置数据
+        tables: crud[this.comParam].list, // 左侧列表
+        forms: '' // 右侧表单
       },
       tempStatus: false, // 临时请求状态器
       listStatus: false
+    }
+  },
+  computed: {
+    span: function () { // 左侧栏宽度判断,默认100%宽
+      return this.config.forms === '' ? 24 : 10
+    },
+    comp: function () { // 动态加载组件
+      let comName = 'tables'
+      switch (this.comParam[0]) {
+        case 'column': // 栏目模块
+          comName = 'column'
+          break
+      }
+      return comName
     }
   },
   methods: {
@@ -34,15 +49,19 @@ export default {
      * @param  {object} param request时附带的参数
      */
     toForm: function (type, param) {
-      this.$set(this.config, 'forms', crud['column'][type])
+      this.$set(this.config, 'forms', crud[this.comParam][type])
       this.tempStatus = !this.tempStatus
       if (param !== undefined) this.$set(this.config.forms, 'param', param)
     },
-    update: function () {
+    update: function () { // 通知左侧列表更新
       this.listStatus = !this.listStatus
     },
+    /**
+     * 删除选中的数据
+     * @param  {object} val 选中的数据
+     */
     del: function (val) {
-      let config = crud['column'].delete
+      let config = crud[this.comParam].delete
       let param = {}
       for (var k in config.data) {
         param[k] = val[k]
@@ -53,7 +72,11 @@ export default {
       })
     }
   },
-  components: {list, forms}
+  components: {
+    'tables': () => import('@/actions/tables'),
+    'forms': () => import('@/actions/forms'),
+    'column': () => import('@/actions/column-list')
+  }
 }
 </script>
 <style lang="less" scoped>

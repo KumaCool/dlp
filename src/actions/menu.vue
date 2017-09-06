@@ -6,12 +6,12 @@
   </el-menu>
 </template>
 <script>
-import itemMenu from './item-menu'
+import itemMenu from '@/components/item-menu'
 export default {
   props: ['data'],
   methods: {
     openWindow: function (index) {
-      this.$store.commit('openWindow', index.split('.')[1])
+      this.$store.commit('openWindow', index.split('#')[1])
     }
   },
   components: {itemMenu}

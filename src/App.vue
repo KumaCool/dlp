@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import leftMenu from '@/components/menu'
+import leftMenu from '@/actions/menu'
 import login from '@/actions/login'
 
 export default {

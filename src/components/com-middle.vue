@@ -8,7 +8,7 @@
       {{title}}<i class="el-icon-close" @click="close"></i>
     </el-col>
     <el-col :span="24">
-      <component :is="com"></component>
+      <component :is="com" :com-param="param"></component>
     </el-col>
   </el-row>
 </template>
@@ -17,16 +17,22 @@
  * 组件调用的中间件
  * @param {number} index 组件标识
  * @param {string} window 窗口大小 small(默认)/full
- * @param {string} name 调用组件名
+ * @param {string} name 调用组件名,它可以有组合形式 fileName.param
  * @param {string} title 窗口标题
  * @param {number} zIndex 窗口层级
  * @param {boolean} checkedClass 顶层样式判断
+ *
+ * 如何该中间件的参数name接收到的是组合模式,
+ * 它会打散成数组并把除第一元素外以参数的形式传给要调用的组件
+ * @param {array} comParam 组件的参数
  */
 export default {
   props: ['index', 'window', 'name', 'title', 'zIndex', 'checkedClass'],
   data () {
     return {
-      offset: '' // 窗口坐标值
+      offset: '', // 窗口坐标值
+      fileName: '', // 组件的文件名
+      param: '' // 调用组件的附加参数
     }
   },
   computed: {
@@ -34,13 +40,17 @@ export default {
       return this.window === 'full' ? 'full' : 'wrapper small'
     },
     com: function () { // 调用组件
+      let arr = this.name.split('.')
+      this.fileName = arr[0]
+      arr.shift()
+      this.param = arr
       try {
-        return require(`./${this.name}`)
+        return require(`./${this.fileName}`)
       } catch (e) {
         try {
-          return require(`../actions/${this.name}`)
+          return require(`../actions/${this.fileName}`)
         } catch (e) {
-          this.$message.error(`没有找到 ${this.name} 组件`)
+          this.$message.error(`没有找到 ${this.fileName} 组件`)
           this.close()
         }
       }

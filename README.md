@@ -37,13 +37,25 @@
   + asset / *资源*
     + css /
     + images /
+    + js /
+    + fonts /
   + components / *公共组件*
     - com-middle.vue *功能组件调用*
+    - item-menu.vue *导航菜单*
+  + actions / *功能组件*
     - menu.vue *左导航*
-  + function / *功能组件*
+    - login.vue *登录*
+    - crud.vue *数据CRUD*
+    - tables.vue *CRUD列表操作*
+    - forms.vue *CRUD表单操作*
+    - column-list.vue *CRUD导航操作*
+    - map.vue *地图*
+  + mixins / *公共方法*
   + router / *路由*
-  + store / *状态管理*
+  + store / *状态与数据管理*
+    + config / *配置目录*
+      - crud-config.vue *CRUD组件配置信息*
   - App.vue *主框架*
   - main.js *入口文件*
 + static / *静态资源*
-  + data / *模拟数据*
+  + sys / *模拟数据*

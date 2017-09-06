@@ -74,7 +74,9 @@ export default {
     request: function (param) { // 拉取列表数据
       param = param !== undefined ? {params: param} : {}
       this.$http.get(this.config.request, param).then(response => {
-        this.dataset = response.data.data.paginationList
+        if (response.data.rtnCode === 200) {
+          this.dataset = response.data.data.paginationList
+        }
         // 触发事件
         this.fnForeach()
       })

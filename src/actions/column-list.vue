@@ -54,7 +54,7 @@ export default {
       this.$emit('to-form', 'created')
     },
     edit: function (index) { // 触发父组件修改事件
-      index = {id: index.split('.')[0]}
+      index = {id: index.split('#')[0]}
       this.deleteTable = index
       this.$emit('to-form', 'edit', index)
     },

@@ -1,5 +1,5 @@
 <template>
-  <el-submenu :index="data.id + '.' + data.url" v-if="data.item !== null">
+  <el-submenu :index="data.id + '#' + data.url" v-if="data.item !== null">
     <template slot="title">
       <i :class="data.icon"></i>{{data.name}}
     </template>
@@ -7,7 +7,7 @@
       <item-menu :data="obj"></item-menu>
     </template>
   </el-submenu>
-  <el-menu-item :index="data.id + '.' + data.url" v-else>
+  <el-menu-item :index="data.id + '#' + data.url" v-else>
     <i :class="data.icon"></i>{{data.name}}
   </el-menu-item>
 </template>
