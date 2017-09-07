@@ -10,7 +10,7 @@
         <el-option v-for="(item, index) in iconArr"
                    :key="index"
                    :value="'el-icon-ion-' + item"
-                   class="xxx">
+                   class="option">
           <i :class="'el-icon-ion-' + item"></i>
         </el-option>
       </el-select>
@@ -54,17 +54,20 @@ export default {
   .icon-now{
     position: absolute;
     margin: 5px;
-    padding: 5px 8px;
+    padding: 3px 8px 7px;
     width: 14px;
     height: 14px;
+    font-size: 20px;
     border: #CCC 1px solid;
     background: #FFF;
     z-index: 1;
   }
   .select-icon .el-select-dropdown__list{
-    width: 200px;
-    .el-select-dropdown__item{
-      width: 25px;
+    width: 400px; // 选择器弹出层的宽度
+    .option{
+      padding-top: 3px;
+      width: 35px;
+      font-size: 20px;
       float: left;
     }
   }

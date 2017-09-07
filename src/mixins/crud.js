@@ -56,6 +56,16 @@ export default {
           }
         }
       })
+    },
+    /**
+     * 配置信息与数据匹配检测
+     * @param  {object} configData 配置信息
+     * @param  {object} data       后端数据
+     */
+    configVerify: function (configData, data) {
+      for (var k in configData) {
+        if (data[k] === undefined) this.$message.error(`没有找到与 ${k} 配置对应的数据,请检查配置信息是否正确!`)
+      }
     }
   },
   watch: {

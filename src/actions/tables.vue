@@ -76,6 +76,7 @@ export default {
       this.$http.get(this.config.request, param).then(response => {
         if (response.data.rtnCode === 200) {
           this.dataset = response.data.data.paginationList
+          this.configVerify(this.config.data, this.dataset[0])
         }
         // 触发事件
         this.fnForeach()

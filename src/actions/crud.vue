@@ -21,12 +21,18 @@ export default {
   data () {
     return {
       config: { // 配置数据
-        tables: crud[this.comParam].list, // 左侧列表
+        tables: '', // 左侧列表
         forms: '' // 右侧表单
       },
       tempStatus: false, // 临时请求状态器
       listStatus: false
     }
+  },
+  created () {
+    if (crud[this.comParam] === undefined) {
+      this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
+      this.$emit('close')
+    } else this.config.tables = crud[this.comParam].list
   },
   computed: {
     span: function () { // 左侧栏宽度判断,默认100%宽

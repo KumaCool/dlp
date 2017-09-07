@@ -104,6 +104,70 @@ const config = {
         id: []
       }
     }
+  },
+  // 功能管理
+  'action': {
+    list: {
+      request: '/action/query/page/criteria',
+      select: '/action/query/page/criteria',
+      selectValue: ['name'],
+      data: {
+        id: {name: 'ID'},
+        name: {name: '功能名称'}
+      }
+    },
+    edit: {
+      request: '/action/getAction',
+      response: '/action/updateAction',
+      data: {
+        name: {name: '功能名称', formType: 'text'},
+        act: {name: '功能标识', formType: 'text'}
+      }
+    },
+    created: {
+      response: '/action/addAction',
+      data: {
+        name: {name: '功能名称', formType: 'text'},
+        act: {name: '功能标识', formType: 'text'}
+      }
+    },
+    delete: {
+      response: '/action/delAction',
+      data: {
+        id: []
+      }
+    }
+  },
+  // 角色管理
+  'role': {
+    list: {
+      request: '/role/queryRoleList',
+      select: '/role/queryRoleList',
+      selectValue: ['roleName'],
+      data: {
+        id: {name: 'ID'},
+        roleName: {name: '角色名称'}
+      }
+    },
+    edit: {
+      request: '/action/getAction',
+      response: '/role/updateRole',
+      data: {
+        roleName: {name: '角色名称', formType: 'text'}
+      }
+    },
+    created: {
+      response: '/role/addRole',
+      data: {
+        name: {name: '角色名称', formType: 'text'}
+      }
+    },
+    delete: {
+      response: '/role/deleteRole',
+      data: {
+        id: []
+      }
+    }
   }
 }
 

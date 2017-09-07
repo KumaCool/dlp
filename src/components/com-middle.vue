@@ -8,13 +8,14 @@
       {{title}}<i class="el-icon-close" @click="close"></i>
     </el-col>
     <el-col :span="24">
-      <component :is="com" :com-param="param"></component>
+      <component :is="com" :com-param="param" @close="close"></component>
     </el-col>
   </el-row>
 </template>
 <script>
 /**
  * 组件调用的中间件
+ * [ 接收参数 ]
  * @param {number} index 组件标识
  * @param {string} window 窗口大小 small(默认)/full
  * @param {string} name 调用组件名,它可以有组合形式 fileName.param
@@ -22,8 +23,12 @@
  * @param {number} zIndex 窗口层级
  * @param {boolean} checkedClass 顶层样式判断
  *
+ * [监听参数]
+ * @param {string} close 关闭本窗口组件
+ *
  * 如何该中间件的参数name接收到的是组合模式,
  * 它会打散成数组并把除第一元素外以参数的形式传给要调用的组件
+ * [ 传出参数 ]
  * @param {array} comParam 组件的参数
  */
 export default {

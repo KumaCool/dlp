@@ -73,6 +73,7 @@ export default {
         this.$http.get(this.config.request, {params: this.config.param}).then(response => {
           if (response.data.rtnCode === 200) {
             this.dataset = response.data.data
+            this.configVerify(this.config.data, this.dataset)
           }
         })
       } else {
