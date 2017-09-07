@@ -32,7 +32,7 @@ import itemMenu from '@/components/item-menu'
  */
 import mixin from '@/mixins/crud'
 export default {
-  props: ['config', 'listStatus'],
+  props: ['config', 'tempStatus'],
   mixins: [mixin],
   data () {
     return {
@@ -85,7 +85,7 @@ export default {
     }
   },
   watch: {
-    listStatus: function () {
+    tempStatus: function () {
       // log('ok')
       this.request()
     }

@@ -83,7 +83,7 @@ const config = {
       data: {
         name: {name: '栏目名', formType: 'text'},
         parentId: {name: '所属栏目', formType: ['select', '0', '一级菜单'], dictionary: ['selectList', '/column/user/list', 'name']},
-        icon: {name: '图标', formType: 'text'},
+        icon: {name: '图标', formType: 'select-icon'},
         winProperty: {name: '窗口属性', formType: 'text'},
         url: {name: '链接', formType: 'text'}
       }
@@ -93,7 +93,7 @@ const config = {
       data: {
         name: {name: '栏目名', formType: 'text'},
         parentId: {name: '所属栏目', formType: ['select', '0', '一级菜单'], dictionary: ['selectList', '/column/user/list', 'name']},
-        icon: {name: '图标', formType: 'text'},
+        icon: {name: '图标', formType: 'select-icon'},
         winProperty: {name: '窗口属性', formType: 'text'},
         url: {name: '链接', formType: 'text'}
       }

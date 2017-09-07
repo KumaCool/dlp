@@ -22,6 +22,7 @@
                        :label="opt.label"
                        :value="opt.value"></el-option>
           </el-select>
+          <component v-else :is="com(item.formType)" v-model="dataset[index]"></component>
         </el-form-item>
       </el-form>
     </el-col>
@@ -46,8 +47,18 @@ export default {
     }
   },
   methods: {
+    com: function (fileName) {
+      try {
+        return require(`@/components/${fileName}`)
+      } catch (e) {
+        try {
+          return require(`@/actions/${fileName}`)
+        } catch (e) {
+          this.$message.error(`没有找到 ${fileName} 组件`)
+        }
+      }
+    },
     onSubmit: function () { // 表单提交
-      // log(this.dataset)
       this.$http.post(this.config.response, this.dataset).then(response => {
         let type = 'error'
         if (response.data.rtnCode === 200) {
@@ -58,7 +69,6 @@ export default {
       })
     },
     request: function () { // 请求表单数据
-      // log(this.$route)
       if (this.config.request !== undefined) {
         this.$http.get(this.config.request, {params: this.config.param}).then(response => {
           if (response.data.rtnCode === 200) {
