@@ -6,13 +6,13 @@
   </el-menu>
 </template>
 <script>
+import {mapActions} from 'vuex'
 import itemMenu from '@/components/item-menu'
+
 export default {
   props: ['data'],
   methods: {
-    openWindow: function (index) {
-      this.$store.commit('openWindow', index.split('#')[1])
-    }
+    ...mapActions(['openWindow'])
   },
   components: {itemMenu}
 }

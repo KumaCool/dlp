@@ -1,7 +1,7 @@
 <template>
   <el-row class="user" :gutter="10">
     <el-col :span="span">
-      <component :is="comp"
+      <component :is="com"
                  :config="config.tables"
                  :tempStatus="listStatus"
                  @to-form="toForm"
@@ -28,17 +28,23 @@ export default {
       listStatus: false
     }
   },
-  created () {
-    if (crud[this.comParam] === undefined) {
-      this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
-      this.$emit('close')
-    } else this.config.tables = crud[this.comParam].list
-  },
+  // created () {
+  //   if (crud[this.comParam] === undefined) {
+  //     this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
+  //     this.$emit('close')
+  //   } else this.config.tables = crud[this.comParam].list
+  // },
   computed: {
     span: function () { // 左侧栏宽度判断,默认100%宽
       return this.config.forms === '' ? 24 : 10
     },
-    comp: function () { // 动态加载组件
+    com: function () { // 动态加载组件
+      // 加载配置信息
+      if (crud[this.comParam] === undefined) {
+        this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
+        this.$emit('close')
+      } else this.config.tables = crud[this.comParam].list
+
       let comName = 'tables'
       switch (this.comParam[0]) {
         case 'column': // 栏目模块

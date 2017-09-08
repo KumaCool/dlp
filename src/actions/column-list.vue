@@ -41,9 +41,6 @@ export default {
       deleteTable: {} // 预删除数据
     }
   },
-  created () {
-    this.request()
-  },
   computed: {
     tableColumn: function () { // 列表栏目
       return this.config.data
@@ -82,12 +79,6 @@ export default {
         // 触发事件
         this.fnForeach()
       })
-    }
-  },
-  watch: {
-    tempStatus: function () {
-      // log('ok')
-      this.request()
     }
   },
   components: {itemMenu}

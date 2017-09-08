@@ -10,15 +10,14 @@
       <el-col :span="20" class="body-window">
         <com-middle window="full" name="map"></com-middle>
         <template v-for="(item, index) in windowCom">
-          <com-middle
-            window="small"
-            :index="index"
-            :name="item.name"
-            :title="item.title"
-            :zIndex="item.zIndex"
-            :checkedClass="item.checked"
-            @com-close="comClose"
-            @com-checked="comChecked"
+          <com-middle window="small"
+                      :index="index"
+                      :name="item.name"
+                      :title="item.title"
+                      :zIndex="item.zIndex"
+                      :checkedClass="item.checked"
+                      @com-close="closeWindow"
+                      @com-checked="windowChecked"
           ></com-middle>
         </template>
       </el-col>
@@ -28,6 +27,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 import leftMenu from '@/actions/menu'
 import login from '@/actions/login'
 
@@ -35,14 +36,7 @@ export default {
   name: 'app',
   data () {
     return {
-      /* eslint-disable */
-      windowCom: this.$store.state.window,
-      // [
-      //   {name: 'Hello', title: '您好', zIndex: 0, checked: false},
-      //   {name: 'Hello', title: '测试', zIndex: 1, checked: false},
-      //   {name: 'login', title: '测试2', zIndex: 2, checked: true}
-      // ]
-      /* eslint-enable */
+      windowCom: this.$store.state.window
     }
   },
   created () {
@@ -59,26 +53,7 @@ export default {
     }
   },
   methods: {
-    /**
-     * 关闭指定组件窗口
-     * @param  {number} index 要关闭窗口所在层级
-     */
-    comClose: function (index) {
-      this.windowCom.splice(index, 1)
-    },
-    /**
-     * 变更窗口层级
-     * @param  {number} index 选中的窗口所在层级
-     */
-    comChecked: function (index) {
-      let leng = this.windowCom.length
-      for (let i = 0; i < leng; i++) {
-        if (this.windowCom[i].zIndex > this.windowCom[index].zIndex) this.windowCom[i].zIndex--
-        this.windowCom[i].checked = false
-      }
-      this.windowCom[index].zIndex = leng - 1
-      this.windowCom[index].checked = true
-    }
+    ...mapMutations(['closeWindow', 'windowChecked'])
   },
   components: {leftMenu, login}
 }
