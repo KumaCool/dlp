@@ -1,9 +1,10 @@
 <template>
   <el-row :class="comClass" :style="[{zIndex: zIndex}, offset]" @mousedown.native="checked">
-    <el-col :span="24" class="dialog_header"
-      :class="checkedClass ? 'checked' : ''"
-      v-if="window !== 'full'"
-      v-drag="positionUpdate"
+    <el-col :span="24"
+            class="dialog-header"
+            :class="checkedClass ? 'checked' : ''"
+            v-if="window !== 'full'"
+            v-drag="positionUpdate"
     >
       {{title}}<i class="el-icon-close" @click="close"></i>
     </el-col>
@@ -15,7 +16,7 @@
 <script>
 /**
  * 组件调用的中间件
- * [ 接收参数 ]
+ * [接收参数]
  * @param {number} index 组件标识
  * @param {string} window 窗口大小 small(默认)/full
  * @param {string} name 调用组件名,它可以有组合形式 fileName.param
@@ -26,9 +27,9 @@
  * [监听参数]
  * @param {string} close 关闭本窗口组件
  *
- * 如何该中间件的参数name接收到的是组合模式,
+ * 如果该中间件的参数name接收到的是组合模式,
  * 它会打散成数组并把除第一元素外以参数的形式传给要调用的组件
- * [ 传出参数 ]
+ * [传出参数]
  * @param {array} comParam 组件的参数
  */
 export default {
@@ -110,7 +111,7 @@ export default {
     box-shadow: 0 0 10px 1px #CCC;
     background: #FFF;
   }
-  .dialog_header{
+  .dialog-header{
     @height: 30px;
     padding: 0 5px;
     height: @height;

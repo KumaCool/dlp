@@ -28,12 +28,6 @@ export default {
       listStatus: false
     }
   },
-  // created () {
-  //   if (crud[this.comParam] === undefined) {
-  //     this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
-  //     this.$emit('close')
-  //   } else this.config.tables = crud[this.comParam].list
-  // },
   computed: {
     span: function () { // 左侧栏宽度判断,默认100%宽
       return this.config.forms === '' ? 24 : 10
@@ -96,6 +90,5 @@ export default {
     padding: 10px;
     min-width: 1100px;
     min-height: 600px;
-    // height: 500px;
   }
 </style>

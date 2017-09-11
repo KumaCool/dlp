@@ -21,7 +21,6 @@ export default {
 </script>
 <style scoped>
   [class^="el-icon-ion"], [class*=" el-icon-ion"] {
-    // padding-top: 105px;
     font-size: 28px;
     transform: translateY(15%);
   };

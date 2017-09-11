@@ -15,9 +15,7 @@
     </el-col>
     <el-col :span="24">
       <el-table max-height="700" :data="dataset" highlight-current-row @current-change="edit">
-        <template v-for="(item, key) in tableColumn">
-          <el-table-column :prop="key" :label="item.name"></el-table-column>
-        </template>
+          <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="index" :label="item.name"></el-table-column>
       </el-table>
     </el-col>
   </el-row>

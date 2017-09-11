@@ -1,8 +1,6 @@
 <template>
   <el-menu default-active="1" class="el-menu-vertical-demo" @select="openWindow">
-    <template v-for="item in data">
-      <item-menu :data="item"></item-menu>
-    </template>
+      <item-menu v-for="(item, index) in data" :key="index" :data="item"></item-menu>
   </el-menu>
 </template>
 <script>
