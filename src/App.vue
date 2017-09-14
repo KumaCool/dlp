@@ -1,14 +1,17 @@
 <template>
-  <el-row class="H100" v-if="$store.state.columnData !== ''">
-    <el-row class="body-head">
+  <el-row class="H100 app" v-if="$store.state.columnData !== ''">
+    <el-row class="app-head">
       <el-col :span="24" class="head-bg"><img src="./assets/images/header.jpg"></el-col>
     </el-row>
-    <el-row class="body-main">
-      <el-col :span="4" class="body-left-menu">
+    <el-row class="app-main">
+      <el-col :span="4" class="app-left-menu">
         <left-menu :data="$store.getters.columnTree"></left-menu>
       </el-col>
-      <el-col :span="20" class="body-window">
-        <com-middle window="full" name="map"></com-middle>
+      <el-col :span="20" class="app-window">
+        <com-middle window="full"
+                    :name="$store.state.windowFull.url"
+                    :title="$store.state.windowFull.title"
+                    :showTitle="$store.state.windowFull.showTitle"></com-middle>
         <template v-for="(item, index) in windowCom">
           <com-middle window="small"
                       :index="index"
@@ -60,23 +63,27 @@ export default {
 </script>
 <style lang="less">
   @import './assets/css/style';
-  @bodyHeadHeight: 7%; // 框架头部的高
-  .body-head{
+  @import './assets/css/DLPlatform';
+  @bodyHeadHeight: 100px; // 框架头部的高
+  .app{
+    background: #E6E8ED;
+  }
+  .app-head{
     height: @bodyHeadHeight;
     line-height: 0;
     .head-bg{background: url('./assets/images/header_bg.jpg') repeat-x;}
-    // background-size: 100px;
   }
-  .body-main{
-    height: 100 - @bodyHeadHeight;
+  .app-main{
+    position: absolute;
+    top: @bodyHeadHeight;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
-  .body-left-menu,.body-window{
+  .app-left-menu,.app-window{
     .H100;
   }
-  .body-left-menu{
-    background: #666;
-  }
-  .body-window{
+  .app-window{
     position: relative;
     overflow: hidden;
   }

@@ -1,0 +1,219 @@
+@import 'less';
+
+// 表单
+.el-input__inner,.el-select-dropdown{
+  border: 1px solid #5EBFF9;
+}
+
+// 登陆
+.login{
+  .W100;
+  .H100;
+  min-width: 1200px;
+  background: url('../images/app_login_bg.jpg') no-repeat;
+  background-size: cover;
+  &>.el-col{
+    background: url('../images/app_login_bg_2.png') no-repeat;
+  }
+  form{
+    position: absolute;
+    top: 30px;
+    right: 200px;
+    padding: 280px 250px;
+    width: 882px;
+    height: 716px;
+    box-sizing: border-box;
+    background: url('../images/app_login_bg_2.png') no-repeat center;
+    [for]{
+      height: 40px;
+      font-size: 0px;
+    }
+    [for=usercode]{
+      background: url('../images/icon_user.png') no-repeat center;
+      background-size: contain;
+    }
+    [for=password]{
+      background: url('../images/icon_key.png') no-repeat center;
+      background-size: contain;
+    }
+    .el-checkbox__input,.el-input{
+      padding: 1px;
+      line-height: 0;
+      border: 1px solid #D1E9FE;
+      border-radius: 5px;
+    }
+    .el-checkbox__inner,input{
+      border: 1px solid #95BFF2;
+    }
+    button,button:hover,button:active,button:focus{
+      width: 146px;
+      height: 46px;
+      border: none;
+      background: url('../images/app_login_submit.png') no-repeat center;
+      font-size: 26px;
+      letter-spacing: 5px;
+    }
+  }
+}
+
+
+// 左侧导航栏
+.left-menu{
+  .H100;
+  background: #313332;
+  .el-submenu__title,.el-menu-item{
+    background: #313332;
+    color: #FFF;
+    &:hover{
+      background: url('../images/menu_bg_hover.jpg') repeat-y left #7B7B7B;
+    }
+  }
+  // 选中父级栏样式
+  .is-opened > .el-submenu__title{
+    background: url('../images/menu_bg_hover.jpg') repeat-y left #7B7B7B;
+  }
+  // 选中通栏样式
+  .is-active{
+    background: url('../images/menu_bg_hover.jpg') repeat-y left #7B7B7B;
+    &>i{
+      color: #F8F130;
+    }
+  }
+  // 选中子级栏样式
+  .el-submenu .is-active{
+    background: #313332;
+  }
+}
+
+// 组件中间件
+.wrapper{
+  position: absolute;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 1px #CCC;
+  box-sizing: border-box;
+  background: #FFF;
+  .checked{
+    // background: url('../images/window_title_bg_1.jpg') no-repeat left;
+    // background: #1D8CE0;
+  }
+  .dialog-header{
+    @height: 40px;
+    height: @height;
+    line-height: @height;
+    border-radius: 5px 5px 0 0;
+    background: url('../images/window_title_bg_2.jpg') repeat-x left;
+    color: #FFF;
+    cursor: move;
+    & > i{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+    span{
+      padding: 0 5px;
+      min-width: 202px;
+      background: url('../images/window_title_bg_1.png') no-repeat left;
+      display: inline-block;
+    }
+  }
+  .component{
+    border: 1px solid #5EBFF9;
+    border-top: 1px solid #FFF;
+    border-radius: 0 0 5px 5px;
+  }
+}
+// 组件中间件 全屏模式
+.full{
+  @height: 40px;
+  padding: 20px;
+  .W100;
+  .H100;
+  box-sizing: border-box;
+  background: #FFF;
+  z-index: 0;
+  .dialog-header{
+    height: @height;
+    line-height: @height;
+    background: #5EBFF9;
+  }
+  .component{
+    margin-top: -@height;
+    padding-top: @height;
+    .H100;
+    box-shadow: 0 0 10px 1px #CCC;
+  }
+  & .curd{
+    .W100;
+    min-width: 100%;
+    .H100;
+  }
+}
+// 组件中间件 窗口模式
+.small{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.el-button{
+  padding: 7px 15px;
+  border: none;
+  background: url('../images/button_bg.jpg') repeat-x;
+  color: #FFF;
+  &:hover{
+    color: #FFF;
+    background: url('../images/button_bg_hover.jpg') repeat-x;
+  }
+  &:active{
+    color: #FFF;
+    background: url('../images/button_bg_active.jpg') repeat-x;
+  }
+  &:focus{
+    color: #FFF;
+  }
+}
+
+// CRUD组件
+.curd{
+  min-width: 1100px;
+  height: 600px;
+  &>.el-col{
+    .H100;
+  }
+  .curd-left,.curd-right{
+    .H100;
+  }
+  // 左面板
+  .curd-left{
+    border-right: 1px solid #5EBFF9;
+    .el-col:first-of-type{
+      padding: 10px;
+    }
+    .el-form-item{
+      margin-bottom: 0;
+    }
+    .el-table{
+      border: none;
+      &::after, &::before{
+        background: none;
+      }
+      th.is-leaf{
+        border-top: 1px solid #5EBFF9;
+        border-bottom: 1px solid #5EBFF9;
+      }
+      td{
+        border: none;
+      }
+      th,thead div{
+        background-color: inherit;
+      }
+    }
+  }
+  // 右面板
+  .curd-right{
+    padding: 10px;
+    border-left: 1px solid #5EBFF9;
+  }
+}

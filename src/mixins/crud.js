@@ -71,6 +71,9 @@ export default {
   watch: {
     tempStatus: function () { // 监控其它组件事件触发更新请求
       this.request()
+    },
+    'config': function () {
+      this.request()
     }
   }
 }

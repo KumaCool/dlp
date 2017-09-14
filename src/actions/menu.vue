@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="1" class="el-menu-vertical-demo" @select="openWindow">
+  <el-menu default-active="1" class="left-menu el-menu-vertical-demo" @select="openWindow">
       <item-menu v-for="(item, index) in data" :key="index" :data="item"></item-menu>
   </el-menu>
 </template>

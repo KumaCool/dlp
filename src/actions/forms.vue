@@ -8,7 +8,7 @@
         </el-form-item>
         <el-form-item v-for="(item, index) in config.data"
                       :key="index"
-                      :label="item.name"
+                      :label="item.name + '：'"
                       label-width="100px">
           <el-input v-if="item.formType === 'text' || item.formType === 'textarea' || item.formType === 'password'"
                     :type="item.formType"

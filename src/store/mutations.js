@@ -15,14 +15,15 @@ export default {
   openWindow: (state, comName) => {
     let length = state.window.length
     for (var k of state.columnData) {
-      if (k.url === comName) {
+      if (k.url === comName && k.winProperty !== 'full') {
+        // console.log(k)
         state.window.push({
-          name: k.url,
+          name: comName,
           title: k.name,
           zIndex: length,
           checked: true
         })
-      }
+      } else if (k.url === comName) state.windowFull = k
     }
   },
   /**

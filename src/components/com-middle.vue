@@ -3,12 +3,18 @@
     <el-col :span="24"
             class="dialog-header"
             :class="checkedClass ? 'checked' : ''"
-            v-if="window !== 'full'"
+            v-if="window === 'small'"
             v-drag="positionUpdate"
     >
-      {{title}}<i class="el-icon-close" @click="close"></i>
+      <span>{{title}}</span><i class="el-icon-close" @click="close"></i>
     </el-col>
-    <el-col :span="24">
+    <el-col :span="24"
+            class="dialog-header"
+            v-if="window === 'full' && showTitle === 1"
+    >
+      <span>{{title}}</span>
+    </el-col>
+    <el-col :span="24" class="component">
       <component :is="com" :com-param="param" @close="close"></component>
     </el-col>
   </el-row>
@@ -20,6 +26,7 @@
  * @param {number} index 组件标识
  * @param {string} window 窗口大小 small(默认)/full
  * @param {string} name 调用组件名,它可以有组合形式 fileName.param
+ * @param {boolean} showTitle 显示窗口标题
  * @param {string} title 窗口标题
  * @param {number} zIndex 窗口层级
  * @param {boolean} checkedClass 顶层样式判断
@@ -33,7 +40,20 @@
  * @param {array} comParam 组件的参数
  */
 export default {
-  props: ['index', 'window', 'name', 'title', 'zIndex', 'checkedClass'],
+  // props: ['index', 'window', 'name', 'showTitle', 'title', 'zIndex', 'checkedClass'],
+  props: {
+    index: Number,
+    window: String,
+    name: String,
+    title: String,
+    showTitle: {
+      default: function () {
+        if (this.title !== undefined) return 1
+      }
+    },
+    zIndex: Number,
+    checkedClass: Boolean
+  },
   data () {
     return {
       offset: '', // 窗口坐标值
@@ -104,39 +124,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-  @import '../assets/css/less';
-  .wrapper{
-    position: absolute;
-    box-shadow: 0 0 10px 1px #CCC;
-    background: #FFF;
-  }
-  .dialog-header{
-    @height: 30px;
-    padding: 0 5px;
-    height: @height;
-    line-height: @height;
-    background: #58B7FF;
-    color: #FFF;
-    cursor: move;
-    & > i{
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      cursor: pointer;
-    }
-  }
-  .checked{background: #1D8CE0;}
-  .full{
-    .W100;
-    .H100;
-    z-index: 0;
-    .el-col{.H100;}
-  }
-  .small{
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-</style>

@@ -1,14 +1,18 @@
 <template>
-  <el-row class="user" :gutter="10">
+  <el-row class="curd" :gutter="20">
     <el-col :span="span">
-      <component :is="com"
+      <component class="curd-left"
+                 :is="com"
                  :config="config.tables"
                  :tempStatus="listStatus"
                  @to-form="toForm"
                  @del="del"></component>
     </el-col>
     <el-col v-if="config.forms !== ''" :span="14">
-      <forms :config="config.forms" :tempStatus="tempStatus" @update="update"></forms>
+      <forms class="curd-right"
+             :config="config.forms"
+             :tempStatus="tempStatus"
+             @update="update"></forms>
     </el-col>
   </el-row>
 </template>
@@ -85,10 +89,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-  .user{
-    padding: 10px;
-    min-width: 1100px;
-    min-height: 600px;
-  }
-</style>

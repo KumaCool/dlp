@@ -1,0 +1,39 @@
+@import 'less';
+
+.left-menu{
+  .H100;
+}
+
+.wrapper{
+    position: absolute;
+    box-shadow: 0 0 10px 1px #CCC;
+    background: #FFF;
+  .checked{background: #1D8CE0;}
+  .dialog-header{
+    @height: 30px;
+    padding: 0 5px;
+    height: @height;
+    line-height: @height;
+    background: #58B7FF;
+    color: #FFF;
+    cursor: move;
+    & > i{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+  }
+}
+.full{
+  .W100;
+  .H100;
+  z-index: 0;
+  .el-col{.H100;}
+}
+.small{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

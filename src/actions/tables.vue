@@ -3,8 +3,11 @@
     <el-col :span="24">
       <el-form :inline="true">
         <el-form-item>
-          <el-input v-model="selectValue" placeholder="用户名" @keyup.enter.native="select">
-            <template slot="prepend">查询</template>
+          <el-input v-model="selectValue"
+                    placeholder="用户名"
+                    icon="search"
+                    :on-icon-click="select"
+                    @keyup.enter.native="select">
           </el-input>
         </el-form-item>
         <el-form-item>
@@ -14,7 +17,11 @@
       </el-form>
     </el-col>
     <el-col :span="24">
-      <el-table max-height="700" :data="dataset" highlight-current-row @current-change="edit">
+      <el-table max-height="700"
+                :data="dataset"
+                stripe
+                highlight-current-row
+                @current-change="edit">
           <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="index" :label="item.name"></el-table-column>
       </el-table>
     </el-col>
