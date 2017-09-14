@@ -137,14 +137,16 @@
     height: @height;
     line-height: @height;
     background: #5EBFF9;
+    &+.component{
+      margin-top: -@height;
+      padding-top: @height;
+    }
   }
   .component{
-    margin-top: -@height;
-    padding-top: @height;
     .H100;
     box-shadow: 0 0 10px 1px #CCC;
   }
-  & .curd{
+  & .crud{
     .W100;
     min-width: 100%;
     .H100;
@@ -176,17 +178,17 @@
 }
 
 // CRUD组件
-.curd{
+.crud{
   min-width: 1100px;
   height: 600px;
   &>.el-col{
     .H100;
   }
-  .curd-left,.curd-right{
+  .crud-left,.crud-right{
     .H100;
   }
   // 左面板
-  .curd-left{
+  .crud-left{
     border-right: 1px solid #5EBFF9;
     .el-col:first-of-type{
       padding: 10px;
@@ -212,8 +214,21 @@
     }
   }
   // 右面板
-  .curd-right{
+  .crud-right{
     padding: 10px;
     border-left: 1px solid #5EBFF9;
+  }
+}
+.crud-menu{
+  background: none;
+  .el-menu-item,.el-submenu__title{
+    padding-left: 40px!important;
+  }
+  .el-submenu__icon-arrow{
+    right: auto;
+    left: 20px;
+  }
+  [class^="el-icon-ion"]{
+    transform: none!important;
   }
 }

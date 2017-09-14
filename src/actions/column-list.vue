@@ -10,7 +10,7 @@
     </el-col>
     <el-col :span="24">
       <el-menu default-active="1"
-               class="el-menu-vertical-demo"
+               class="crud-menu el-menu-vertical-demo"
                @select="edit"
                @open="edit"
                @close="edit">

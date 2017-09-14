@@ -1,7 +1,7 @@
 <template>
-  <el-row class="curd" :gutter="20">
+  <el-row class="crud" :gutter="20">
     <el-col :span="span">
-      <component class="curd-left"
+      <component class="crud-left"
                  :is="com"
                  :config="config.tables"
                  :tempStatus="listStatus"
@@ -9,7 +9,7 @@
                  @del="del"></component>
     </el-col>
     <el-col v-if="config.forms !== ''" :span="14">
-      <forms class="curd-right"
+      <forms class="crud-right"
              :config="config.forms"
              :tempStatus="tempStatus"
              @update="update"></forms>
