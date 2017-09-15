@@ -10,7 +10,7 @@
       <el-col :span="20" class="app-window">
         <com-middle window="full"
                     :name="$store.state.windowFull.url"
-                    :title="$store.state.windowFull.title"
+                    :title="$store.state.windowFull.name"
                     :showTitle="$store.state.windowFull.showTitle"></com-middle>
         <template v-for="(item, index) in windowCom">
           <com-middle window="small"

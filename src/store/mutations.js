@@ -23,7 +23,11 @@ export default {
           zIndex: length,
           checked: true
         })
-      } else if (k.url === comName) state.windowFull = k
+        return
+      } else if (k.url === comName) {
+        state.windowFull = k
+        return
+      }
     }
   },
   /**

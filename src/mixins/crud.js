@@ -58,6 +58,29 @@ export default {
       })
     },
     /**
+     * 一般字段字典本地转换
+     * @param  {object} config  CRUD中该属性的配置信息
+     * @param  {string} key    该属性的名称
+     */
+    fieldChangeLocal: function (config, key) {
+      let dataList
+      switch (key) {
+        case 'showTitle':
+          dataList = [
+            {label: '开启', value: 1},
+            {label: '关闭', value: 0}
+          ]
+          break
+        case 'winProperty':
+          dataList = [
+            {label: '窗口模式', value: 'small'},
+            {label: '全屏模式', value: 'full'}
+          ]
+          break
+      }
+      this.$set(this.dictionary, key, dataList)
+    },
+    /**
      * 配置信息与数据匹配检测
      * @param  {object} configData 配置信息
      * @param  {object} data       后端数据
