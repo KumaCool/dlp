@@ -22,6 +22,13 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 0,
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    // 连续声明
+    'one-var': 0,
+    // 缩进设置
+    'indent': [2, 2, {
+      'VariableDeclarator': {"var": 2, "let": 2, "const": 3},
+      'SwitchCase': 1
+    }]
   }
 }
