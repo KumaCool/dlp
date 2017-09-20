@@ -21,14 +21,14 @@ export default {
     // }).setView([30.93227, 117.80783], 18)
     this.map = new L.Map(this.id, {
       attributionControl: false
-    }).setView([30.921775877611857, 117.77711665257813], 12)
+    }).setView([30.921775877611857, 117.77711665257813], 15)
     L.tileLayer('https://api.mapbox.com/styles/v1/mayahw/cj7043o68chyg2ro3pzfy0qru/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWF5YWh3IiwiYSI6IlhnVzlOb0EifQ.S_tK2JCpZMDshhJN5KNCYQ').addTo(this.map)
 
     this.bound = this.coordinateChange(this.map.getBounds()) // 获取当前地图范围
 
-    // let _self = this
+    let _self = this
     this.map.on('moveend', function (e) {
-      // _self.bound = _self.coordinateChange(_self.map.getBounds())
+      _self.bound = _self.coordinateChange(_self.map.getBounds())
       // let moveBound = _self.coordinateChange(_self.map.getBounds())
       // /* eslint-disable */
       // if (
@@ -75,6 +75,14 @@ export default {
   },
   methods: {
     // 根据地图范围获取数据
+    /**
+     * 获取地图数据
+     * 默认根据可视范围以geoJson格式获取数据
+     * @param  {string} dataName 保存本地时的命名
+     * @param  {integer} dataId   API数据ID
+     * @param  {object} params   API查询条件参数,默认条件为根据可视范围以geoJson格式获取
+     * @return {promise}          数据保存后将返回promise对象
+     */
     getData: function (dataName, dataId, params) {
       if (dataName === undefined) return this.$message({message: 'Map.getData: 必须给数据起个名称', type: 'error'})
       if (!Number.isInteger(dataId)) return this.$message({message: 'Map.getData: 传入ID不正确', type: 'error'})
@@ -91,6 +99,9 @@ export default {
         _self.$http.get(url, option).then(response => {
           if (response.status === 200) {
             _self.$set(_self.data, dataName, response.data.features)
+            // if (_self.data[dataName] !== undefined) {
+            //   response.data.features.forEach(v => _self.data[dataName].add(v))
+            // } else _self.$set(_self.data, dataName, new Set(response.data.features))
             // _self.data = _self.dataForm(response.data.features)
           }
         }).then(resolve)
@@ -140,7 +151,7 @@ export default {
     // 加载数据
     // 生成图层数据
     layerData: function (layerName, data) {
-      // this.markers.clearLayers()
+      this.markers.clearLayers()
       // this.layerGroup.clearLayers()
       let geoJsonOption = {
             pointToLayer: (geoJsonPoint, latlng) => L.circleMarker(latlng, {radius: 3, fillOpacity: 0.5})
@@ -151,13 +162,14 @@ export default {
           // 转换成聚合
           markerCluster = this.markers.addLayers(geoJsonLayer)
       this.layerGroup.addLayer(markerCluster).addTo(this.map)
+      // this.markers.clearLayers()
       // 图层控制
-      let button = {
-        'jing': this.layerGroup
-      }
-      L.control.layers('', button, {
-        collapsed: false
-      }).addTo(this.map)
+      // let button = {
+      //   'jing': this.layerGroup
+      // }
+      // L.control.layers('', button, {
+      //   collapsed: false
+      // }).removeLayer(button).addTo(this.map)
     }
     // 图层组管理
     // layerGroup
@@ -172,6 +184,10 @@ export default {
     bound () {
       // 获取'井'数据
       this.getData('jing', 1).then(this.layerData)
+      // let test
+      // log(Set.prototype.constructor)
+      // log(test.size)
+      // log(Symbol.toStringTag)
     }
   }
 }
