@@ -77,6 +77,20 @@ export default {
             {label: '全屏模式', value: 'full'}
           ]
           break
+        case 'status':
+          dataList = [
+            {label: '未开始', value: 1},
+            {label: '进行中', value: 2},
+            {label: '完成', value: 3}
+          ]
+          break
+        case 'problemType':
+          dataList = [
+            {label: '积水点', value: 1},
+            {label: '隐患', value: 2},
+            {label: '违章', value: 3}
+          ]
+          break
       }
       this.$set(this.dictionary, key, dataList)
     },

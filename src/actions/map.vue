@@ -1,5 +1,12 @@
 <template>
-  <div id="map" ref="xxx"></div>
+  <el-row class="map">
+    <el-col :id="id" :span="24" v-loading="loading">
+      <com-middle window="small"
+                  name="repair"
+                  title="报修"
+                  :zIndex="401"></com-middle>
+    </el-col>
+  </el-row>
 </template>
 <script>
 import '../../node_modules/leaflet/dist/leaflet.css'
@@ -10,15 +17,9 @@ import 'leaflet.markercluster'
 
 let log = console.log.bind(console)
 
-// const raw = 3857, // 原空间参数
-// const geo = 4326, // geoJson 空间参数
-//       url = 'https://116.62.225.78:6443/arcgis/rest/services/tongling/MapServer/1/query' // 数据API
 export default {
   mounted () {
     // 初始化地图
-    // map = new L.Map('map', {
-    //   attributionControl: false
-    // }).setView([30.93227, 117.80783], 18)
     this.map = new L.Map(this.id, {
       attributionControl: false
     }).setView([30.921775877611857, 117.77711665257813], 15)
@@ -27,6 +28,9 @@ export default {
     this.bound = this.coordinateChange(this.map.getBounds()) // 获取当前地图范围
 
     let _self = this
+    this.map.on('movestart', () => {
+      _self.loading = true
+    })
     this.map.on('moveend', function (e) {
       _self.bound = _self.coordinateChange(_self.map.getBounds())
       // let moveBound = _self.coordinateChange(_self.map.getBounds())
@@ -44,34 +48,29 @@ export default {
       // /* eslint-enable */
     })
     this.map.on('click', function (e) {
-      log(e.latlng.lng + ',' + e.latlng.lat)
+      // log(e)
+      // log(e.latlng.lng + ',' + e.latlng.lat)
+      _self.toPoint(e.latlng)
     })
   },
   data () {
     return {
-      raw: 3857,
-      geo: 4326,
-      // url: 'https://116.62.225.78:6443/arcgis/rest/services/tongling/MapServer/',
-      id: 'map',
+      loading: true, // 加载开关
+      raw: 3857, // arcgis 坐标系
+      geo: 4326, // geo 坐标系
+      id: 'map', // 地图documentId
       map: '', // Map对象
       markers: L.markerClusterGroup({ // 初始化聚合对象
         disableClusteringAtZoom: 17,
         maxClusterRadius: 30, // 聚合距离
-        spiderfyOnMaxZoom: false
+        spiderfyOnMaxZoom: false,
+        chunkedLoading: true
       }),
       bound: [], // 可视边界
       data: [], // 数据
-      layerGroup: L.layerGroup([]) // 图层
+      layers: {}
+      // layerGroup: L.layerGroup([]) // 图层
     }
-  },
-  computed: {
-    // loadMarker: function () {
-    //   this.data.forEach(v => {
-    //     markers.addLayer(L.circleMarker(v, {radius: 3}))
-    //   })
-    //   map.addLayer(markers)
-    //   return
-    // }
   },
   methods: {
     // 根据地图范围获取数据
@@ -99,13 +98,45 @@ export default {
         _self.$http.get(url, option).then(response => {
           if (response.status === 200) {
             _self.$set(_self.data, dataName, response.data.features)
-            // if (_self.data[dataName] !== undefined) {
-            //   response.data.features.forEach(v => _self.data[dataName].add(v))
-            // } else _self.$set(_self.data, dataName, new Set(response.data.features))
-            // _self.data = _self.dataForm(response.data.features)
           }
         }).then(resolve)
       })
+    },
+    /**
+     * 图层生成与加载
+     * @param  {string} dataName 被操作的数据名称
+     * @param  {object} data      地图数据
+     */
+    layerData: function (layerName, dataName = layerName) {
+      if (layerName === undefined) return this.$message({message: 'Map.layerData: 必须给图层起个名称', type: 'error'})
+      this.markers.clearLayers()
+      // this.layerGroup.clearLayers()
+      let geoJsonOption = {
+            pointToLayer: (geoJsonPoint, latlng) => L.circleMarker(latlng, {radius: 3, fillOpacity: 0.5})
+          },
+          // 把数据转换成地图标记
+          // geoJsonLayer =
+          geoJsonLayer = this.data[dataName].map(v => L.geoJson(v, geoJsonOption)),
+          // 转换成聚合
+          markerCluster = this.markers.addLayers(geoJsonLayer)
+          // _self = this
+      this.$set(this.layers, layerName, L.layerGroup([]))
+      this.layers[layerName].addLayer(markerCluster).addTo(this.map)
+      this.loading = false
+      // this.markers.clearLayers()
+    },
+    // 图层控制
+    layerButton: function () {
+      // let button = {
+      //   '井盖': this.layerGroup
+      // }
+      L.control.layers('', this.layers, {
+        collapsed: false
+      }).addTo(this.map)
+    },
+    toPoint: function (point, layer, data) {
+      this.map.panTo(point)
+      log(this.layers)
     },
     // 格式式数据
     // dataForm: function (val) {
@@ -145,57 +176,34 @@ export default {
         }
       }
       return arr.length === 0 ? this.$message({message: '坐标参数的格式不正确!', type: 'error'}) : arr
-    },
+    }
     // 点加工
     // 线加工
     // 加载数据
-    // 生成图层数据
-    layerData: function (layerName, data) {
-      this.markers.clearLayers()
-      // this.layerGroup.clearLayers()
-      let geoJsonOption = {
-            pointToLayer: (geoJsonPoint, latlng) => L.circleMarker(latlng, {radius: 3, fillOpacity: 0.5})
-          },
-          // 把数据转换成地图标记
-          // geoJsonLayer =
-          geoJsonLayer = Object.keys(this.data).map(k => L.geoJson(this.data[k], geoJsonOption)),
-          // 转换成聚合
-          markerCluster = this.markers.addLayers(geoJsonLayer)
-      this.layerGroup.addLayer(markerCluster).addTo(this.map)
-      // this.markers.clearLayers()
-      // 图层控制
-      // let button = {
-      //   'jing': this.layerGroup
-      // }
-      // L.control.layers('', button, {
-      //   collapsed: false
-      // }).removeLayer(button).addTo(this.map)
-    }
     // 图层组管理
     // layerGroup
   },
   watch: {
-    // data () {
-    //   this.data.forEach(v => {
-    //     markers.addLayer(L.circleMarker(v, {radius: 3}))
-    //   })
-    //   L.layerGroup().addLayer(markers).addTo(map)
-    // },
     bound () {
-      // 获取'井'数据
-      this.getData('jing', 1).then(this.layerData)
-      // let test
-      // log(Set.prototype.constructor)
-      // log(test.size)
-      // log(Symbol.toStringTag)
+      // 获取'井盖'数据
+      this.getData('jing', 1).then(() => this.layerData('井盖', 'jing'))
+    },
+    layers (v) {
+      // 载入图层控制按钮
+      L.control.layers('', v, {
+        collapsed: false
+      }).addTo(this.map)
     }
   }
 }
 </script>
 <style lang="less" scoped>
   @import '../assets/css/less';
+  .map{
+    .H100;
+  }
   #map{
-    .W100;
+    // .W100;
     .H100;
     // overflow: hidden;
     // box-sizing: border-box;

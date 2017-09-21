@@ -95,7 +95,8 @@ const config = {
         name: {name: '栏目名', formType: 'text'},
         parentId: {name: '所属栏目', formType: ['select', '0', '一级菜单'], dictionary: ['selectList', '/column/user/list', 'name']},
         icon: {name: '图标', formType: 'select-icon'},
-        winProperty: {name: '窗口属性', formType: 'text'},
+        showTitle: {name: '窗口标题', formType: ['select'], dictionary: ['fieldChangeLocal']},
+        winProperty: {name: '窗口属性', formType: ['select'], dictionary: ['fieldChangeLocal']},
         url: {name: '链接', formType: 'text'}
       }
     },
@@ -161,6 +162,59 @@ const config = {
       response: '/role/addRole',
       data: {
         name: {name: '角色名称', formType: 'text'}
+      }
+    },
+    delete: {
+      response: '/role/deleteRole',
+      data: {
+        id: []
+      }
+    }
+  },
+  // 抢修信息
+  'repair': {
+    list: {
+      request: '/inspect/repair',
+      data: {
+        problemDesc: {name: '问题描述', formType: 'text'},
+        problemType: {name: '问题类型', formType: 'text'},
+        submitTime: {name: '提交时间', formType: 'text'},
+        submitPerson: {name: '提交人', formType: 'text'},
+        handleTime: {name: '处理时间', formType: 'text'},
+        handlePerson: {name: '处理人', formType: 'text'},
+        handleResult: {name: '处理结果描述', formType: 'text'},
+        status: {name: '处理状态', formType: 'text'}
+      }
+    },
+    edit: {
+      request: '/inspect/repair/query',
+      response: '/inspect/repair/update',
+      data: {
+        problemDesc: {name: '问题描述', formType: 'text'},
+        problemType: {name: '问题类型', formType: ['select'], dictionary: ['fieldChangeLocal']},
+        submitTime: {name: '提交时间', formType: 'text'},
+        submitPerson: {name: '提交人', formType: 'text'},
+        handleTime: {name: '处理时间', formType: 'text'},
+        handlePerson: {name: '处理人', formType: 'text'},
+        handleResult: {name: '处理结果描述', formType: 'text'},
+        status: {name: '处理状态', formType: ['select'], dictionary: ['fieldChangeLocal']},
+        longitude: {name: '经度', formType: 'text'},
+        latitude: {name: '纬度', formType: 'text'}
+      }
+    },
+    created: {
+      response: '/inspect/repair/insert',
+      data: {
+        problemDesc: {name: '问题描述', formType: 'text'},
+        problemType: {name: '问题类型', formType: ['select'], dictionary: ['fieldChangeLocal']},
+        submitTime: {name: '提交时间', formType: 'text'},
+        submitPerson: {name: '提交人', formType: 'text'},
+        handleTime: {name: '处理时间', formType: 'text'},
+        handlePerson: {name: '处理人', formType: 'text'},
+        handleResult: {name: '处理结果描述', formType: 'text'},
+        status: {name: '处理状态', formType: ['select'], dictionary: ['fieldChangeLocal']},
+        longitude: {name: '经度', formType: 'text'},
+        latitude: {name: '纬度', formType: 'text'}
       }
     },
     delete: {
