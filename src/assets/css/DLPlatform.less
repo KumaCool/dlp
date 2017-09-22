@@ -144,7 +144,7 @@
       padding-top: @height;
     }
   }
-  .component{
+  &>.component{
     .H100;
     box-shadow: 0 0 10px 1px #CCC;
   }
@@ -274,5 +274,36 @@
     height: auto;
     line-height: inherit;
     background: none;
+  }
+}
+
+// 地图组件
+.map{
+  .H100;
+  #map{
+    .H100;
+    background: #333;
+    color: red;
+  }
+  // 地图报修消息提示层
+  .repair{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 0 5px;
+    width: auto;
+    z-index: 400;
+    .component{
+      border: none;
+    }
+    .el-alert{
+      margin: 5px auto;
+    }
+    .el-alert__content{
+      padding: 0 20px 0 8px;
+      .el-alert__title{
+        display: inherit;
+      }
+    }
   }
 }

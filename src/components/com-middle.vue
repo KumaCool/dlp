@@ -3,7 +3,7 @@
     <el-col :span="24"
             class="dialog-header"
             :class="checkedClass ? 'checked' : ''"
-            v-if="window === 'small'"
+            v-if="window === 'small' && showTitle === 1"
             v-drag="positionUpdate"
     >
       <span>{{title}}</span><i class="el-icon-close" @click="close"></i>

@@ -1,10 +1,15 @@
 <template>
-  <el-row class="map">
-    <el-col :id="id" :span="24" v-loading="loading">
-      <com-middle window="small"
+  <el-row class="map" v-loading="loading">
+    <el-col :id="id" :span="24"></el-col>
+    <el-col :span="24">
+<!--       <com-middle window="small"
                   name="repair"
                   title="报修"
-                  :zIndex="401"></com-middle>
+                  class="map-repair"
+                  :showTitle="0"
+                  :zIndex="401"
+                  @xxx="toPoint"></com-middle> -->
+      <repair @to-point="toPoint"></repair>
     </el-col>
   </el-row>
 </template>
@@ -14,6 +19,7 @@ import L from 'leaflet'
 import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/dist/MarkerCluster.css'
 import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster'
+import repair from './repair'
 
 let log = console.log.bind(console)
 
@@ -113,10 +119,14 @@ export default {
       // this.layerGroup.clearLayers()
       let geoJsonOption = {
             pointToLayer: (geoJsonPoint, latlng) => L.circleMarker(latlng, {radius: 3, fillOpacity: 0.5})
+            // .on('mouseover', () => log(this))
           },
           // 把数据转换成地图标记
           // geoJsonLayer =
-          geoJsonLayer = this.data[dataName].map(v => L.geoJson(v, geoJsonOption)),
+          geoJsonLayer = this.data[dataName].map(v => {
+            // log(v)
+            return L.geoJson(v, geoJsonOption)
+          }),
           // 转换成聚合
           markerCluster = this.markers.addLayers(geoJsonLayer)
           // _self = this
@@ -135,8 +145,11 @@ export default {
       }).addTo(this.map)
     },
     toPoint: function (point, layer, data) {
-      this.map.panTo(point)
-      log(this.layers)
+      log(data)
+      // if (arguments[0])
+      // point
+      // this.map.panTo(point)
+      // log(this.layers)
     },
     // 格式式数据
     // dataForm: function (val) {
@@ -194,20 +207,7 @@ export default {
         collapsed: false
       }).addTo(this.map)
     }
-  }
+  },
+  components: {repair}
 }
 </script>
-<style lang="less" scoped>
-  @import '../assets/css/less';
-  .map{
-    .H100;
-  }
-  #map{
-    // .W100;
-    .H100;
-    // overflow: hidden;
-    // box-sizing: border-box;
-    background: #333;
-    color: red;
-  }
-</style>
