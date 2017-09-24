@@ -2,14 +2,7 @@
   <el-row class="map" v-loading="loading">
     <el-col :id="id" :span="24"></el-col>
     <el-col :span="24">
-<!--       <com-middle window="small"
-                  name="repair"
-                  title="报修"
-                  class="map-repair"
-                  :showTitle="0"
-                  :zIndex="401"
-                  @xxx="toPoint"></com-middle> -->
-      <repair @to-point="toPoint"></repair>
+      <repair @to-point="toPoint" v-model="repair"></repair>
     </el-col>
   </el-row>
 </template>
@@ -25,10 +18,18 @@ let log = console.log.bind(console)
 
 export default {
   mounted () {
+    // 获取报修数据
+    this.getData('/inspect/repair').then(data => {
+      this.repair = data.data.paginationList
+    }).then(() => {
+      this.markerList.map(v => {
+        log(v)
+      })
+    })
     // 初始化地图
     this.map = new L.Map(this.id, {
       attributionControl: false
-    }).setView([30.921775877611857, 117.77711665257813], 15)
+    }).setView([30.921775877611857, 117.77711665257813], 13)
     L.tileLayer('https://api.mapbox.com/styles/v1/mayahw/cj7043o68chyg2ro3pzfy0qru/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWF5YWh3IiwiYSI6IlhnVzlOb0EifQ.S_tK2JCpZMDshhJN5KNCYQ').addTo(this.map)
 
     this.bound = this.coordinateChange(this.map.getBounds()) // 获取当前地图范围
@@ -39,23 +40,10 @@ export default {
     })
     this.map.on('moveend', function (e) {
       _self.bound = _self.coordinateChange(_self.map.getBounds())
-      // let moveBound = _self.coordinateChange(_self.map.getBounds())
-      // /* eslint-disable */
-      // if (
-      //   moveBound[0][0] > _self.bound[0][0] ||
-      //   moveBound[1][0] > _self.bound[1][0] ||
-      //   moveBound[0][1] > _self.bound[0][1] ||
-      //   moveBound[1][1] > _self.bound[1][1]
-      // ) {
-      //   _self.$set(_self, bound, moveBound)
-      //   // _self.bound = moveBound
-      //   log('move')
-      // }
-      // /* eslint-enable */
     })
     this.map.on('click', function (e) {
       // log(e)
-      // log(e.latlng.lng + ',' + e.latlng.lat)
+      log(e.latlng.lng + ',' + e.latlng.lat)
       _self.toPoint(e.latlng)
     })
   },
@@ -64,48 +52,44 @@ export default {
       loading: true, // 加载开关
       raw: 3857, // arcgis 坐标系
       geo: 4326, // geo 坐标系
+      repair: [], // 报修数据
       id: 'map', // 地图documentId
       map: '', // Map对象
-      markers: L.markerClusterGroup({ // 初始化聚合对象
-        disableClusteringAtZoom: 17,
-        maxClusterRadius: 30, // 聚合距离
-        spiderfyOnMaxZoom: false,
-        chunkedLoading: true
-      }),
+      markers: {}, // 聚合图层集
       bound: [], // 可视边界
       data: [], // 数据
-      layers: {}
+      layers: {},
+      markerList: []
       // layerGroup: L.layerGroup([]) // 图层
     }
   },
   methods: {
-    // 根据地图范围获取数据
     /**
-     * 获取地图数据
-     * 默认根据可视范围以geoJson格式获取数据
-     * @param  {string} dataName 保存本地时的命名
-     * @param  {integer} dataId   API数据ID
-     * @param  {object} params   API查询条件参数,默认条件为根据可视范围以geoJson格式获取
+     * 获取数据
+     * @param  {string|array} url    <string>:为数据API地址,<array>:为地图数据apiId
+     * @param  {object} params API请求附带参数
      * @return {promise}          数据保存后将返回promise对象
      */
-    getData: function (dataName, dataId, params) {
-      if (dataName === undefined) return this.$message({message: 'Map.getData: 必须给数据起个名称', type: 'error'})
-      if (!Number.isInteger(dataId)) return this.$message({message: 'Map.getData: 传入ID不正确', type: 'error'})
-      let url = 'https://116.62.225.78:6443/arcgis/rest/services/tongling/MapServer/' + dataId + '/query',
-          option = {}
-      option.params = params !== undefined ? params : {
-        geometry: this.bound.map(v => v).toString(),
-        geometryType: 'esriGeometryEnvelope',
-        inSR: this.geo,
-        f: 'geojson'
+    getData: function (url, params) {
+      if (url === undefined) return this.$message({message: 'Map.getData: URL不能为空', type: 'error'})
+      let option = {}
+      if (Number.isInteger(url)) {
+        url = 'https://116.62.225.78:6443/arcgis/rest/services/tongling/MapServer/' + url + '/query'
+        option.params = params !== undefined ? params : {
+          geometry: this.bound.map(v => v).toString(),
+          geometryType: 'esriGeometryEnvelope',
+          inSR: this.geo,
+          f: 'geojson'
+        }
       }
       let _self = this
       return new Promise(function (resolve) {
         _self.$http.get(url, option).then(response => {
           if (response.status === 200) {
-            _self.$set(_self.data, dataName, response.data.features)
+            resolve(response.data)
+            // _self.$set(_self.data, dataName, response.data.features)
           }
-        }).then(resolve)
+        }) // .then(resolve)
       })
     },
     /**
@@ -115,58 +99,87 @@ export default {
      */
     layerData: function (layerName, dataName = layerName) {
       if (layerName === undefined) return this.$message({message: 'Map.layerData: 必须给图层起个名称', type: 'error'})
-      this.markers.clearLayers()
-      // this.layerGroup.clearLayers()
-      let geoJsonOption = {
-            pointToLayer: (geoJsonPoint, latlng) => L.circleMarker(latlng, {radius: 3, fillOpacity: 0.5})
-            // .on('mouseover', () => log(this))
-          },
-          // 把数据转换成地图标记
-          // geoJsonLayer =
-          geoJsonLayer = this.data[dataName].map(v => {
-            // log(v)
-            return L.geoJson(v, geoJsonOption)
-          }),
-          // 转换成聚合
-          markerCluster = this.markers.addLayers(geoJsonLayer)
-          // _self = this
-      this.$set(this.layers, layerName, L.layerGroup([]))
-      this.layers[layerName].addLayer(markerCluster).addTo(this.map)
+      if (this.markers[layerName] === undefined) {
+        this.$set(this.markers, layerName, L.markerClusterGroup({ // 初始化聚合对象
+          disableClusteringAtZoom: 17,
+          maxClusterRadius: 30, // 聚合距离
+          spiderfyOnMaxZoom: false,
+          chunkedLoading: true
+        }))
+        this.$set(this.markerList, layerName, [])
+      } else this.markers[layerName].clearLayers()
+      this.data[dataName].map(v => {
+        let m = this.geoJsonChange(v)
+        // if (this.repair.length > 0) {
+        //   this.repair.map(rV => {
+        //     if (isLayer(m, L.latLng(rV.longitude, rV.latitude)))
+        //   })
+        // }
+        // log()
+        // m.setTooltipContent('qqq').openTooltip()
+        this.markers[layerName].addLayer(m)
+        // this.markers.openTooltip(m.getLatLng())
+        this.markerList[layerName].push(m)
+      })
+      this.markers[layerName]
+      this.map.addLayer(this.markers[layerName])
       this.loading = false
-      // this.markers.clearLayers()
     },
     // 图层控制
     layerButton: function () {
-      // let button = {
-      //   '井盖': this.layerGroup
-      // }
       L.control.layers('', this.layers, {
         collapsed: false
       }).addTo(this.map)
     },
-    toPoint: function (point, layer, data) {
-      log(data)
-      // if (arguments[0])
-      // point
-      // this.map.panTo(point)
-      // log(this.layers)
+    /**
+     * 跳转到指定坐标点并触发该点图层
+     * @param  {object|array} point     坐标值
+     * @param  {string} layerName 所在图层集的名称
+     * @param  {object} data      数据
+     */
+    toPoint: function (point, layerName, data) {
+      layerName = '井盖'
+      let geoJson = this.geoJsonEach(this.data[layerName], point)
+      this.map.setView(point, 18)
+      let layer = this.geoJsonChange(geoJson)
+      this.map.addLayer(layer)
+      layer.openTooltip(L.latLng(geoJson.geometry.coordinates.reverse()))
     },
-    // 格式式数据
-    // dataForm: function (val) {
-    //   let arr = []
-    //   if (Array.isArray(val)) {
-    //     // log(val)
-    //     val.forEach(v => {
-    //       if (v.geometry.coordinates !== undefined) {
-    //         arr.push([
-    //           v.geometry.coordinates[1],
-    //           v.geometry.coordinates[0]
-    //         ])
-    //       }
-    //     })
-    //     return arr
-    //   } else this.$message({message: '非数组!', type: 'error'})
-    // },
+    isLayer: function (layer, point) {
+      return layer.getLatLng() === L.latLng(point)
+    },
+    // layerEach: function (layer, po)
+    /**
+     * 根据坐标查询匹配的数据
+     * @param  {object} [geoJson={}] 要查询的数据
+     * @param  {object|Array} point        坐标
+     * @return {object}              返回匹配的数据
+     */
+    geoJsonEach: function (geoJson = {}, point) {
+      if (Array.isArray(geoJson) && geoJson[0].geometry === undefined) return this.$message({message: 'Map.geoJsonChange: geoJson格式不正确', type: 'error'})
+      // if (typeof point === 'object') point = [point.lng, point.lat]
+      point = L.latLng(point)
+      let temp
+      geoJson.some(v => {
+        temp = v
+        if (L.latLng(v.geometry.coordinates) === point) return true
+      })
+      return temp
+    },
+    /**
+     * geoJson转换成图层数据
+     * @param  {object} geoJson geoJson数据
+     * @return {object}         返回对应的图层类型数据
+     */
+    geoJsonChange: function (geoJson) {
+      if (geoJson.geometry === undefined) return this.$message({message: 'Map.geoJsonChange: geoJson格式不正确', type: 'error'})
+      switch (geoJson.geometry.type) {
+        case 'Point':
+          let marker = L.circleMarker(L.latLng(geoJson.geometry.coordinates.reverse()), {radius: 3})
+          if (geoJson.properties.Name !== undefined) marker.bindTooltip(geoJson.properties.Name)
+          return marker
+      }
+    },
     /**
      * 坐标翻转
      * 将传入的对象值前后颠倒并以数组形式返回
@@ -199,9 +212,12 @@ export default {
   watch: {
     bound () {
       // 获取'井盖'数据
-      this.getData('jing', 1).then(() => this.layerData('井盖', 'jing'))
+      // this.getData('井盖', 1).then(() => this.layerData('井盖'))
+      this.getData(1).then(data => {
+        this.$set(this.data, '井盖', data.features)
+      }).then(() => this.layerData('井盖'))
     },
-    layers (v) {
+    markers (v) {
       // 载入图层控制按钮
       L.control.layers('', v, {
         collapsed: false
