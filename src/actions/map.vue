@@ -18,21 +18,21 @@ let log = console.log.bind(console)
 
 export default {
   mounted () {
-    // 获取报修数据
-    this.getData('/inspect/repair').then(data => {
-      this.repair = data.data.paginationList
-    }).then(() => {
-      this.markerList.map(v => {
-        log(v)
-      })
-    })
     // 初始化地图
     this.map = new L.Map(this.id, {
       attributionControl: false
     }).setView([30.921775877611857, 117.77711665257813], 13)
     L.tileLayer('https://api.mapbox.com/styles/v1/mayahw/cj7043o68chyg2ro3pzfy0qru/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWF5YWh3IiwiYSI6IlhnVzlOb0EifQ.S_tK2JCpZMDshhJN5KNCYQ').addTo(this.map)
 
-    this.bound = this.coordinateChange(this.map.getBounds()) // 获取当前地图范围
+    // 获取当前地图范围
+    this.bound = this.coordinateChange(this.map.getBounds())
+
+    // 获取报修数据
+    this.getData('/inspect/repair').then(data => {
+      this.repair = data.data.paginationList
+    }).then(() => setTimeout(() => { // 该处还有问题<<<<
+      this.layerRepair('井盖')
+    }, 1000))
 
     let _self = this
     this.map.on('movestart', () => {
@@ -42,9 +42,9 @@ export default {
       _self.bound = _self.coordinateChange(_self.map.getBounds())
     })
     this.map.on('click', function (e) {
-      // log(e)
       log(e.latlng.lng + ',' + e.latlng.lat)
-      _self.toPoint(e.latlng)
+      // _self.markers['井盖'].zoomToShowLayer(_self.markerList['井盖'][1])
+      // _self.toPoint(e.latlng)
     })
   },
   data () {
@@ -59,8 +59,7 @@ export default {
       bound: [], // 可视边界
       data: [], // 数据
       layers: {},
-      markerList: []
-      // layerGroup: L.layerGroup([]) // 图层
+      markerList: {}
     }
   },
   methods: {
@@ -78,6 +77,7 @@ export default {
         option.params = params !== undefined ? params : {
           geometry: this.bound.map(v => v).toString(),
           geometryType: 'esriGeometryEnvelope',
+          // outFields: '*',
           inSR: this.geo,
           f: 'geojson'
         }
@@ -108,22 +108,42 @@ export default {
         }))
         this.$set(this.markerList, layerName, [])
       } else this.markers[layerName].clearLayers()
-      this.data[dataName].map(v => {
-        let m = this.geoJsonChange(v)
-        // if (this.repair.length > 0) {
-        //   this.repair.map(rV => {
-        //     if (isLayer(m, L.latLng(rV.longitude, rV.latitude)))
-        //   })
-        // }
-        // log()
-        // m.setTooltipContent('qqq').openTooltip()
-        this.markers[layerName].addLayer(m)
-        // this.markers.openTooltip(m.getLatLng())
-        this.markerList[layerName].push(m)
-      })
+      let arrMarker = this.data[dataName].map(v => this.geoJsonChange(v))
+      this.markers[layerName].addLayers(arrMarker)
+      this.$set(this.markerList, layerName, arrMarker)
+
       this.markers[layerName]
       this.map.addLayer(this.markers[layerName])
       this.loading = false
+
+      // this.markerList[layerName].map(v => {
+      //   if (v._tooltip._content === '1-WS032282') log(v.getLatLng())
+      //   v.openTooltip()
+      // })
+    },
+    /**
+     * 生成报修提示图层
+     * @param  {string} layerName 报修类型相关的图层名称
+     */
+    layerRepair: function (layerName) {
+      if (this.layers.repair === undefined) {
+        this.$set(this.layers, 'repair', L.layerGroup())
+        this.layers.repair.addTo(this.map)
+      } else this.layers.repair.clearLayers()
+      // let m = [],
+      let point
+      this.repair.map(v => {
+        point = L.latLng([v.latitude, v.longitude])
+        this.markerList[layerName].some(mV => {
+          if (this.isLayer(mV, point)) {
+            // 改变标记<<<
+            return true
+          }
+        })
+        let m = L.circleMarker(point, {radius: 0, stroke: false})
+                 .bindPopup(v.problemDesc, {autoClose: false})
+        this.layers.repair.addLayer(m).eachLayer(v => v.openPopup())
+      })
     },
     // 图层控制
     layerButton: function () {
@@ -138,15 +158,24 @@ export default {
      * @param  {object} data      数据
      */
     toPoint: function (point, layerName, data) {
+      log(arguments)
       layerName = '井盖'
-      let geoJson = this.geoJsonEach(this.data[layerName], point)
-      this.map.setView(point, 18)
-      let layer = this.geoJsonChange(geoJson)
-      this.map.addLayer(layer)
-      layer.openTooltip(L.latLng(geoJson.geometry.coordinates.reverse()))
+      this.markers[layerName].zoomToShowLayer(this.markerList[layerName][1])
+      // let geoJson = this.geoJsonEach(this.data[layerName], point)
+      // this.map.setView(point, 18)
+      // let layer = this.geoJsonChange(geoJson)
+      // this.map.addLayer(layer)
+      // layer.openTooltip(L.latLng(geoJson.geometry.coordinates.reverse()))
     },
+    /**
+     * 判断图层是否属于该坐标
+     * @param  {object}  layer 图层
+     * @param  {object}  point 坐标
+     * @return {Boolean}       如果是就返回真
+     */
     isLayer: function (layer, point) {
-      return layer.getLatLng() === L.latLng(point)
+      let l = layer.getLatLng()
+      return l.lat === point.lat && l.lng === point.lng
     },
     // layerEach: function (layer, po)
     /**
@@ -203,25 +232,20 @@ export default {
       }
       return arr.length === 0 ? this.$message({message: '坐标参数的格式不正确!', type: 'error'}) : arr
     }
-    // 点加工
-    // 线加工
-    // 加载数据
-    // 图层组管理
-    // layerGroup
   },
   watch: {
-    bound () {
+    bound (v) {
+      log(v)
       // 获取'井盖'数据
-      // this.getData('井盖', 1).then(() => this.layerData('井盖'))
       this.getData(1).then(data => {
         this.$set(this.data, '井盖', data.features)
-      }).then(() => this.layerData('井盖'))
+      }).then(() => this.layerData('井盖')) // .then(() => this.layerRepair('井盖'))
     },
     markers (v) {
       // 载入图层控制按钮
-      L.control.layers('', v, {
-        collapsed: false
-      }).addTo(this.map)
+      if (this.layers.button !== undefined) this.layers.button.remove()
+      let layer = L.control.layers('', v, {collapsed: false}).addTo(this.map)
+      this.$set(this.layers, 'button', layer)
     }
   },
   components: {repair}

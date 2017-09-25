@@ -177,6 +177,7 @@ const config = {
       request: '/inspect/repair',
       data: {
         id: {name: 'ID'},
+        type: {name: '类型', formType: 'text'},
         problemDesc: {name: '问题描述', formType: 'text'},
         problemType: {name: '问题类型', formType: 'text'},
         // submitTime: {name: '提交时间', formType: 'text'},
@@ -191,7 +192,8 @@ const config = {
       request: '/inspect/repair/query',
       response: '/inspect/repair/update',
       data: {
-        fid: {name: '坐标ID', formType: 'text'},
+        // fid: {name: '坐标ID', formType: 'text'},
+        type: {name: '类型', formType: 'text'},
         problemDesc: {name: '问题描述', formType: 'text'},
         problemType: {name: '问题类型', formType: ['select'], dictionary: ['fieldChangeLocal']},
         // submitTime: {name: '提交时间', formType: 'text'},
@@ -207,7 +209,8 @@ const config = {
     created: {
       response: '/inspect/repair/insert',
       data: {
-        fid: {name: '坐标ID', formType: 'text'},
+        // fid: {name: '坐标ID', formType: 'text'},
+        type: {name: '类型', formType: 'text'},
         problemDesc: {name: '问题描述', formType: 'text'},
         problemType: {name: '问题类型', formType: ['select'], dictionary: ['fieldChangeLocal']},
         // submitTime: {name: '提交时间', formType: 'text'},

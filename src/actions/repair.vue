@@ -26,7 +26,7 @@ export default {
             lng: this.value[dataIndex].longitude
           },
           data = {
-            fid: this.value[dataIndex].fid,
+            // fid: this.value[dataIndex].fid,
             layer: ''
           }
       this.$emit('to-point', point, this.value[dataIndex].problemType, data)
