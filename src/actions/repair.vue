@@ -22,14 +22,10 @@ export default {
     toPoint: function (dataIndex) {
       if (dataIndex === undefined) return this.$message({message: 'Repair.toPoint: 必须是个整数', type: 'error'})
       let point = {
-            lat: this.value[dataIndex].latitude,
-            lng: this.value[dataIndex].longitude
-          },
-          data = {
-            // fid: this.value[dataIndex].fid,
-            layer: ''
-          }
-      this.$emit('to-point', point, this.value[dataIndex].problemType, data)
+        lat: this.value[dataIndex].latitude,
+        lng: this.value[dataIndex].longitude
+      }
+      this.$emit('to-point', point, this.value[dataIndex].type, this.value[dataIndex].problemDesc)
       // this.data.splice(dataIndex, 1)
     }
   }
