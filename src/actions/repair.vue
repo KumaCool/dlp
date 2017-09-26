@@ -26,7 +26,6 @@ export default {
         lng: this.value[dataIndex].longitude
       }
       this.$emit('to-point', point, this.value[dataIndex].type, this.value[dataIndex].problemDesc)
-      // this.data.splice(dataIndex, 1)
     }
   }
 }
