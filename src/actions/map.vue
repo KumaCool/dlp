@@ -130,47 +130,29 @@ export default {
       if (this.layers.repair === undefined) {
         this.$set(this.layers, 'repair', L.layerGroup())
         this.layers.repair.addTo(this.map)
-      }// else this.layers.repair.clearLayers()
-
-      // 以报修数据为主的算法
+      } else this.layers.repair.clearLayers()
       this.repair.forEach(v => {
         let point = L.latLng([v.latitude, v.longitude]),
-            bool = () => {
-              let b
-              this.layers.repair.eachLayer(lrV => {
-                if (this.isMarker(lrV, point)) {
-                  b = true
-                  return
-                }
-              })
-              return b
+            bool = false,
+            option = {radius: 3, color: 'red'}
+        if (this.markers[layerName].getLayers().length > 0) {
+          let markerArr = this.markers[layerName].getLayers()
+          bool = markerArr.some(mV => {
+            if (this.isMarker(mV, point)) {
+              option = {radius: 0, stroke: false}
+              mV.setStyle({color: 'red'})
+              return true
             }
-        if (!bool()) {
-          let m = L.circleMarker(point, {radius: 3, color: 'red'})
+          })
+        } else bool = true
+        if (bool) {
+          let m = L.circleMarker(point, option)
                    .bindPopup(v.problemDesc, {autoClose: false, closeOnClick: false})
+                   .on('click', () => this.toPoint(point))
           this.layers.repair.addLayer(m)
           m.openPopup()
         }
       })
-
-      // 以聚合层为主的算法
-      // this.markers[layerName].eachLayer(v => {
-      //   let tempRepair,
-      //       point,
-      //       bool = this.repair.some(rV => {
-      //         tempRepair = rV
-      //         point = L.latLng([rV.latitude, rV.longitude])
-      //         return this.isMarker(v, point)
-      //       })
-      //   if (bool) {
-      //     // 设置点颜色,目前写死,待修改
-      //     v.setStyle({color: 'red'})
-      //     let m = L.circleMarker(point, {radius: 0, stroke: false})
-      //              .bindPopup(tempRepair.problemDesc, {autoClose: false, closeOnClick: false})
-      //     this.layers.repair.addLayer(m)
-      //   }
-      // })
-      // this.layers.repair.eachLayer(v => v.openPopup())
     },
     // 图层控制
     layerButton: function () {
