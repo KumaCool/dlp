@@ -2,7 +2,9 @@
   <el-row class="map" v-loading="loading">
     <el-col :id="id" :span="24"></el-col>
     <el-col :span="24">
-      <repair @to-point="toPoint" v-model="repair"></repair>
+      <repair v-model="repair"
+              @to-point="toPoint"
+              @repair-switch="repairSwitch"></repair>
     </el-col>
   </el-row>
 </template>
@@ -15,7 +17,7 @@ import 'leaflet.markercluster'
 import repair from './repair'
 
 let log = console.log.bind(console)
-
+let intervalId
 export default {
   mounted () {
     // 初始化地图
@@ -30,17 +32,14 @@ export default {
     // 初始化聚合层
     this.layerData('井盖')
 
-    // 获取报修数据
-    setInterval(() => {
-      this.getData('/inspect/repair').then(data => {
-        this.repair = data.data.paginationList
-      }).then(() => this.layerRepair('井盖'))
-    }, 3000)
+    // 开启报修提示
+    this.repairShow = true
 
     let _self = this
     this.map.on('movestart', () => {
       // _self.loading = true
     })
+    // 监听地图变动完成时触发
     this.map.on('moveend', function (e) {
       _self.bound = _self.coordinateChange(_self.map.getBounds())
     })
@@ -59,6 +58,7 @@ export default {
       raw: 3857, // arcgis 坐标系
       geo: 4326, // geo 坐标系
       repair: [], // 报修数据
+      repairShow: false, // 报修开关
       id: 'map', // 地图documentId
       map: '', // Map对象
       markers: {}, // 聚合图层集
@@ -72,7 +72,7 @@ export default {
      * 获取数据
      * @param  {string|array} url    <string>:为数据API地址,<array>:为地图数据apiId
      * @param  {object} params API请求附带参数
-     * @return {promise}          数据保存后将返回promise对象
+     * @return {promise}          数据将以promise对象返回
      */
     getData: function (url, params) {
       // this.loading = true
@@ -154,6 +154,13 @@ export default {
         }
       })
     },
+    /**
+     * 监听报修面板开关
+     * @param  {boolean} v 开关值
+     */
+    repairSwitch: function (v) {
+      this.repairShow = !v
+    },
     // 图层控制
     layerButton: function () {
       L.control.layers('', this.layers, {
@@ -175,7 +182,7 @@ export default {
      * 判断图层是否属于该坐标
      * @param  {object}  marker 图层
      * @param  {object}  point 坐标
-     * @return {Boolean}       如果是就返回真
+     * @return {bolean}       如果是就返回真
      */
     isMarker: function (marker, point) {
       let l = marker.getLatLng()
@@ -254,6 +261,18 @@ export default {
       if (this.layers.button !== undefined) this.layers.button.remove()
       let layer = L.control.layers('', v, {collapsed: false}).addTo(this.map)
       this.$set(this.layers, 'button', layer)
+    },
+    repairShow (v) {
+      if (!v) {
+        this.layers.repair.clearLayers()
+        clearInterval(intervalId)
+      } else {
+        intervalId = setInterval(() => {
+          this.getData('/inspect/repair').then(data => {
+            this.repair = data.data.paginationList
+          }).then(() => this.layerRepair('井盖'))
+        }, 1500)
+      }
     }
   },
   components: {repair}
