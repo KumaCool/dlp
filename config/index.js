@@ -34,6 +34,13 @@ module.exports = {
             pathRewrite: {
                 '^/api': ''
             }
+        },
+        '/weather': {
+            target: 'https://api.seniverse.com/v3',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/weather': ''
+            }
         }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

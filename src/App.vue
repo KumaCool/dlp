@@ -2,6 +2,7 @@
   <el-row class="H100 app" v-if="$store.state.columnData !== ''">
     <el-row class="app-head">
       <el-col :span="24" class="head-bg"><img src="./assets/images/header.jpg"></el-col>
+      <weather class="head-weather"></weather>
     </el-row>
     <el-row class="app-main">
       <el-col :span="4" class="app-left-menu">
@@ -34,6 +35,7 @@ import { mapMutations } from 'vuex'
 
 import leftMenu from '@/actions/menu'
 import login from '@/actions/login'
+import weather from '@/actions/weather'
 
 export default {
   name: 'app',
@@ -58,7 +60,7 @@ export default {
   methods: {
     ...mapMutations(['closeWindow', 'windowChecked'])
   },
-  components: {leftMenu, login}
+  components: {leftMenu, login, weather}
 }
 </script>
 <style lang="less">
@@ -72,6 +74,24 @@ export default {
     height: @bodyHeadHeight;
     line-height: 0;
     .head-bg{background: url('./assets/images/header_bg.jpg') repeat-x;}
+    
+    // 天气样式
+    .head-weather{
+      // position: absolute;
+      // top: 0;
+      // right: 0;
+      // .H100;
+      line-height: normal;
+      .weather-today{
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 200px;
+        background: red;
+        color: #FFF;
+      }
+    }
   }
   .app-main{
     position: absolute;
