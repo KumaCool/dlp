@@ -1,11 +1,17 @@
 <template>
   <el-row v-if="daily.length > 0">
-    <el-row class="weather-today">
-      <el-col :span="6" class="weather-today-icon">图标</el-col>
-      <el-col :span="18">今天<br>{{daily[0].low}}&#8451;&sim;{{daily[0].high}}&#8451;</el-col>
+    <el-row class="weather-today" :gutter="10">
+      <el-col :span="7" :class="'weather-today-icon ' + weatherIcon(daily[0].code_day)"></el-col>
+      <el-col :span="17">今天<br>{{daily[0].low}}&#8451;&sim;{{daily[0].high}}&#8451;</el-col>
     </el-row>
     <el-row class="weather-info">
-      <el-col></el-col>
+      <el-row clsss="weather-info-today">
+        <el-col :span="7" :class="'weather-info-today-icon ' + weatherIcon(daily[0].code_day)"></el-col>
+        <el-col :span="17">今天<br>{{daily[0].low}}&#8451;&sim;{{daily[0].high}}&#8451;</el-col>
+      </el-row>
+      <el-row class="weather-info-list">
+        <el-col></el-col>
+      </el-row>
     </el-row>
   </el-row>
 </template>
@@ -55,6 +61,15 @@ export default {
         })
       })
       // this.$http.get(url, option)
+    },
+    weatherIcon: function (val) {
+      let className = 'weather-icon-'
+      switch (val) {
+        case 0:
+          return className + 'sunny'
+        default:
+          return className + 'sunny'
+      }
     }
   }
 }

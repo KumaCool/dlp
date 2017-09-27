@@ -74,7 +74,7 @@ export default {
     height: @bodyHeadHeight;
     line-height: 0;
     .head-bg{background: url('./assets/images/header_bg.jpg') repeat-x;}
-    
+
     // 天气样式
     .head-weather{
       // position: absolute;
@@ -87,9 +87,25 @@ export default {
         right: 0;
         top: 50%;
         transform: translateY(-50%);
-        width: 200px;
-        background: red;
+        width: 180px;
+        // background: red;
         color: #FFF;
+      }
+      .weather-info{
+        position: absolute;
+        top: 100px;
+        right: 0;
+        background: red;
+        z-index: 1;
+      }
+      .weather-today-icon{
+        @height: 45px;
+        height: @height;
+        background-repeat: no-repeat;
+        background-size: @height;
+      }
+      .weather-icon-sunny{
+        background-image: url('./assets/images/icon_weather_cloudy.png');
       }
     }
   }
