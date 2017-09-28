@@ -40,7 +40,7 @@
       padding: 1px;
       line-height: 0;
       border: 1px solid #D1E9FE;
-      border-radius: 5px;
+      .Radius;
     }
     .el-checkbox__inner,input{
       border: 1px solid #95BFF2;
@@ -88,8 +88,8 @@
 // 组件中间件
 .wrapper{
   position: absolute;
-  border-radius: 5px;
-  box-shadow: 0 0 10px 1px #CCC;
+  .Radius;
+  .BoxShadow;
   box-sizing: border-box;
   background: #FFF;
   .checked{
@@ -100,7 +100,7 @@
     @height: 40px;
     height: @height;
     line-height: @height;
-    border-radius: 5px 5px 0 0;
+    .Radius(5px 5px 0 0);
     background: url('../images/window_title_bg_2.jpg') repeat-x left;
     color: #FFF;
     cursor: move;
@@ -121,7 +121,7 @@
   .component{
     border: 1px solid #5EBFF9;
     border-top: 1px solid #FFF;
-    border-radius: 0 0 5px 5px;
+    .Radius(0 0 5px 5px);
   }
 }
 // 组件中间件 全屏模式
@@ -146,7 +146,7 @@
   }
   &>.component{
     .H100;
-    box-shadow: 0 0 10px 1px #CCC;
+    .BoxShadow;
   }
   & .crud{
     .W100;
@@ -310,3 +310,97 @@
     }
   }
 }
+
+// 天气样式
+.head-weather{
+  width: 140px;
+  line-height: normal;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #FFF;
+  z-index: 1;
+  cursor: pointer;
+  .weather-info{
+    position: relative;
+  }
+  .weather-info-main{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 246px;
+    height: 220px;
+    .Radius;
+    .BoxShadow;
+    span{
+      display: block;
+    }
+    .weather-info-today{
+      margin-top: 20px;
+      font-size: 16px;
+      .TextShadow;
+      span{
+        font-size: 24px;
+      }
+    }
+    .weather-info-list{
+      position: absolute;
+      bottom: 0;
+      padding: 10px 0;
+      .W100;
+      font-size: 14px;
+      font-weight: 100;
+      background-color: rgba(0, 0, 0, 0.15);
+      text-align: center;
+      letter-spacing: 1px;
+      span{
+
+        // opacity: 1;
+      }
+    }
+  }
+  .weather-icon{
+    @height: 45px;
+    height: @height;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: @height;
+  }
+  .weather-info-today-icon{
+    @height: 80px;
+    height: @height;
+    background: no-repeat;
+    background-size: @height;
+  }
+  .weather-icon-sunny{
+    background-image: url('../images/icons/icon_weather_sunny.png');
+  }
+  .weather-bg-sunny{
+    background-image: url('../images/weather_bg_sunny.jpg');
+  }
+  .weather-icon-cloudy{
+    background-image: url('../images/icons/icon_weather_cloudy.png');
+  }
+  .weather-bg-cloudy{
+    background-image: url('../images/weather_bg_cloudy.jpg');
+  }
+  .weather-icon-overcast{
+    background-image: url('../images/icons/icon_weather_overcast.png');
+  }
+  .weather-bg-overcast{
+    background-image: url('../images/weather_bg_overcast.jpg');
+  }
+  .weather-icon-rain{
+    background-image: url('../images/icons/icon_weather_rain.png');
+  }
+  .weather-bg-rain{
+    background-image: url('../images/weather_bg_rain.jpg');
+  }
+  .weather-icon-shower{
+    background-image: url('../images/icons/icon_weather_shower.png');
+  }
+  .weather-bg-shower{
+    background-image: url('../images/weather_bg_shower.jpg');
+  }
+}
+

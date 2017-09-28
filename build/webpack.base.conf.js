@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+// var SpritesmithPlugin = require('webpack-spritesmith')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -25,6 +26,24 @@ module.exports = {
       '@': resolve('src')
     }
   },
+  // plugins: [
+  //   new SpritesmithPlugin({
+  //     src: {
+  //       cwd: path.resolve(__dirname, 'src/assets/images/icons'),
+  //       glob: '*.png'
+  //     },
+  //     target: {
+  //       image: path.resolve(__dirname, 'dist/static/img/sprite.png'),
+  //       css: path.resolve(__dirname, 'dist/static/css/sprite.css')
+  //     },
+  //     apiOptions: {
+  //       cssImageRef: '../static/img/sprite.png'
+  //     },
+  //     spritesmithOptions: {
+  //         algorithm: 'top-down'
+  //     }
+  //   })
+  // ],
   module: {
     rules: [
       {

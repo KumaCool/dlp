@@ -2,7 +2,12 @@
   <el-row class="H100 app" v-if="$store.state.columnData !== ''">
     <el-row class="app-head">
       <el-col :span="24" class="head-bg"><img src="./assets/images/header.jpg"></el-col>
-      <weather class="head-weather"></weather>
+      <el-row class="head-menu"
+              type="flex"
+              justify="end"
+              :gutter="10">
+        <el-col :span="3"><weather class="head-weather"></weather></el-col>
+      </el-row>
     </el-row>
     <el-row class="app-main">
       <el-col :span="4" class="app-left-menu">
@@ -75,38 +80,11 @@ export default {
     line-height: 0;
     .head-bg{background: url('./assets/images/header_bg.jpg') repeat-x;}
 
-    // 天气样式
-    .head-weather{
-      // position: absolute;
+    .head-menu{
+      position: absolute;
       // top: 0;
-      // right: 0;
-      // .H100;
-      line-height: normal;
-      .weather-today{
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 180px;
-        // background: red;
-        color: #FFF;
-      }
-      .weather-info{
-        position: absolute;
-        top: 100px;
-        right: 0;
-        background: red;
-        z-index: 1;
-      }
-      .weather-today-icon{
-        @height: 45px;
-        height: @height;
-        background-repeat: no-repeat;
-        background-size: @height;
-      }
-      .weather-icon-sunny{
-        background-image: url('./assets/images/icon_weather_cloudy.png');
-      }
+      .W100;
+      .H100;
     }
   }
   .app-main{

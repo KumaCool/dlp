@@ -35,13 +35,20 @@ module.exports = {
                 '^/api': ''
             }
         },
-        '/weather': {
-            target: 'https://api.seniverse.com/v3',
+        '/sojson': {
+            target: 'http://www.sojson.com/open/api/weather/',
             changeOrigin: true,
             pathRewrite: {
-                '^/weather': ''
+                '^/sojson': ''
             }
         }
+        // '/weather': {
+        //     target: 'https://api.seniverse.com/v3',
+        //     changeOrigin: true,
+        //     pathRewrite: {
+        //         '^/weather': ''
+        //     }
+        // }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
