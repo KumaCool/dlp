@@ -31,6 +31,11 @@ export default {
 
     // 初始化聚合层
     this.layerData('井盖')
+    this.layerData('管线')
+    this.getData(2).then(data => {
+      this.$set(this.data, '管线', data.features)
+      log(this.data['管线'])
+    }).then(() => this.layerData('管线', 'line'))
 
     // 开启报修提示
     this.repairShow = true
@@ -82,12 +87,13 @@ export default {
       }
       if (Number.isInteger(url)) {
         url = 'https://116.62.225.78:6443/arcgis/rest/services/tongling/MapServer/' + url + '/query'
-        option.params = params !== undefined ? params : {
+        option.params = {
           geometry: this.bound.map(v => v).toString(),
           geometryType: 'esriGeometryEnvelope',
-          outFields: 'Name,Strasse,权属单,探测时',
+          // outFields: 'Name,Strasse,权属单,探测时',
           inSR: this.geo,
-          f: 'geojson'
+          f: 'geojson',
+          ...params
         }
       }
       let _self = this
@@ -104,22 +110,37 @@ export default {
      * @param  {string} dataName 被操作的数据名称
      * @param  {object} data      地图数据
      */
-    layerData: function (layerName, dataName = layerName) {
+    layerData: function (layerName, type = 'point', dataName = layerName) {
       if (layerName === undefined) return this.$message({message: 'Map.layerData: 必须给图层起个名称', type: 'error'})
-      if (this.markers[layerName] === undefined) {
-        this.$set(this.markers, layerName, L.markerClusterGroup({ // 初始化聚合对象
-          disableClusteringAtZoom: 17,
-          maxClusterRadius: 30, // 聚合距离
-          spiderfyOnMaxZoom: false,
-          chunkedLoading: true
-        }))
-      } else this.markers[layerName].clearLayers()
-      // log(this.data[dataName])
       // 如果没有真实数据就初始化一个
       if (this.data[dataName] === undefined) this.$set(this.data, dataName, [])
-      // log(this.markers[layerName])
-      let arrMarker = this.data[dataName].map(v => this.geoJsonChange(v))
-      this.markers[layerName].addLayers(arrMarker).addTo(this.map)
+      // 如果没有图层就初始化一个,否则就清空图层数据
+      switch (type) {
+        case 'line':
+          log('line')
+          if (this.markers[layerName] === undefined) {
+            this.$set(this.markers, layerName, L.layerGroup().addTo(this.map))
+          } else this.markers[layerName].clearLayers()
+          this.data[dataName].forEach(v => {
+            // log(v)
+            this.markers[layerName].addLayer(this.geoJsonChange(v))
+          })
+          break
+        case 'point':
+          log('point')
+          if (this.markers[layerName] === undefined) {
+            this.$set(this.markers, layerName, L.markerClusterGroup({ // 初始化聚合对象
+              disableClusteringAtZoom: 17,
+              maxClusterRadius: 30, // 聚合距离
+              spiderfyOnMaxZoom: false,
+              chunkedLoading: true
+            }))
+          } else this.markers[layerName].clearLayers()
+          let arrMarker = this.data[dataName].map(v => this.geoJsonChange(v))
+          this.markers[layerName].addLayers(arrMarker).addTo(this.map)
+          break
+      }
+
       // this.loading = false
     },
     /**
@@ -216,6 +237,10 @@ export default {
               tip = Object.keys(geoJson.properties).map(k => k + '：' + geoJson.properties[k])
           marker.bindTooltip(tip.join('<br>'))
           return marker
+        case 'LineString':
+          geoJson.geometry.coordinates.map(v => v.reverse())
+          let polyline = L.polyline(geoJson.geometry.coordinates, {color: 'green'})
+          return polyline
       }
     },
     /**
@@ -246,7 +271,7 @@ export default {
     bound (v) {
       if (this.map.getZoom() >= 14) {
         // 获取'井盖'数据
-        this.getData(1).then(data => {
+        this.getData(1, {outFields: 'Name,Strasse,权属单,探测时'}).then(data => {
           this.$set(this.data, '井盖', data.features)
         }).then(() => this.layerData('井盖'))
       } else {
