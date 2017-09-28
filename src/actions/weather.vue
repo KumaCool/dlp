@@ -5,37 +5,27 @@
 
       <el-col v-show="show" class="weather-info">
         <el-row :class="'weather-info-main weather-bg-' + weatherIcon(now.code_day)">
+          <!-- 当日天气 -->
           <el-row class="weather-info-today"
                   type="flex"
                   justify="center">
             <el-col :span="9" :class="'weather-info-today-icon weather-icon-' + weatherIcon(now.code_day)"></el-col>
-            <el-col :span="10">{{location.name}}<br><span>{{now.temperature}}&#8451;</span>{{daily[0].text_day}}&nbsp;&nbsp;{{daily[0].wind_direction}}</el-col>
+            <el-col :span="10">{{location.name}}<br><span>{{now.temperature}}&#8451;</span>{{now.text_day}}&nbsp;&nbsp;{{now.wind_direction}}</el-col>
           </el-row>
-
+          <!-- 未来天气列表 -->
           <el-row class="weather-info-list">
             <el-col v-for="(v, index) in dailyNoToday"
                     :key="index"
                     :span="8">
               <span>{{dayCalc(index, v.date)}}</span>
               <span :class="'weather-icon weather-icon-' + weatherIcon(v.code_day)"></span>
-              <span>{{v.low}}&#8451;&frasl;{{v.high}}&#8451;</span>
+              <span>{{v.low}}&#8451;/{{v.high}}&#8451;</span>
             </el-col>
           </el-row>
         </el-row>
       </el-col>
     </el-row>
-<!--   <el-row v-if="daily.length > 0">
-    <el-row class="weather-info">
-      <el-row clsss="weather-info-today">
-        <el-col :span="8" :class="'weather-info-today-icon ' + weatherIcon(daily[0].code_day)"></el-col>
-        <el-col :span="16">今天<br>{{daily[0].low}}&#8451;&sim;{{daily[0].high}}&#8451;</el-col>
-      </el-row>
-      <el-row class="weather-info-list">
-        <el-col></el-col>
-      </el-row>
-    </el-row>
-  </el-row>
- --></template>
+</template>
 <script>
 let log = console.log.bind(console)
 
@@ -46,7 +36,7 @@ export default {
       let dayList = []
       for (var i = 0; i < 4; i++) {
         dayList.push({
-          date: v.data.forecast[i].date,
+          date: v.data.forecast[i].date.substr(-3),
           code_day: this.dayToCode(v.data.forecast[i].type),
           text_day: v.data.forecast[i].type,
           low: parseInt(v.data.forecast[i].low.replace(/[^((\d)+.\d)]/g, '')),
@@ -55,13 +45,7 @@ export default {
         })
       }
       this.now = dayList.splice(0, 1)[0]
-      log(this.now.date.substr(1, 2))
-      // log(this.now.date.replace(this.now.date.substr(1, 4), ''))
-      // v.data.forecast.forEach(dV => {
-      // })
       this.daily = dayList
-      // let test = v.data.forecast[0].high.replace(/[^((\d)+.\d)]/g, '')
-      // log(test)
     })
     // this.getData('/weather/daily.json', {start: 0, days: 4}).then(v => {
     //   this.daily = v.results[0].daily
@@ -115,20 +99,25 @@ export default {
           if (response.status === 200) resolve(response.data)
         })
       })
-      // this.$http.get(url, option)
     },
+    /**
+     * 日期编码转换成相应Class名,用于图标样式的控制
+     * @param  {integer} val 日期编码
+     * @return {string}     返回相应的Class名称
+     */
     weatherIcon: function (val) {
       // 晴
       if (val <= 3) return 'sunny'
       // 多云
       if (val > 3 && val <= 8) return 'cloudy'
       // 阴
-      if (val === '9') return 'overcast'
+      if (val === 9) return 'overcast'
       // 阵雨
       if (val > 9 && val <= 12) return 'shower'
       // 雨与其它
       if (val > 12) return 'rain'
     },
+    // 日期计算
     dayCalc: function (val, date) {
       switch (val) {
         case 0:
@@ -136,14 +125,18 @@ export default {
         case 1:
           return '后天'
         default:
-          return date.replace(/[^(\w{2})$]/, '')
+          return date
       }
-      // let date = new Date()
-      // this.
     },
+    // 天气面板控制
     showInfo: function () {
       this.show = !this.show
     },
+    /**
+     * 日期转换成编码
+     * @param  {string} val 日期值
+     * @return {integer}     返回相应的编码
+     */
     dayToCode: function (val) {
       switch (true) {
         case /阴/.test(val):
