@@ -44,7 +44,9 @@ export default {
           wind_direction: v.data.forecast[i].fx
         })
       }
-      this.now = dayList.splice(0, 1)[0]
+      let now = dayList.splice(0, 1)[0]
+      now.temperature = v.data.wendu
+      this.now = now
       this.daily = dayList
     })
     // this.getData('/weather/daily.json', {start: 0, days: 4}).then(v => {

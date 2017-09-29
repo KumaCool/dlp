@@ -30,12 +30,8 @@ export default {
     this.bound = this.coordinateChange(this.map.getBounds())
 
     // 初始化聚合层
-    this.layerData('井盖')
+    this.layerData('污水管点')
     this.layerData('管线')
-    this.getData(2).then(data => {
-      this.$set(this.data, '管线', data.features)
-      log(this.data['管线'])
-    }).then(() => this.layerData('管线', 'line'))
 
     // 开启报修提示
     this.repairShow = true
@@ -53,8 +49,13 @@ export default {
       log(e.latlng.lng + ',' + e.latlng.lat)
     })
     // 监听图层控制按钮的显示操作
-    this.map.on('overlayadd', () => {
-      if (this.map.getZoom() < 14) this.map.setZoom(14)
+    // this.map.on('overlayadd', () => {
+    //   if (this.map.getZoom() < 14) this.map.setZoom(14)
+    // })
+
+    this.map.on('overlayadd', (e) => {
+      log(arguments)
+      // log('end')
     })
   },
   data () {
@@ -110,7 +111,8 @@ export default {
      * @param  {string} dataName 被操作的数据名称
      * @param  {object} data      地图数据
      */
-    layerData: function (layerName, type = 'point', dataName = layerName) {
+    layerData: function (layerName, color = '#000', type = 'point') {
+      let dataName = layerName
       if (layerName === undefined) return this.$message({message: 'Map.layerData: 必须给图层起个名称', type: 'error'})
       // 如果没有真实数据就初始化一个
       if (this.data[dataName] === undefined) this.$set(this.data, dataName, [])
@@ -123,7 +125,7 @@ export default {
           } else this.markers[layerName].clearLayers()
           this.data[dataName].forEach(v => {
             // log(v)
-            this.markers[layerName].addLayer(this.geoJsonChange(v))
+            this.markers[layerName].addLayer(this.geoJsonChange(v, color))
           })
           break
         case 'point':
@@ -136,7 +138,7 @@ export default {
               chunkedLoading: true
             }))
           } else this.markers[layerName].clearLayers()
-          let arrMarker = this.data[dataName].map(v => this.geoJsonChange(v))
+          let arrMarker = this.data[dataName].map(v => this.geoJsonChange(v, color))
           this.markers[layerName].addLayers(arrMarker).addTo(this.map)
           break
       }
@@ -229,17 +231,17 @@ export default {
      * @param  {object} geoJson geoJson数据
      * @return {object}         返回对应的图层类型数据
      */
-    geoJsonChange: function (geoJson) {
+    geoJsonChange: function (geoJson, color) {
       if (geoJson.geometry === undefined) return this.$message({message: 'Map.geoJsonChange: geoJson格式不正确', type: 'error'})
       switch (geoJson.geometry.type) {
         case 'Point':
-          let marker = L.circleMarker(L.latLng(geoJson.geometry.coordinates.reverse()), {radius: 3}),
+          let marker = L.circleMarker(L.latLng(geoJson.geometry.coordinates.reverse()), {radius: 3, color: color}),
               tip = Object.keys(geoJson.properties).map(k => k + '：' + geoJson.properties[k])
           marker.bindTooltip(tip.join('<br>'))
           return marker
         case 'LineString':
           geoJson.geometry.coordinates.map(v => v.reverse())
-          let polyline = L.polyline(geoJson.geometry.coordinates, {color: 'green'})
+          let polyline = L.polyline(geoJson.geometry.coordinates, {color: color})
           return polyline
       }
     },
@@ -269,22 +271,34 @@ export default {
   },
   watch: {
     bound (v) {
-      if (this.map.getZoom() >= 14) {
+      if (this.map.getZoom() >= 16) {
+        this.getData(5).then(data => {
+          this.$set(this.data, '管线', data.features)
+        }).then(() => this.layerData('管线', 'green', 'line'))
+      } else if (this.map.getZoom() >= 14) {
         // 获取'井盖'数据
-        this.getData(1, {outFields: 'Name,Strasse,权属单,探测时'}).then(data => {
-          this.$set(this.data, '井盖', data.features)
-        }).then(() => this.layerData('井盖'))
+        this.getData(1, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
+          this.$set(this.data, '污水管点', data.features)
+        }).then(() => this.layerData('污水管点', 'blue'))
+        // 清除聚合图层
+        // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
       } else {
         // 清除聚合图层
         Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
         // 清除报修提示图层
         // if (this.layers.repair !== undefined) this.layers.repair.clearLayers()
       }
+      // 清除聚合图层
+      // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
     },
     markers (v) {
       // 载入图层控制按钮
       if (this.layers.button !== undefined) this.layers.button.remove()
-      let layer = L.control.layers('', v, {collapsed: false}).addTo(this.map)
+      let test = {}
+      Object.keys(v).forEach(k => {
+        test[k] = v[k]
+      })
+      let layer = L.control.layers('', test, {collapsed: false}).addTo(this.map)
       this.$set(this.layers, 'button', layer)
     },
     repairShow (v) {
@@ -295,7 +309,7 @@ export default {
         intervalId = setInterval(() => {
           this.getData('/inspect/repair').then(data => {
             this.repair = data.data.paginationList
-          }).then(() => this.layerRepair('井盖'))
+          }).then(() => this.layerRepair('污水管点'))
         }, 1500)
       }
     }
