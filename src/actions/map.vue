@@ -26,12 +26,12 @@ export default {
     }).setView([30.921775877611857, 117.77711665257813], 12)
     L.tileLayer('https://api.mapbox.com/styles/v1/mayahw/cj7043o68chyg2ro3pzfy0qru/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWF5YWh3IiwiYSI6IlhnVzlOb0EifQ.S_tK2JCpZMDshhJN5KNCYQ').addTo(this.map)
 
+    // 初始化聚合层
+    this.layerData('污水管点', 'blue')
+    this.layerData('管线', 'green', 'line')
+
     // 获取当前地图范围
     this.bound = this.coordinateChange(this.map.getBounds())
-
-    // 初始化聚合层
-    this.layerData('污水管点')
-    this.layerData('管线')
 
     // 开启报修提示
     this.repairShow = true
@@ -41,21 +41,29 @@ export default {
       // _self.loading = true
     })
     // 监听地图变动完成时触发
-    this.map.on('moveend', function (e) {
+    this.map.on('moveend', e => {
       _self.bound = _self.coordinateChange(_self.map.getBounds())
     })
     // 监听点击事件
-    this.map.on('click', function (e) {
+    this.map.on('click', e => {
       log(e.latlng.lng + ',' + e.latlng.lat)
     })
-    // 监听图层控制按钮的显示操作
-    // this.map.on('overlayadd', () => {
-    //   if (this.map.getZoom() < 14) this.map.setZoom(14)
-    // })
-
-    this.map.on('overlayadd', (e) => {
-      log(arguments)
-      // log('end')
+    // 图层控制按钮开启触发事件
+    this.map.on('overlayadd', e => {
+      let zoom = this.map.getZoom()
+      this.$set(this.buttonTypes, e.name, true)
+      log(this.buttonTypes)
+      if (e.layer.layerType === 'line' && zoom < 16) {
+        log('line')
+        this.map.setZoom(16)
+      } else if (e.layer.layerType === 'point' && zoom < 14) {
+        log('point')
+        this.map.setZoom(14)
+      }// else if (zoom < 14) this.map.setZoom(zoom)
+    })
+    // 图层控制按钮关闭触发事件
+    this.map.on('overlayremove', e => {
+      this.$set(this.buttonTypes, e.name, false)
     })
   },
   data () {
@@ -70,7 +78,8 @@ export default {
       markers: {}, // 聚合图层集
       bound: [], // 可视边界
       data: [], // 真实数据
-      layers: {} // 控制图层
+      layers: {}, // 控制图层
+      buttonTypes: {} // 图层控制按钮状态
     }
   },
   methods: {
@@ -112,24 +121,26 @@ export default {
      * @param  {object} data      地图数据
      */
     layerData: function (layerName, color = '#000', type = 'point') {
+      log('layerData')
       let dataName = layerName
       if (layerName === undefined) return this.$message({message: 'Map.layerData: 必须给图层起个名称', type: 'error'})
       // 如果没有真实数据就初始化一个
       if (this.data[dataName] === undefined) this.$set(this.data, dataName, [])
+      // 如果没有真实数据就初始化一个
+      if (this.buttonTypes[dataName] === undefined) this.$set(this.buttonTypes, dataName, false)
       // 如果没有图层就初始化一个,否则就清空图层数据
       switch (type) {
         case 'line':
-          log('line')
           if (this.markers[layerName] === undefined) {
             this.$set(this.markers, layerName, L.layerGroup().addTo(this.map))
           } else this.markers[layerName].clearLayers()
           this.data[dataName].forEach(v => {
-            // log(v)
             this.markers[layerName].addLayer(this.geoJsonChange(v, color))
           })
+          // 给图层标注类型
+          this.markers[layerName].layerType = type
           break
         case 'point':
-          log('point')
           if (this.markers[layerName] === undefined) {
             this.$set(this.markers, layerName, L.markerClusterGroup({ // 初始化聚合对象
               disableClusteringAtZoom: 17,
@@ -140,6 +151,8 @@ export default {
           } else this.markers[layerName].clearLayers()
           let arrMarker = this.data[dataName].map(v => this.geoJsonChange(v, color))
           this.markers[layerName].addLayers(arrMarker).addTo(this.map)
+          // 给图层标注类型
+          this.markers[layerName].layerType = type
           break
       }
 
@@ -150,32 +163,67 @@ export default {
      * @param  {string} layerName 报修类型相关的图层名称
      */
     layerRepair: function (layerName) {
+      log('layerRepair')
       if (this.layers.repair === undefined) {
         this.$set(this.layers, 'repair', L.layerGroup())
         this.layers.repair.addTo(this.map)
       } else this.layers.repair.clearLayers()
+
       this.repair.forEach(v => {
-        let point = L.latLng([v.latitude, v.longitude]),
-            bool = false,
-            option = {radius: 3, color: 'red'}
-        if (this.markers[layerName].getLayers().length > 0) {
-          let markerArr = this.markers[layerName].getLayers()
-          bool = markerArr.some(mV => {
+        let point = L.latLng(v.latlng.split(',')), // 坐标 <<<<<<<< 要修改
+            type = 'point', // 类型 <<<<<<<< 要修改
+            markers = this.markers[v.type].getLayers(),
+            popupOption = {
+              autoClose: false,
+              closeOnClick: false
+            }
+        if (markers.length > 0) {
+          // markers = this.markers[v.type].getLayers()
+          markers.forEach(mV => {
+            // log(this.isMarker(mV, point))
             if (this.isMarker(mV, point)) {
-              option = {radius: 0, stroke: false}
+              log('isMarker')
               mV.setStyle({color: 'red'})
-              return true
             }
           })
-        } else bool = true
-        if (bool) {
-          let m = L.circleMarker(point, option)
-                   .bindPopup(v.problemDesc, {autoClose: false, closeOnClick: false})
-                   .on('click', () => this.toPoint(point))
-          this.layers.repair.addLayer(m)
-          m.openPopup()
+        }
+        switch (type) {
+          case 'point':
+            let m = L.circleMarker(point, {radius: 3, color: 'red'})
+                .bindPopup(v.problemDesc, popupOption)
+                // .on('click', () => this.toPoint(point))
+            this.layers.repair.addLayer(m)
+            m.openPopup()
+            break
         }
       })
+      // log(this.layers.repair)
+      // if (this.layers.repair === undefined) {
+      //   this.$set(this.layers, 'repair', L.layerGroup())
+      //   this.layers.repair.addTo(this.map)
+      // } else this.layers.repair.clearLayers()
+      // this.repair.forEach(v => {
+      //   let point = L.latLng([v.latitude, v.longitude]),
+      //       bool = false,
+      //       option = {radius: 3, color: 'red'}
+      //   if (this.markers[layerName].getLayers().length > 0) {
+      //     let markerArr = this.markers[layerName].getLayers()
+      //     bool = markerArr.some(mV => {
+      //       if (this.isMarker(mV, point)) {
+      //         option = {radius: 0, stroke: false}
+      //         mV.setStyle({color: 'red'})
+      //         return true
+      //       }
+      //     })
+      //   } else bool = true
+      //   if (bool) {
+      //     let m = L.circleMarker(point, option)
+      //              .bindPopup(v.problemDesc, {autoClose: false, closeOnClick: false})
+      //              .on('click', () => this.toPoint(point))
+      //     this.layers.repair.addLayer(m)
+      //     m.openPopup()
+      //   }
+      // })
     },
     /**
      * 监听报修面板开关
@@ -270,24 +318,46 @@ export default {
     }
   },
   watch: {
+    // 根据地图变动更新数据
     bound (v) {
-      if (this.map.getZoom() >= 16) {
-        this.getData(5).then(data => {
-          this.$set(this.data, '管线', data.features)
-        }).then(() => this.layerData('管线', 'green', 'line'))
-      } else if (this.map.getZoom() >= 14) {
-        // 获取'井盖'数据
-        this.getData(1, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
-          this.$set(this.data, '污水管点', data.features)
-        }).then(() => this.layerData('污水管点', 'blue'))
-        // 清除聚合图层
-        // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
-      } else {
-        // 清除聚合图层
-        Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
-        // 清除报修提示图层
-        // if (this.layers.repair !== undefined) this.layers.repair.clearLayers()
-      }
+      // let zoom = this.map.getZoom()
+      let pointJsonId = [1],
+          lineJsonId = [5]
+
+      Object.keys(this.buttonTypes).forEach(k => {
+        // log(this.buttonTypes[k])
+        if (this.buttonTypes[k] && this.markers[k].layerType === 'point') {
+          pointJsonId.forEach(pV => {
+            this.getData(pV, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
+              this.$set(this.data, k, data.features)
+            }).then(() => this.layerData(k, 'blue')).then(() => this.layerRepair())
+          })
+        } else if (this.buttonTypes[k] && this.markers[k].layerType === 'line') {
+          lineJsonId.forEach(lV => {
+            this.getData(lV).then(data => {
+              this.$set(this.data, k, data.features)
+            }).then(() => this.layerData(k, 'green', 'line'))
+          })
+        } else this.map.removeLayer(this.markers[k])
+      })
+
+      // if (zoom >= 16 && this.buttonTypes['管线']) {
+      //   this.getData(5).then(data => {
+      //     this.$set(this.data, '管线', data.features)
+      //   }).then(() => this.layerData('管线', 'green', 'line'))
+      // }
+      // if (zoom >= 14 && this.buttonTypes['污水管点']) {
+      //   this.getData(1, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
+      //     this.$set(this.data, '污水管点', data.features)
+      //   }).then(() => this.layerData('污水管点', 'blue'))
+      //   // 清除聚合图层
+      //   // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
+      // } else {
+      //   // 清除聚合图层
+      //   Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
+      //   // 清除报修提示图层
+      //   // if (this.layers.repair !== undefined) this.layers.repair.clearLayers()
+      // }
       // 清除聚合图层
       // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
     },
@@ -297,21 +367,25 @@ export default {
       let test = {}
       Object.keys(v).forEach(k => {
         test[k] = v[k]
+        this.$set(this.buttonTypes, k, false)
       })
       let layer = L.control.layers('', test, {collapsed: false}).addTo(this.map)
       this.$set(this.layers, 'button', layer)
     },
     repairShow (v) {
-      if (!v) {
-        this.layers.repair.clearLayers()
-        clearInterval(intervalId)
-      } else {
-        intervalId = setInterval(() => {
-          this.getData('/inspect/repair').then(data => {
-            this.repair = data.data.paginationList
-          }).then(() => this.layerRepair('污水管点'))
-        }, 1500)
-      }
+      this.getData('/inspect/repair').then(data => {
+        this.repair = data.data.paginationList
+      }).then(() => this.layerRepair())
+      // if (!v) {
+      //   this.layers.repair.clearLayers()
+      //   clearInterval(intervalId)
+      // } else {
+      //   intervalId = setInterval(() => {
+      //     this.getData('/inspect/repair').then(data => {
+      //       this.repair = data.data.paginationList
+      //     }).then(() => this.layerRepair('污水管点'))
+      //   }, 1500)
+      // }
     }
   },
   components: {repair}
