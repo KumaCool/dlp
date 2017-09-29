@@ -11,7 +11,7 @@
     </el-row>
     <el-row class="app-main">
       <el-col :span="4" class="app-left-menu">
-        <left-menu :data="$store.getters.columnTree"></left-menu>
+        <left-menu :data="$store.getters.columnTree" :defaultx="menuDefault"></left-menu>
       </el-col>
       <el-col :span="20" class="app-window">
         <com-middle window="full"
@@ -53,6 +53,10 @@ export default {
     document.getElementById('app').style.display = 'block'
   },
   computed: {
+    // 左侧栏默认激活
+    menuDefault: function () {
+      return this.$store.state.windowFull.id + '#' + this.$store.state.windowFull.url
+    },
     url: function () { // 路由用,暂无用的方法
       let path = new Array(this.windowCom.length)
       this.windowCom.forEach(function (v) {

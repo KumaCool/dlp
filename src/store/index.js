@@ -11,7 +11,7 @@ const store = {
     /* eslint-disable */
     columnData: '', // 栏目数据
     window: [], // 窗口组件
-    windowFull: {url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
+    windowFull: {id: 'd5884608ebb84143b44cd03540eb5a04', url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
     permission: '' // 用户权限
     /* eslint-enable */
   },
