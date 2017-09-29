@@ -5,6 +5,9 @@
   border: 1px solid #5EBFF9;
 }
 
+
+
+
 // 登陆
 .login{
   .W100;
@@ -403,5 +406,82 @@
   }
   .weather-bg-shower{
     background-image: url('../images/weather_bg_shower.jpg');
+  }
+}
+
+//专题
+.leaflet-control-layers-expanded{
+  width:160px;
+  .layer-active{
+    font-weight:bold;
+    opacity:1;
+    .switch-icon{
+      opacity:1;
+    }
+  }
+  label{
+    cursor:pointer;
+    opacity:0.4;
+    width:80px;
+    float:left;
+    
+    .leaflet-control-layers-selector{
+      opacity:0;
+      margin-left:-15px;
+    }
+    div{
+      text-align:center;
+      .switch-icon{
+        opacity:0.5;
+        position:relative;
+        top:4px;
+        display:inline-block;
+        @imgSize: 16px;
+        height: @imgSize;
+        width:16px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+      }
+      .icon-switch-wushuiguandian{
+        background-image: url('../images/icons/icon_map_switch_wushuiguandian.png');
+      }
+      .icon-switch-wushuiguanxian{
+        background-image: url('../images/icons/icon_map_switch_wushuiguanxian.png');
+      }
+      .icon-switch-yushuiguandian{
+        background-image: url('../images/icons/icon_map_switch_yushuiguandian.png');
+      }
+      .icon-switch-yushuiguanxian{
+        background-image: url('../images/icons/icon_map_switch_yushuiguanxian.png');
+      }
+      .icon-switch-heliuguandian{
+        background-image: url('../images/icons/icon_map_switch_heliuguandian.png');
+      }
+      .icon-switch-heliuguanxian{
+        background-image: url('../images/icons/icon_map_switch_heliuguanxian.png');
+      }
+      .icon-switch-bengzhan{
+        background-image: url('../images/icons/icon_map_switch_bengzhan.png');
+      }
+      .icon-switch-jishuidian{
+        background-image: url('../images/icons/icon_map_switch_jishuidian.png');
+      }
+      .icon-switch-yinjing{
+        background-image: url('../images/icons/icon_map_switch_yinjing.png');
+      }
+      .icon-switch-jinggai{
+        background-image: url('../images/icons/icon_map_switch_jinggai.png');
+      }
+      .icon-switch-jishuidian{
+        background-image: url('../images/icons/icon_map_switch_jishuidian.png');
+      }
+      .icon-switch-yinhuan{
+        background-image: url('../images/icons/icon_map_switch_yinhuan.png');
+      }
+      .icon-switch-weizhang{
+        background-image: url('../images/icons/icon_map_switch_weizhang.png');
+      }
+    }
   }
 }

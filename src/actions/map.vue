@@ -31,7 +31,7 @@ export default {
 
     // 初始化聚合层
     this.layerData('污水管点')
-    this.layerData('管线')
+    this.layerData('污水管线')
 
     // 开启报修提示
     this.repairShow = true
@@ -296,7 +296,21 @@ export default {
       if (this.layers.button !== undefined) this.layers.button.remove()
       let test = {}
       Object.keys(v).forEach(k => {
-        test[k] = v[k]
+        let xxxx = ''
+        if (k === '污水管点') xxxx = 'wushuiguandian'
+        if (k === '污水管线') xxxx = 'wushuiguanxian'
+        if (k === '雨水管点') xxxx = 'yushuiguandian'
+        if (k === '雨水管线') xxxx = 'yushuiguanxian'
+        if (k === '合流管点') xxxx = 'heliuguandian'
+        if (k === '合流管线') xxxx = 'heliuguanxian'
+        if (k === '泵站') xxxx = 'bengzhan'
+        if (k === '井盖') xxxx = 'jinggai'
+        if (k === '积水点') xxxx = 'jishuidian'
+        if (k === '窨井') xxxx = 'yinjing'
+        if (k === '井盖') xxxx = 'jinggai'
+        if (k === '隐患') xxxx = 'yinhuan'
+        if (k === '违章') xxxx = 'weizhang'
+        test['<i class="icon-switch-' + xxxx + ' switch-icon"></i> ' + k] = v[k]
       })
       let layer = L.control.layers('', test, {collapsed: false}).addTo(this.map)
       this.$set(this.layers, 'button', layer)
