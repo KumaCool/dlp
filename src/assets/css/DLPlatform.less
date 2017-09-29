@@ -412,13 +412,9 @@
 //专题
 .leaflet-control-layers-expanded{
   width:200px;
-  .layer-active{
-    font-weight:bold;
-    opacity:1;
-  }
   label{
     cursor:pointer;
-    opacity:0.4;
+    // opacity:0.4;
     width:100px;
     float:left;
     &>div{
@@ -434,6 +430,13 @@
         background-position: center;
         background-size: contain;
       }
+    }
+    .layer-switch{
+      opacity: 0.5
+    }
+    .layer-active{
+      font-weight:bold;
+      opacity:1;
     }
     .leaflet-control-layers-selector{
       position: absolute;

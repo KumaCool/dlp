@@ -17,7 +17,7 @@ import 'leaflet.markercluster'
 import repair from './repair'
 
 let log = console.log.bind(console)
-let intervalId
+// let intervalId
 export default {
   mounted () {
     // 初始化地图
@@ -36,6 +36,24 @@ export default {
     // 开启报修提示
     this.repairShow = true
 
+    // 创建假按钮面板
+    let jiance = {
+          '积水点': this.falseData,
+          '窨井': this.falseData,
+          '井盖': this.falseData
+        },
+        jiankong = {
+          '泵站': this.falseData
+        },
+        xuncha = {
+          '积水点': this.falseData,
+          '隐患': this.falseData,
+          '违章': this.falseData
+        }
+    this.layerButton(jiance, 'jiance')
+    this.layerButton(jiankong, 'jiankong')
+    this.layerButton(xuncha, 'xuncha')
+
     let _self = this
     this.map.on('movestart', () => {
       // _self.loading = true
@@ -50,26 +68,25 @@ export default {
     })
     // 图层控制按钮开启触发事件
     this.map.on('overlayadd', e => {
-      // log(e)
-      // let tempName = e.name
-      let layerName = e.name.replace(/^<(.*)<\/i>/, '')
-      // e.name = 'xxx'
-      // log(this.buttonTypes)
-      // this.layers.button.addOverlay(this.markers)
+      let layerName = e.name.replace(/^<(.*)<\/i>/, '').replace('</div>', '')
+      // 排除假按钮面板
+      if (this.buttonTypes[layerName] === undefined) return this.$message({message: '没有数据'})
       let zoom = this.map.getZoom()
       this.$set(this.buttonTypes, layerName, true)
-      log(this.buttonTypes)
+      this.layerButton(this.markers, 'basis')
       if (e.layer.layerType === 'line' && zoom < 16) {
-        log('line')
         this.map.setZoom(16)
       } else if (e.layer.layerType === 'point' && zoom < 14) {
-        log('point')
         this.map.setZoom(14)
-      }// else if (zoom < 14) this.map.setZoom(zoom)
+      } else if (zoom < 14) this.map.setZoom(zoom)
     })
     // 图层控制按钮关闭触发事件
     this.map.on('overlayremove', e => {
+      let layerName = e.name.replace(/^<(.*)<\/i>/, '').replace('</div>', '')
+      // 排除假按钮面板
+      if (this.buttonTypes[layerName] === undefined) return this.$message({message: '没有数据'})
       this.$set(this.buttonTypes, layerName, false)
+      this.layerButton(this.markers, 'basis')
     })
   },
   data () {
@@ -85,7 +102,8 @@ export default {
       bound: [], // 可视边界
       data: [], // 真实数据
       layers: {}, // 控制图层
-      buttonTypes: {} // 图层控制按钮状态
+      buttonTypes: {}, // 图层控制按钮状态
+      falseData: L.layerGroup()
     }
   },
   methods: {
@@ -127,7 +145,7 @@ export default {
      * @param  {object} data      地图数据
      */
     layerData: function (layerName, color = '#000', type = 'point') {
-      log('layerData')
+      // log('layerData')
       let dataName = layerName
       if (layerName === undefined) return this.$message({message: 'Map.layerData: 必须给图层起个名称', type: 'error'})
       // 如果没有真实数据就初始化一个
@@ -169,7 +187,7 @@ export default {
      * @param  {string} layerName 报修类型相关的图层名称
      */
     layerRepair: function (layerName) {
-      log('layerRepair')
+      // log('layerRepair')
       if (this.layers.repair === undefined) {
         this.$set(this.layers, 'repair', L.layerGroup())
         this.layers.repair.addTo(this.map)
@@ -188,7 +206,7 @@ export default {
           markers.forEach(mV => {
             // log(this.isMarker(mV, point))
             if (this.isMarker(mV, point)) {
-              log('isMarker')
+              // log('isMarker')
               mV.setStyle({color: 'red'})
             }
           })
@@ -203,33 +221,6 @@ export default {
             break
         }
       })
-      // log(this.layers.repair)
-      // if (this.layers.repair === undefined) {
-      //   this.$set(this.layers, 'repair', L.layerGroup())
-      //   this.layers.repair.addTo(this.map)
-      // } else this.layers.repair.clearLayers()
-      // this.repair.forEach(v => {
-      //   let point = L.latLng([v.latitude, v.longitude]),
-      //       bool = false,
-      //       option = {radius: 3, color: 'red'}
-      //   if (this.markers[layerName].getLayers().length > 0) {
-      //     let markerArr = this.markers[layerName].getLayers()
-      //     bool = markerArr.some(mV => {
-      //       if (this.isMarker(mV, point)) {
-      //         option = {radius: 0, stroke: false}
-      //         mV.setStyle({color: 'red'})
-      //         return true
-      //       }
-      //     })
-      //   } else bool = true
-      //   if (bool) {
-      //     let m = L.circleMarker(point, option)
-      //              .bindPopup(v.problemDesc, {autoClose: false, closeOnClick: false})
-      //              .on('click', () => this.toPoint(point))
-      //     this.layers.repair.addLayer(m)
-      //     m.openPopup()
-      //   }
-      // })
     },
     /**
      * 监听报修面板开关
@@ -238,9 +229,41 @@ export default {
     repairSwitch: function (v) {
       this.repairShow = !v
     },
-    // 图层控制
-    layerButton: function (v) {
-      // ddd
+    /**
+     * 生成图层控制按钮面板
+     * @param  {object} v 图层对象
+     * @param  {string} buttonName 按钮面板名称
+     */
+    layerButton: function (v, buttonName) {
+      // 载入图层控制按钮
+      if (this.layers[buttonName] !== undefined) this.layers[buttonName].remove()
+      let overlay = {},
+          buttonIconClass = {
+            '泵站': 'bengzhan',
+            '泵站监控点': 'bengzhanjiankongdian',
+            '合流管点': 'heliuguandian',
+            '合流管线': 'heliuguanxian',
+            '积水点': 'jishuidian',
+            '积水监测点': 'jishuijiancedian',
+            '积水巡查点': 'jishuixunchadian',
+            '井盖': 'jinggai',
+            '井盖监测点': 'jinggaijiancedian',
+            '违章巡查点': 'weizhangxunchadian',
+            '污水管点': 'wushuiguandian',
+            '污水管线': 'wushuiguanxian',
+            '窨井监测点': 'yinjingjiancedian',
+            '隐患': 'yinhuan',
+            '隐患巡查点': 'yinhuanxunchadian',
+            '雨水管点': 'yushuiguandian',
+            '雨水管线': 'yushuiguanxian'
+          }
+      Object.keys(v).forEach(k => {
+        let active = ''
+        if (this.buttonTypes[k]) active = 'layer-active'
+        overlay[`<div class="layer-switch switch-icon ${active}"><i class="icon-switch-${buttonIconClass[k]}"></i>${k}</div>`] = v[k]
+      })
+      let layer = L.control.layers('', overlay, {collapsed: false}).addTo(this.map)
+      this.$set(this.layers, buttonName, layer)
     },
     /**
      * 跳转到指定坐标点并触发该点图层
@@ -331,6 +354,7 @@ export default {
       Object.keys(this.buttonTypes).forEach(k => {
         // log(this.buttonTypes[k])
         if (this.buttonTypes[k] && this.markers[k].layerType === 'point') {
+          // log('bound')
           pointJsonId.forEach(pV => {
             this.getData(pV, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
               this.$set(this.data, k, data.features)
@@ -366,40 +390,7 @@ export default {
       // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
     },
     markers (v) {
-      // 载入图层控制按钮
-      if (this.layers.button !== undefined) this.layers.button.remove()
-      let test = {}
-      Object.keys(v).forEach(k => {
-        let xxxx = ''
-        // if (k === '泵站') xxxx = 'bengzhan'
-        // if (k === '泵站监控点') xxxx = 'bengzhanjiankongdian'
-        // if (k === '合流管点') xxxx = 'heliuguandian'
-        // if (k === '合流管线') xxxx = 'heliuguanxian'
-        // if (k === '积水点') xxxx = 'jishuidian'
-        // if (k === '积水监测点') xxxx = 'jishuijiancedian'
-        // if (k === '积水巡查点') xxxx = 'jishuixunchadian'
-        // if (k === '井盖') xxxx = 'jinggai'
-        // if (k === '井盖监测点') xxxx = 'jinggaijiancedian'
-        // if (k === '违章巡查点') xxxx = 'weizhangxunchadian'
-        if (k === '污水管点') xxxx = 'wushuiguandian'
-        if (k === '污水管线') xxxx = 'wushuiguanxian'
-        // if (k === '窨井监测点') xxxx = 'yinjingjiancedian'
-        // if (k === '隐患') xxxx = 'yinhuan'
-        // if (k === '隐患巡查点') xxxx = 'yinhuanxunchadian'
-        // if (k === '雨水管点') xxxx = 'yushuiguandian'
-        // if (k === '雨水管线') xxxx = 'yushuiguanxian'
-        let active = ''
-        Object.keys(this.buttonTypes).some(bK => {
-          if (bK === k) {
-            active = 'layer-active'
-          }
-        })
-        // log('qqqqqqq' + active)
-        test[`<div class="layer-switch switch-icon ${active}"><i class="icon-switch-${xxxx}"></i> ${k}</div>`] = v[k]
-        this.$set(this.buttonTypes, k, false)
-      })
-      let layer = L.control.layers('', test, {collapsed: false}).addTo(this.map)
-      this.$set(this.layers, 'button', layer)
+      this.layerButton(v, 'basis')
     },
     repairShow (v) {
       this.getData('/inspect/repair').then(data => {
