@@ -28,7 +28,7 @@ export default {
 
     // 初始化聚合层
     this.layerData('污水管点', 'blue')
-    this.layerData('管线', 'green', 'line')
+    this.layerData('污水管线', 'green', 'line')
 
     // 获取当前地图范围
     this.bound = this.coordinateChange(this.map.getBounds())
@@ -50,8 +50,14 @@ export default {
     })
     // 图层控制按钮开启触发事件
     this.map.on('overlayadd', e => {
+      // log(e)
+      // let tempName = e.name
+      let layerName = e.name.replace(/^<(.*)<\/i>/, '')
+      // e.name = 'xxx'
+      // log(this.buttonTypes)
+      // this.layers.button.addOverlay(this.markers)
       let zoom = this.map.getZoom()
-      this.$set(this.buttonTypes, e.name, true)
+      this.$set(this.buttonTypes, layerName, true)
       log(this.buttonTypes)
       if (e.layer.layerType === 'line' && zoom < 16) {
         log('line')
@@ -63,7 +69,7 @@ export default {
     })
     // 图层控制按钮关闭触发事件
     this.map.on('overlayremove', e => {
-      this.$set(this.buttonTypes, e.name, false)
+      this.$set(this.buttonTypes, layerName, false)
     })
   },
   data () {
@@ -233,10 +239,8 @@ export default {
       this.repairShow = !v
     },
     // 图层控制
-    layerButton: function () {
-      L.control.layers('', this.layers, {
-        collapsed: false
-      }).addTo(this.map)
+    layerButton: function (v) {
+      // ddd
     },
     /**
      * 跳转到指定坐标点并触发该点图层
@@ -341,10 +345,10 @@ export default {
         } else this.map.removeLayer(this.markers[k])
       })
 
-      // if (zoom >= 16 && this.buttonTypes['管线']) {
+      // if (zoom >= 16 && this.buttonTypes['污水管线']) {
       //   this.getData(5).then(data => {
-      //     this.$set(this.data, '管线', data.features)
-      //   }).then(() => this.layerData('管线', 'green', 'line'))
+      //     this.$set(this.data, '污水管线', data.features)
+      //   }).then(() => this.layerData('污水管线', 'green', 'line'))
       // }
       // if (zoom >= 14 && this.buttonTypes['污水管点']) {
       //   this.getData(1, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
@@ -366,7 +370,32 @@ export default {
       if (this.layers.button !== undefined) this.layers.button.remove()
       let test = {}
       Object.keys(v).forEach(k => {
-        test[k] = v[k]
+        let xxxx = ''
+        // if (k === '泵站') xxxx = 'bengzhan'
+        // if (k === '泵站监控点') xxxx = 'bengzhanjiankongdian'
+        // if (k === '合流管点') xxxx = 'heliuguandian'
+        // if (k === '合流管线') xxxx = 'heliuguanxian'
+        // if (k === '积水点') xxxx = 'jishuidian'
+        // if (k === '积水监测点') xxxx = 'jishuijiancedian'
+        // if (k === '积水巡查点') xxxx = 'jishuixunchadian'
+        // if (k === '井盖') xxxx = 'jinggai'
+        // if (k === '井盖监测点') xxxx = 'jinggaijiancedian'
+        // if (k === '违章巡查点') xxxx = 'weizhangxunchadian'
+        if (k === '污水管点') xxxx = 'wushuiguandian'
+        if (k === '污水管线') xxxx = 'wushuiguanxian'
+        // if (k === '窨井监测点') xxxx = 'yinjingjiancedian'
+        // if (k === '隐患') xxxx = 'yinhuan'
+        // if (k === '隐患巡查点') xxxx = 'yinhuanxunchadian'
+        // if (k === '雨水管点') xxxx = 'yushuiguandian'
+        // if (k === '雨水管线') xxxx = 'yushuiguanxian'
+        let active = ''
+        Object.keys(this.buttonTypes).some(bK => {
+          if (bK === k) {
+            active = 'layer-active'
+          }
+        })
+        // log('qqqqqqq' + active)
+        test[`<div class="layer-switch switch-icon ${active}"><i class="icon-switch-${xxxx}"></i> ${k}</div>`] = v[k]
         this.$set(this.buttonTypes, k, false)
       })
       let layer = L.control.layers('', test, {collapsed: false}).addTo(this.map)
