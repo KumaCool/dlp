@@ -78,7 +78,7 @@ export default {
         this.map.setZoom(16)
       } else if (e.layer.layerType === 'point' && zoom < 14) {
         this.map.setZoom(14)
-      } else if (zoom < 14) this.map.setZoom(zoom)
+      } else if (zoom >= 14) this.map.setZoom(zoom)
     })
     // 图层控制按钮关闭触发事件
     this.map.on('overlayremove', e => {
@@ -204,18 +204,24 @@ export default {
         if (markers.length > 0) {
           // markers = this.markers[v.type].getLayers()
           markers.forEach(mV => {
-            // log(this.isMarker(mV, point))
             if (this.isMarker(mV, point)) {
               // log('isMarker')
               mV.setStyle({color: 'red'})
             }
           })
         }
+        if (this.overBound(point)) return
         switch (type) {
           case 'point':
             let m = L.circleMarker(point, {radius: 3, color: 'red'})
                 .bindPopup(v.problemDesc, popupOption)
-                // .on('click', () => this.toPoint(point))
+                .on('click', () => {
+                  this.toPoint(point)
+                  this.layerRepair()
+                })
+                .on('popupclose', (e) => {
+                  this.layers.repair.removeLayer(e.target)
+                })
             this.layers.repair.addLayer(m)
             m.openPopup()
             break
@@ -272,7 +278,6 @@ export default {
      * @param  {object} data      数据
      */
     toPoint: function (point, layerName, data) {
-      // log('1')
       point = L.latLng(point)
       this.map.setView(point, 18)
     },
@@ -285,6 +290,21 @@ export default {
     isMarker: function (marker, point) {
       let l = marker.getLatLng()
       return l.lat === point.lat && l.lng === point.lng
+    },
+    /**
+     * 判断坐标是否超出可视边界
+     * @param  {object} point 坐标
+     * @return {boolean}       超出返回true
+     */
+    overBound: function (point) {
+      let bound = this.map.getBounds(),
+          b1 = {lat: bound._northEast.lat, lng: bound._southWest.lng},
+          b2 = {lat: bound._southWest.lat, lng: bound._northEast.lng}
+      if (point.lat < b1.lat && point.lng < b1.lng) return true
+      if (point.lat > bound._northEast.lat && point.lng < bound._northEast.lng) return true
+      if (point.lat < bound._southWest.lat && point.lng > bound._southWest.lng) return true
+      if (point.lat > b2.lat && point.lng > b2.lng) return true
+      return false
     },
     /**
      * 根据坐标查询匹配的数据
@@ -368,34 +388,19 @@ export default {
           })
         } else this.map.removeLayer(this.markers[k])
       })
-
-      // if (zoom >= 16 && this.buttonTypes['污水管线']) {
-      //   this.getData(5).then(data => {
-      //     this.$set(this.data, '污水管线', data.features)
-      //   }).then(() => this.layerData('污水管线', 'green', 'line'))
-      // }
-      // if (zoom >= 14 && this.buttonTypes['污水管点']) {
-      //   this.getData(1, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
-      //     this.$set(this.data, '污水管点', data.features)
-      //   }).then(() => this.layerData('污水管点', 'blue'))
-      //   // 清除聚合图层
-      //   // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
-      // } else {
-      //   // 清除聚合图层
-      //   Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
-      //   // 清除报修提示图层
-      //   // if (this.layers.repair !== undefined) this.layers.repair.clearLayers()
-      // }
-      // 清除聚合图层
-      // Object.keys(this.markers).map(k => this.map.removeLayer(this.markers[k]))
     },
     markers (v) {
       this.layerButton(v, 'basis')
     },
     repairShow (v) {
-      this.getData('/inspect/repair').then(data => {
-        this.repair = data.data.paginationList
-      }).then(() => this.layerRepair())
+      if (!v) {
+        this.layers.repair.clearLayers()
+        // clearInterval(intervalId)
+      } else {
+        this.getData('/inspect/repair').then(data => {
+          this.repair = data.data.paginationList
+        }).then(() => this.layerRepair())
+      }
       // if (!v) {
       //   this.layers.repair.clearLayers()
       //   clearInterval(intervalId)
