@@ -32,6 +32,28 @@ export default {
     // 初始化聚合层
     this.layerData('污水管点')
     this.layerData('污水管线')
+    /* 
+    //测试用，可删
+    this.layerData('污水管线')
+    this.layerData('污水管线')
+    this.layerData('污水管线')
+    this.layerData('污水管线')
+    this.layerData('雨水管线')
+    this.layerData('雨水管点')
+    this.layerData('隐患巡查点')
+    this.layerData('隐患')
+    this.layerData('窨井监测点')
+    this.layerData('违章巡查点')
+    this.layerData('井盖监测点')
+    this.layerData('井盖')
+    this.layerData('积水巡查点')
+    this.layerData('积水监测点')
+    this.layerData('积水点')
+    this.layerData('合流管线')
+    this.layerData('合流管点')
+    this.layerData('泵站监控点')
+    this.layerData('泵站')
+    */
 
     // 开启报修提示
     this.repairShow = true
@@ -297,19 +319,23 @@ export default {
       let test = {}
       Object.keys(v).forEach(k => {
         let xxxx = ''
-        if (k === '污水管点') xxxx = 'wushuiguandian'
-        if (k === '污水管线') xxxx = 'wushuiguanxian'
-        if (k === '雨水管点') xxxx = 'yushuiguandian'
-        if (k === '雨水管线') xxxx = 'yushuiguanxian'
+        if (k === '泵站') xxxx = 'bengzhan'
+        if (k === '泵站监控点') xxxx = 'bengzhanjiankongdian'
         if (k === '合流管点') xxxx = 'heliuguandian'
         if (k === '合流管线') xxxx = 'heliuguanxian'
-        if (k === '泵站') xxxx = 'bengzhan'
-        if (k === '井盖') xxxx = 'jinggai'
         if (k === '积水点') xxxx = 'jishuidian'
-        if (k === '窨井') xxxx = 'yinjing'
+        if (k === '积水监测点') xxxx = 'jishuijiancedian'
+        if (k === '积水巡查点') xxxx = 'jishuixunchadian'
         if (k === '井盖') xxxx = 'jinggai'
+        if (k === '井盖监测点') xxxx = 'jinggaijiancedian'
+        if (k === '违章巡查点') xxxx = 'weizhangxunchadian'
+        if (k === '污水管点') xxxx = 'wushuiguandian'
+        if (k === '污水管线') xxxx = 'wushuiguanxian'
+        if (k === '窨井监测点') xxxx = 'yinjingjiancedian'
         if (k === '隐患') xxxx = 'yinhuan'
-        if (k === '违章') xxxx = 'weizhang'
+        if (k === '隐患巡查点') xxxx = 'yinhuanxunchadian'
+        if (k === '雨水管点') xxxx = 'yushuiguandian'
+        if (k === '雨水管线') xxxx = 'yushuiguanxian'
         test['<i class="icon-switch-' + xxxx + ' switch-icon"></i> ' + k] = v[k]
       })
       let layer = L.control.layers('', test, {collapsed: false}).addTo(this.map)
