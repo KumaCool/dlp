@@ -343,7 +343,7 @@ export default {
           return marker
         case 'LineString':
           geoJson.geometry.coordinates.map(v => v.reverse())
-          let polyline = L.polyline(geoJson.geometry.coordinates, {color: color})
+          let polyline = L.polyline(geoJson.geometry.coordinates, {color: color, weight: 1})
           return polyline
       }
     },
@@ -386,7 +386,7 @@ export default {
             this.getData(pV, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
               this.$set(this.data, k, data.features)
             }).then(() => {
-              let iconUrl = '../assets/images/icons/icon_map_switch_wushuiguandian.png'
+              let iconUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjM3MEM5NjY0QTREQjExRTc5QTM2QTcwMERFNTQzRjBGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjM3MEM5NjY1QTREQjExRTc5QTM2QTcwMERFNTQzRjBGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MzcwQzk2NjJBNERCMTFFNzlBMzZBNzAwREU1NDNGMEYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MzcwQzk2NjNBNERCMTFFNzlBMzZBNzAwREU1NDNGMEYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4P0J3pAAAB/klEQVR42nxTPS9sURTd514MFTfBoCBGxRCFX0AUXsZf0HnFo5pWolVSkQiv8xcmeQX+wRTCUBnzRGFUI5EQ486x1j73jPvysJN99845e6/9cdY1r8WipMXMzU3BrEJ/QMeT4yr0D/TQlsuX/8R7ACR2wWzL29svW68H8vgo8vLiorq7RXp7xWSzLenoOMBJEUDPbYAkuSSNxqKt1UTiWD6VMBQzNiYSRafsECCvQXK1o8nX118nU3Bnq5im0VjQbtlB8+goj7bPTH9/GBYKEp+cSKtU0vjOrS21zY0N18DKigSTk9Lc3BQzPR1jnFl2sGofHkJbqbhdjIw4OzPjZoeqz7MoEnt/7zqp10PmEmAJLemFhTXDwy54dNQtEao+z4aGpMUxKVwycgmQ89u2Nzdi+vo0MJiYcKBQ+r4je3vrAFxOLkjvyN7dOWdgoF2NSt93ZM/PEwIYfvUVqjorAa6u3LLm59vVtCL8IJ9383vJZPj9GyjD0LYC+D2gIi2rcaz/5qeAWJBjAvw2g4MxSeL3oNWTRHl6UjC98/OTUNksCXPombiLl1iz6QrfiMFS0fUemLjul1jEwbFeJJ18SeVcjsmnmgNRAHIapoCLXTCsJZhXenrcpqn0+RK8i6J9xC4nOR9/Y+p3zsP8VIKRI3gqaI0LS37ni3T8uwADAB/z4SVL1HxjAAAAAElFTkSuQmCC'
               this.layerData(k, this.layerIcon(iconUrl))
             }).then(() => {
               this.layerRepair()
@@ -396,7 +396,7 @@ export default {
           lineJsonId.forEach(lV => {
             this.getData(lV).then(data => {
               this.$set(this.data, k, data.features)
-            }).then(() => this.layerData(k, '#FCBCBC', 'line'))
+            }).then(() => this.layerData(k, '#B97878', 'line'))
           })
         } else this.map.removeLayer(this.markers[k])
       })
