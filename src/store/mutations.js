@@ -26,6 +26,8 @@ export default {
         return
       } else if (k.url === comName) {
         state.windowFull = k
+        // 打开全屏组件时清空窗口组件
+        state.window.splice(0, length)
         return
       }
     }

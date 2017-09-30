@@ -5,9 +5,6 @@
   border: 1px solid #5EBFF9;
 }
 
-
-
-
 // 登陆
 .login{
   .W100;
@@ -59,7 +56,47 @@
   }
 }
 
-
+// APP主界面
+@bodyHeadHeight: 100px; // 框架头部的高
+.app{
+  background: #E6E8ED;
+}
+.app-head{
+  height: @bodyHeadHeight;
+  line-height: 0;
+  .head-bg{
+    text-align: right;
+    background: url('../images/header_bg.jpg') repeat-x;
+    .head-logo{
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      transform: translateY(-50%)
+    }
+  }
+  .head-menu{
+    position: absolute;
+    .W100;
+    .H100;
+  }
+}
+.app-main{
+  position: absolute;
+  top: @bodyHeadHeight;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.app-left-menu,.app-window{
+  .H100;
+}
+.app-window{
+  position: relative;
+  overflow: hidden;
+}
+.left-menu-min{
+  width: 50px;
+}
 // 左侧导航栏
 .left-menu{
   .H100;
@@ -127,6 +164,7 @@
     .Radius(0 0 5px 5px);
   }
 }
+
 // 组件中间件 全屏模式
 .full{
   @height: 40px;

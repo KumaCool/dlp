@@ -152,6 +152,7 @@ export default {
       if (this.data[dataName] === undefined) this.$set(this.data, dataName, [])
       // 如果没有真实数据就初始化一个
       if (this.buttonTypes[dataName] === undefined) this.$set(this.buttonTypes, dataName, false)
+      // icon = L.icon()
       // 如果没有图层就初始化一个,否则就清空图层数据
       switch (type) {
         case 'line':
@@ -196,21 +197,20 @@ export default {
       this.repair.forEach(v => {
         let point = L.latLng(v.latlng.split(',')), // 坐标 <<<<<<<< 要修改
             type = 'point', // 类型 <<<<<<<< 要修改
-            markers = this.markers[v.type].getLayers(),
+            // markers = this.markers[v.type].getLayers(),
             popupOption = {
               autoClose: false,
               closeOnClick: false
             }
-        if (markers.length > 0) {
-          // markers = this.markers[v.type].getLayers()
-          markers.forEach(mV => {
-            if (this.isMarker(mV, point)) {
-              // log('isMarker')
-              mV.setStyle({color: 'red'})
-            }
-          })
-        }
-        if (this.overBound(point)) return
+        // 修改与报修数据相同的标记
+        // if (markers.length > 0) {
+        //   markers.forEach(mV => {
+        //     if (this.isMarker(mV, point)) {
+        //       mV.setStyle({color: 'red'})
+        //     }
+        //   })
+        // }
+        if (this.overBound(point) || !this.repairShow) return
         switch (type) {
           case 'point':
             let m = L.circleMarker(point, {radius: 3, color: 'red'})
@@ -227,6 +227,13 @@ export default {
             break
         }
       })
+    },
+    layerIcon: function (option, size = [10, 10]) {
+      option = typeof option === 'object' ? option : {
+        iconUrl: option,
+        iconSize: size
+      }
+      return L.icon(option)
     },
     /**
      * 监听报修面板开关
@@ -330,7 +337,7 @@ export default {
       if (geoJson.geometry === undefined) return this.$message({message: 'Map.geoJsonChange: geoJson格式不正确', type: 'error'})
       switch (geoJson.geometry.type) {
         case 'Point':
-          let marker = L.circleMarker(L.latLng(geoJson.geometry.coordinates.reverse()), {radius: 3, color: color}),
+          let marker = L.marker(L.latLng(geoJson.geometry.coordinates.reverse()), {icon: color}),
               tip = Object.keys(geoJson.properties).map(k => k + '：' + geoJson.properties[k])
           marker.bindTooltip(tip.join('<br>'))
           return marker
@@ -378,13 +385,18 @@ export default {
           pointJsonId.forEach(pV => {
             this.getData(pV, {outFields: 'EXP_NO,MAP_NO,ROAD,SUBSID'}).then(data => {
               this.$set(this.data, k, data.features)
-            }).then(() => this.layerData(k, 'blue')).then(() => this.layerRepair())
+            }).then(() => {
+              let iconUrl = '../assets/images/icons/icon_map_switch_wushuiguandian.png'
+              this.layerData(k, this.layerIcon(iconUrl))
+            }).then(() => {
+              this.layerRepair()
+            })
           })
         } else if (this.buttonTypes[k] && this.markers[k].layerType === 'line') {
           lineJsonId.forEach(lV => {
             this.getData(lV).then(data => {
               this.$set(this.data, k, data.features)
-            }).then(() => this.layerData(k, 'green', 'line'))
+            }).then(() => this.layerData(k, '#FCBCBC', 'line'))
           })
         } else this.map.removeLayer(this.markers[k])
       })

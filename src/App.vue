@@ -1,7 +1,10 @@
 <template>
   <el-row class="H100 app" v-if="$store.state.columnData !== ''">
     <el-row class="app-head">
-      <el-col :span="24" class="head-bg"><img src="./assets/images/header.jpg"></el-col>
+      <el-col :span="24" class="head-bg">
+        <span class="head-logo"><img src="./assets/images/logo.png"></span>
+        <img src="./assets/images/header.jpg">
+      </el-col>
       <el-row class="head-menu"
               type="flex"
               justify="end"
@@ -11,7 +14,7 @@
     </el-row>
     <el-row class="app-main">
       <el-col :span="4" class="app-left-menu">
-        <left-menu :data="$store.getters.columnTree" :defaultx="menuDefault"></left-menu>
+        <left-menu :data="$store.getters.columnTree"></left-menu>
       </el-col>
       <el-col :span="20" class="app-window">
         <com-middle window="full"
@@ -53,10 +56,6 @@ export default {
     document.getElementById('app').style.display = 'block'
   },
   computed: {
-    // 左侧栏默认激活
-    menuDefault: function () {
-      return this.$store.state.windowFull.id + '#' + this.$store.state.windowFull.url
-    },
     url: function () { // 路由用,暂无用的方法
       let path = new Array(this.windowCom.length)
       this.windowCom.forEach(function (v) {
@@ -75,34 +74,4 @@ export default {
 <style lang="less">
   @import './assets/css/style';
   @import './assets/css/DLPlatform';
-  @bodyHeadHeight: 100px; // 框架头部的高
-  .app{
-    background: #E6E8ED;
-  }
-  .app-head{
-    height: @bodyHeadHeight;
-    line-height: 0;
-    .head-bg{background: url('./assets/images/header_bg.jpg') repeat-x;}
-
-    .head-menu{
-      position: absolute;
-      // top: 0;
-      .W100;
-      .H100;
-    }
-  }
-  .app-main{
-    position: absolute;
-    top: @bodyHeadHeight;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  .app-left-menu,.app-window{
-    .H100;
-  }
-  .app-window{
-    position: relative;
-    overflow: hidden;
-  }
 </style>

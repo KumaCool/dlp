@@ -152,7 +152,7 @@ const config = {
       }
     },
     edit: {
-      request: '/action/getAction',
+      request: '/role/queryRole',
       response: '/role/updateRole',
       data: {
         roleName: {name: '角色名称', formType: 'text'}
@@ -161,7 +161,7 @@ const config = {
     created: {
       response: '/role/addRole',
       data: {
-        name: {name: '角色名称', formType: 'text'}
+        roleName: {name: '角色名称', formType: 'text'}
       }
     },
     delete: {
@@ -202,9 +202,7 @@ const config = {
         // handlePerson: {name: '处理人', formType: 'text'},
         handleResult: {name: '处理结果描述', formType: 'text'},
         status: {name: '处理状态', formType: ['select'], dictionary: ['fieldChangeLocal']},
-        latlng: {name: '坐标', formType: 'text'},
-        longitude: {name: '经度', formType: 'text'},
-        latitude: {name: '纬度', formType: 'text'}
+        latlng: {name: '坐标', formType: 'text'}
       }
     },
     created: {
@@ -220,8 +218,7 @@ const config = {
         // handlePerson: {name: '处理人', formType: 'text'},
         handleResult: {name: '处理结果描述', formType: 'text'},
         status: {name: '处理状态', formType: ['select'], dictionary: ['fieldChangeLocal']},
-        longitude: {name: '经度', formType: 'text'},
-        latitude: {name: '纬度', formType: 'text'}
+        latlng: {name: '坐标', formType: 'text'}
       }
     },
     delete: {
