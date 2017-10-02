@@ -120,7 +120,7 @@ export default {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }
       if (Number.isInteger(url)) {
-        url = 'https://116.62.225.78:6443/arcgis/rest/services/tongling/MapServer/' + url + '/query'
+        url = 'http://116.62.225.78:6080/arcgis/rest/services/tongling/MapServer/' + url + '/query'
         option.params = {
           geometry: this.bound.map(v => v).toString(),
           geometryType: 'esriGeometryEnvelope',
