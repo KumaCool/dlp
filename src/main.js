@@ -16,7 +16,7 @@ Vue.use(VueAxios, axios)
 Vue.component('com-middle', ComMiddle)
 
 // 设置API路径与跨域
-axios.defaults.baseURL = '/api'
+axios.defaults.baseURL = ''
 axios.defaults.withCredentials = true
 // axios.defaults.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 

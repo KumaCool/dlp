@@ -88,7 +88,7 @@ export default {
       if (url === undefined || url === '' || typeof params !== 'object') return this.$message({message: 'Weather.getData: 传入参数不正确', type: 'error'})
       let option = {
         // baseURL: '/weather',
-        baseURL: '/sojson',
+        baseURL: '',
         params: {
           key: 'fcldhx7li1dlr7az',
           location: '30.921775877611857:117.77711665257813',
