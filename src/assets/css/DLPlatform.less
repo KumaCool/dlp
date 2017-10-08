@@ -275,46 +275,21 @@
     font-size: 14px;
     font-weight: bold;
     content: '名称';
+    display: inline-block;
   }
-  .el-menu-item,.el-submenu__title{
-    padding-left: 40px!important;
-    height: @titleHeight;
-    line-height: @titleHeight;
-  }
-  .el-submenu__icon-arrow{
-    right: auto;
-    left: 20px;
-    width: 16px;
-    height: 16px;
-    background: url('../images/crud_menu_icon_arrow_right.png') no-repeat center;
-    &::before{
-      content: '';
+  .el-tree-node__expand-icon{
+    border-left-color: #75C9F8;
+    &+span{
+      padding-left: 20px;
+      background: url('../images/crud_menu_icon_folder.png') no-repeat left 12px;
     }
   }
-  .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow{
-    transform: rotateZ(90deg);
-  }
-  .el-submenu__title{
-    [class^="el-icon-ion"]{
-      width: 18px;
-      background: url('../images/crud_menu_icon_folder.png') no-repeat center 12px;
-      transform: none!important;
-      &::before{
-        content: '';
-      }
+  .is-leaf{
+    border-left-color: transparent;
+    &+span{
+      padding-left: 20px;
+      background: none;
     }
-  }
-  .el-menu-item>i{
-    width: 18px;
-    &::before{
-      content: '';
-    }
-  }
-  .el-submenu .el-menu{
-    padding-left: 30px;
-    height: auto;
-    line-height: inherit;
-    background: none;
   }
 }
 

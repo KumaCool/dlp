@@ -9,21 +9,16 @@
       </el-form>
     </el-col>
     <el-col :span="24">
-      <el-menu default-active="1"
-               class="crud-menu el-menu-vertical-demo"
-               @select="edit"
-               @open="edit"
-               @close="edit">
-        <template v-for="item in dataset">
-          <item-menu :data="item"></item-menu>
-        </template>
-      </el-menu>
+      <tree :data="dataset"
+            :props="props()"
+            class="crud-menu el-menu-vertical-demo"
+            @node-click="edit"></tree>
     </el-col>
   </el-row>
 </template>
 <script>
 // let log = console.log.bind(console)
-import itemMenu from '@/components/item-menu'
+import tree from '@/components/tree'
 /**
  * CRUD下的栏目显示组件
  * 用于把数据展示为树型结构进行操作
@@ -47,13 +42,18 @@ export default {
     }
   },
   methods: {
+    props: function () {
+      return {
+        children: 'item',
+        label: 'name'
+      }
+    },
     add: function () { // 触发父组件添加事件
       this.$emit('to-form', 'created')
     },
-    edit: function (index) { // 触发父组件修改事件
-      index = {id: index.split('#')[0]}
-      this.deleteTable = index
-      this.$emit('to-form', 'edit', index)
+    edit: function (obj) { // 触发父组件修改事件
+      this.deleteTable = obj // 记录预删除对象
+      this.$emit('to-form', 'edit', obj)
     },
     del: function () { // 触发父组件删除事件
       this.$confirm('删除后将无法恢复,是否要继续?', '提示', {
@@ -81,6 +81,6 @@ export default {
       })
     }
   },
-  components: {itemMenu}
+  components: {tree}
 }
 </script>

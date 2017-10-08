@@ -2,7 +2,7 @@
   <el-row class="crud" :gutter="20">
     <el-col :span="span">
       <component class="crud-left"
-                 :is="com"
+                 :is="com('list')"
                  :config="config.tables"
                  :tempStatus="listStatus"
                  @to-form="toForm"
@@ -35,24 +35,32 @@ export default {
   computed: {
     span: function () { // 左侧栏宽度判断,默认100%宽
       return this.config.forms === '' ? 24 : 10
-    },
-    com: function () { // 动态加载组件
-      // 加载配置信息
-      if (crud[this.comParam] === undefined) {
-        this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
-        this.$emit('close')
-      } else this.config.tables = crud[this.comParam].list
-
-      let comName = 'tables'
-      switch (this.comParam[0]) {
-        case 'column': // 栏目模块
-          comName = 'column'
-          break
-      }
-      return comName
     }
   },
   methods: {
+    /**
+     * 动态加载组件
+     * 根据配置类型中的com数据调用组件.
+     * @param  {string} position 配置文件中的模块类型名称
+     * @return {object}          返回对应的组件
+     */
+    com: function (position) {
+      if (crud[this.comParam] === undefined && crud[this.comParam][position].com === undefined) {
+        this.$message.error(`没有找到 ${this.comParam} 配置数据,请确认是否配置正确!`)
+        this.$emit('close')
+      } else this.config.tables = crud[this.comParam][position]
+      let comPath = crud[this.comParam][position].com
+      try {
+        return require(`./${comPath}`)
+      } catch (e) {
+        try {
+          return require(`../actions/${comPath}`)
+        } catch (e) {
+          this.$message.error(`没有找到 ${comPath} 组件`)
+          // this.close()
+        }
+      }
+    },
     /**
      * 根据类型打开表单组件
      * @param  {string} type  表单组件的类型 created | edit
@@ -84,8 +92,7 @@ export default {
   },
   components: {
     'tables': () => import('@/actions/tables'),
-    'forms': () => import('@/actions/forms'),
-    'column': () => import('@/actions/column-list')
+    'forms': () => import('@/actions/forms')
   }
 }
 </script>

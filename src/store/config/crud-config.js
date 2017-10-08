@@ -3,6 +3,7 @@
  * {
  *   <string: columnName>: { // 栏目模块名称
  *     <string: list | created | edit | delete>: { // 列表型 | 创建型 | 修改型 | 删除型
+ *       com: <string> // 引用的组件名
  *       request: <string> // 请求URL
  *       response: <string> // 提交URL
  *       select: <string> // 查询URL
@@ -32,6 +33,7 @@ const config = {
   // 用户管理
   'user': {
     list: {
+      com: 'tables',
       request: '/user/query/page/criteria',
       select: '/user/query/page/criteria',
       selectValue: ['username'],
@@ -70,6 +72,7 @@ const config = {
   // 栏目管理
   'column': {
     list: {
+      com: 'column-tree',
       request: '/column/user/list',
       select: '/user/query/page/criteria',
       selectValue: ['username'],
@@ -110,6 +113,7 @@ const config = {
   // 功能管理
   'action': {
     list: {
+      com: 'tables',
       request: '/action/query/page/criteria',
       select: '/action/query/page/criteria',
       selectValue: ['name'],
@@ -143,6 +147,7 @@ const config = {
   // 角色管理
   'role': {
     list: {
+      com: 'tables',
       request: '/role/queryRoleList',
       select: '/role/queryRoleList',
       selectValue: ['roleName'],
@@ -174,6 +179,7 @@ const config = {
   // 抢修信息
   'repair': {
     list: {
+      com: 'tables',
       request: '/inspect/repair',
       data: {
         id: {name: 'ID'},
