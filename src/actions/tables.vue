@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <el-row :class="style">
     <el-col :span="24">
       <el-form :inline="true">
         <el-form-item>

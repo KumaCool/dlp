@@ -1,6 +1,6 @@
 <template>
   <el-row class="crud" :gutter="20">
-    <el-col :span="span">
+    <el-col v-if="config.tables !== ''" :span="spanTable">
       <component class="crud-left"
                  :is="com('list')"
                  :config="config.tables"
@@ -8,7 +8,7 @@
                  @to-form="toForm"
                  @del="del"></component>
     </el-col>
-    <el-col v-if="config.forms !== ''" :span="14">
+    <el-col v-if="config.forms !== ''" :span="spanForm">
       <forms class="crud-right"
              :config="config.forms"
              :tempStatus="tempStatus"
@@ -22,6 +22,16 @@ import crud from '@/store/config/crud-config'
 
 export default {
   props: ['com-param'],
+  created () {
+    let config = crud[this.comParam]
+    if (config.list !== undefined) {
+      this.$set(this.config, 'tables', config.list)
+    } else if (config.created !== undefined) {
+      this.$set(this.config, 'forms', config.created)
+    } else if (config.edit !== undefined) {
+      this.$set(this.config, 'forms', config.edit)
+    }
+  },
   data () {
     return {
       config: { // 配置数据
@@ -33,11 +43,31 @@ export default {
     }
   },
   computed: {
-    span: function () { // 左侧栏宽度判断,默认100%宽
+    spanTable: function () { // 表格栏(左)宽度判断,默认100%宽
       return this.config.forms === '' ? 24 : 10
+    },
+    spanForm: function () { // 表单栏(右)宽度判断,无表格时100%宽
+      return this.config.tables === '' ? 24 : 14
     }
   },
   methods: {
+    /**
+     * 调用组件
+     * @param  {string} comName 要调用的组件名称
+     * @return {object}         返回对应的组件
+     */
+    requireCom: function (comName) {
+      try {
+        return require(`./${comName}`)
+      } catch (e) {
+        try {
+          return require(`../components/${comName}`)
+        } catch (e) {
+          this.$message.error(`没有找到 ${comName} 组件`)
+          // this.close()
+        }
+      }
+    },
     /**
      * 动态加载组件
      * 根据配置类型中的com数据调用组件.
@@ -50,16 +80,7 @@ export default {
         this.$emit('close')
       } else this.config.tables = crud[this.comParam][position]
       let comPath = crud[this.comParam][position].com
-      try {
-        return require(`./${comPath}`)
-      } catch (e) {
-        try {
-          return require(`../actions/${comPath}`)
-        } catch (e) {
-          this.$message.error(`没有找到 ${comPath} 组件`)
-          // this.close()
-        }
-      }
+      return this.requireCom(comPath)
     },
     /**
      * 根据类型打开表单组件

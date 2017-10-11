@@ -3,6 +3,7 @@
  * {
  *   <string: columnName>: { // 栏目模块名称
  *     <string: list | created | edit | delete>: { // 列表型 | 创建型 | 修改型 | 删除型
+ *       style: <string> // 模块样式
  *       com: <string> // 引用的组件名
  *       request: <string> // 请求URL
  *       response: <string> // 提交URL
@@ -89,6 +90,7 @@ const config = {
         icon: {name: '图标', formType: 'select-icon'},
         showTitle: {name: '窗口标题', formType: ['select'], dictionary: ['fieldChangeLocal']},
         winProperty: {name: '窗口属性', formType: ['select'], dictionary: ['fieldChangeLocal']},
+        style: {name: '样式', formType: 'text'},
         url: {name: '链接', formType: 'text'}
       }
     },
@@ -231,6 +233,18 @@ const config = {
       response: '/role/deleteRole',
       data: {
         id: []
+      }
+    }
+  },
+  'website': {
+    edit: {
+      style: 'website',
+      request: '/webconfig/queryConfig?id=1',
+      response: '/webconfig/updateConfig',
+      data: {
+        name: {name: '网站名称', formType: 'text'},
+        logo: {name: '网站LOGO', formType: 'text'},
+        primeWin: {name: '主窗口', formType: 'text'}
       }
     }
   }

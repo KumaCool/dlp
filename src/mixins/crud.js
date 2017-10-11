@@ -2,6 +2,11 @@ export default {
   created () {
     this.request()
   },
+  computed: {
+    style: function () {
+      return this.config.style === undefined ? 'crud-small-size' : this.config.style
+    }
+  },
   methods: {
     /**
      * 触发配置中所有设置了事件的属性,并会传入两个参数到事件当中
