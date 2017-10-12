@@ -8,6 +8,7 @@ export default {
       state[k] = obj[k]
     }
   },
+  // 初次显示的全屏窗口组件
   firstWindow: state => {
     if (Array.isArray(state.columnData)) {
       state.columnData.some(v => {
@@ -26,10 +27,11 @@ export default {
     let length = state.window.length
     for (var k of state.columnData) {
       if (k.url === comName && k.winProperty !== 'full') {
-        // console.log(k)
         state.window.push({
           name: comName,
+          style: k.style,
           title: k.name,
+          showTitle: k.showTitle,
           zIndex: length,
           checked: true
         })

@@ -3,14 +3,14 @@
     <el-col :span="24"
             class="dialog-header"
             :class="checkedClass ? 'checked' : ''"
-            v-if="window === 'small' && showTitle === 1"
+            v-if="window === 'small' && showTitle"
             v-drag="positionUpdate"
     >
       <span>{{title}}</span><i class="el-icon-close" @click="close"></i>
     </el-col>
     <el-col :span="24"
             class="dialog-header"
-            v-if="window === 'full' && showTitle === 1"
+            v-if="window === 'full' && showTitle"
     >
       <span>{{title}}</span>
     </el-col>
@@ -26,6 +26,7 @@
  * @param {number} index 组件标识
  * @param {string} window 窗口大小 small(默认)/full
  * @param {string} name 调用组件名,它可以有组合形式 fileName.param
+ * @param {string} className 组件样式
  * @param {boolean} showTitle 显示窗口标题
  * @param {string} title 窗口标题
  * @param {number} zIndex 窗口层级
@@ -40,15 +41,19 @@
  * @param {array} comParam 组件的参数
  */
 export default {
-  // props: ['index', 'window', 'name', 'showTitle', 'title', 'zIndex', 'checkedClass'],
   props: {
     index: Number,
     window: String,
     name: String,
+    className: {
+      type: String,
+      default: ''
+    },
     title: String,
     showTitle: {
-      default: function () {
-        if (this.title !== undefined) return 1
+      type: Boolean,
+      default: () => {
+        if (this.title !== undefined) return true
       }
     },
     zIndex: Number,
@@ -63,7 +68,8 @@ export default {
   },
   computed: {
     comClass: function () { // 本中间件组件的主框架样式名
-      return this.window === 'full' ? 'full' : 'wrapper small'
+      let className = this.className === null ? '' : ' ' + this.className
+      return this.window === 'full' ? 'full' + className : 'wrapper small' + className
     },
     com: function () { // 调用组件
       let arr = this.name.split('.')

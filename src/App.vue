@@ -20,13 +20,16 @@
         <com-middle v-if="$store.state.windowFull !== {}"
                     window="full"
                     :name="$store.state.windowFull.url"
+                    :className="$store.state.windowFull.style"
                     :title="$store.state.windowFull.name"
-                    :showTitle="$store.state.windowFull.showTitle"></com-middle>
+                    :showTitle="$store.state.windowFull.showTitle === 1"></com-middle>
         <template v-for="(item, index) in windowCom">
           <com-middle window="small"
                       :index="index"
                       :name="item.name"
+                      :className="item.style"
                       :title="item.title"
+                      :showTitle="item.showTitle === 1"
                       :zIndex="item.zIndex"
                       :checkedClass="item.checked"
                       @com-close="closeWindow"
