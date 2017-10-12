@@ -8,6 +8,16 @@ export default {
       state[k] = obj[k]
     }
   },
+  firstWindow: state => {
+    if (Array.isArray(state.columnData)) {
+      state.columnData.some(v => {
+        if (state.website.primeWin === v.url) {
+          state.windowFull = v
+          return true
+        }
+      })
+    }
+  },
   /**
    * 打开窗口组件
    * @param  {string} comName   要打开的组件名

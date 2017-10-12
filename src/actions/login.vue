@@ -99,6 +99,12 @@ export default {
         } else if (response.data.rtnCode === 200 && callback !== undefined) {
           callback(response.data)
         } else if (callback !== undefined) return this.$message({message: response.data.rtnStr, type: 'error'})
+      }).then(() => { // XXX: 代码需要优化
+        this.$http.get('webconfig/queryConfig?id=1').then(response => {
+          this.$store.commit('set_state', {website: response.data.data})
+          document.title = this.$store.state.website.name
+          this.$store.commit('firstWindow')
+        })
       }).catch(error => {
         this.$message({message: error, type: 'error'})
         log(error)

@@ -17,7 +17,8 @@
         <left-menu :data="$store.getters.columnTree"></left-menu>
       </el-col>
       <el-col :span="20" class="app-window">
-        <com-middle window="full"
+        <com-middle v-if="$store.state.windowFull !== {}"
+                    window="full"
                     :name="$store.state.windowFull.url"
                     :title="$store.state.windowFull.name"
                     :showTitle="$store.state.windowFull.showTitle"></com-middle>
