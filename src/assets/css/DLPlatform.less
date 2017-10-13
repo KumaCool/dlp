@@ -333,54 +333,32 @@
   }
 }
 
-// 天气样式
-.head-weather{
-  width: 140px;
-  line-height: normal;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+// 天气组件
+.weather{
   color: #FFF;
-  z-index: 1;
-  cursor: pointer;
-  .weather-info{
-    position: relative;
-  }
-  .weather-info-main{
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 246px;
-    height: 220px;
-    .Radius;
-    .BoxShadow;
+  .weather-info-today{
+    margin-top: 10px;
+    font-size: 16px;
+    .TextShadow;
     span{
-      display: block;
+      font-size: 24px;
     }
-    .weather-info-today{
-      margin-top: 20px;
-      font-size: 16px;
-      .TextShadow;
-      span{
-        font-size: 24px;
-      }
+  }
+  .weather-info-list{
+    // position: absolute;
+    // bottom: 0;
+    padding: 10px 0;
+    // .W100;
+    // font-size: 14px;
+    font-weight: 100;
+    background-color: rgba(0, 0, 0, 0.15);
+    text-align: center;
+    letter-spacing: 1px;
+    .el-col{
+      border-right: 1px #FFF solid;
     }
-    .weather-info-list{
-      position: absolute;
-      bottom: 0;
-      padding: 10px 0;
-      .W100;
-      font-size: 14px;
-      font-weight: 100;
-      background-color: rgba(0, 0, 0, 0.15);
-      text-align: center;
-      letter-spacing: 1px;
-      .el-col{
-        border-right: 1px #FFF solid;
-      }
-      .el-col:last-of-type{
-        border-right: none;
-      }
+    .el-col:last-of-type{
+      border-right: none;
     }
   }
   .weather-icon{
@@ -393,38 +371,46 @@
   .weather-info-today-icon{
     @height: 80px;
     height: @height;
-    background: no-repeat;
+    background-repeat: no-repeat;
     background-size: @height;
   }
-  .weather-icon-sunny{
-    background-image: url('../images/icons/icon_weather_sunny.png');
-  }
-  .weather-bg-sunny{
-    background-image: url('../images/weather_bg_sunny.jpg');
-  }
-  .weather-icon-cloudy{
-    background-image: url('../images/icons/icon_weather_cloudy.png');
-  }
-  .weather-bg-cloudy{
-    background-image: url('../images/weather_bg_cloudy.jpg');
-  }
-  .weather-icon-overcast{
-    background-image: url('../images/icons/icon_weather_overcast.png');
-  }
-  .weather-bg-overcast{
-    background-image: url('../images/weather_bg_overcast.jpg');
-  }
-  .weather-icon-rain{
-    background-image: url('../images/icons/icon_weather_rain.png');
-  }
-  .weather-bg-rain{
-    background-image: url('../images/weather_bg_rain.jpg');
-  }
-  .weather-icon-shower{
-    background-image: url('../images/icons/icon_weather_shower.png');
-  }
-  .weather-bg-shower{
-    background-image: url('../images/weather_bg_shower.jpg');
+}
+.weather-icon-sunny{
+  background-image: url('../images/icons/icon_weather_sunny.png');
+}
+.weather-bg-sunny{
+  background-image: url('../images/weather_bg_sunny.jpg');
+}
+.weather-icon-cloudy{
+  background-image: url('../images/icons/icon_weather_cloudy.png');
+}
+.weather-bg-cloudy{
+  background-image: url('../images/weather_bg_cloudy.jpg');
+}
+.weather-icon-overcast{
+  background-image: url('../images/icons/icon_weather_overcast.png');
+}
+.weather-bg-overcast{
+  background-image: url('../images/weather_bg_overcast.jpg');
+}
+.weather-icon-rain{
+  background-image: url('../images/icons/icon_weather_rain.png');
+}
+.weather-bg-rain{
+  background-image: url('../images/weather_bg_rain.jpg');
+}
+.weather-icon-shower{
+  background-image: url('../images/icons/icon_weather_shower.png');
+}
+.weather-bg-shower{
+  background-image: url('../images/weather_bg_shower.jpg');
+}
+
+// 平台配置
+.website{
+  width: 400px;
+  .crud{
+    height: auto;
   }
 }
 

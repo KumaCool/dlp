@@ -9,7 +9,7 @@
               type="flex"
               justify="end"
               :gutter="10">
-        <el-col :span="3"><weather class="head-weather"></weather></el-col>
+        <!-- <el-col :span="3"><weather class="head-weather"></weather></el-col> -->
       </el-row>
     </el-row>
     <el-row class="app-main">
@@ -47,7 +47,6 @@ import { mapMutations } from 'vuex'
 
 import leftMenu from '@/actions/menu'
 import login from '@/actions/login'
-import weather from '@/actions/weather'
 
 export default {
   name: 'app',
@@ -72,7 +71,7 @@ export default {
   methods: {
     ...mapMutations(['closeWindow', 'windowChecked'])
   },
-  components: {leftMenu, login, weather}
+  components: {leftMenu, login}
 }
 </script>
 <style lang="less">

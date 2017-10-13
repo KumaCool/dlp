@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import io from 'socket.io-client'
 
 import mutations from '@/store/mutations'
 import actions from '@/store/actions'
@@ -13,7 +14,10 @@ const store = {
     columnData: '', // 栏目数据
     window: [], // 窗口组件
     windowFull: {url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
-    permission: '' // 用户权限
+    permission: '', // 用户权限
+    socket: io('ws://116.62.225.78:8380/', {
+      path: 'pusher'
+    })
     /* eslint-enable */
   },
   getters: {

@@ -1,30 +1,31 @@
 <template>
-    <el-row v-if="daily.length > 0" class="weather-today" @mouseover.native="showInfo">
+  <el-row :class="'weather-info-main weather-bg-' + weatherIcon(now.code_day)">
+    <!-- 当日天气 -->
+    <el-row class="weather-info-today"
+            type="flex"
+            justify="center">
+      <el-col :span="10" :class="'weather-info-today-icon weather-icon-' + weatherIcon(now.code_day)"></el-col>
+      <el-col :span="10">{{location.name}}<br><span>{{now.temperature}}&#8451;</span>{{now.text_day}}&nbsp;&nbsp;{{now.wind_direction}}</el-col>
+    </el-row>
+    <!-- 未来天气列表 -->
+    <el-row class="weather-info-list">
+      <el-col v-for="(v, index) in dailyNoToday"
+              :key="index"
+              :span="8">
+        <span>{{dayCalc(index, v.date)}}</span>
+        <span :class="'weather-icon weather-icon-' + weatherIcon(v.code_day)"></span>
+        <span>{{v.low}}&#8451;/{{v.high}}&#8451;</span>
+      </el-col>
+    </el-row>
+  </el-row>
+
+<!--     <el-row v-if="daily.length > 0" class="weather-today" @mouseover.native="showInfo">
       <el-col :span="10" :class="'weather-icon weather-icon-' + weatherIcon(now.code_day)"></el-col>
       <el-col :span="14">今天<br>{{now.low}}&#8451;&sim;{{now.high}}&#8451;</el-col>
 
       <el-col v-show="show" class="weather-info">
-        <el-row :class="'weather-info-main weather-bg-' + weatherIcon(now.code_day)">
-          <!-- 当日天气 -->
-          <el-row class="weather-info-today"
-                  type="flex"
-                  justify="center">
-            <el-col :span="9" :class="'weather-info-today-icon weather-icon-' + weatherIcon(now.code_day)"></el-col>
-            <el-col :span="10">{{location.name}}<br><span>{{now.temperature}}&#8451;</span>{{now.text_day}}&nbsp;&nbsp;{{now.wind_direction}}</el-col>
-          </el-row>
-          <!-- 未来天气列表 -->
-          <el-row class="weather-info-list">
-            <el-col v-for="(v, index) in dailyNoToday"
-                    :key="index"
-                    :span="8">
-              <span>{{dayCalc(index, v.date)}}</span>
-              <span :class="'weather-icon weather-icon-' + weatherIcon(v.code_day)"></span>
-              <span>{{v.low}}&#8451;/{{v.high}}&#8451;</span>
-            </el-col>
-          </el-row>
-        </el-row>
       </el-col>
-    </el-row>
+    </el-row> -->
 </template>
 <script>
 let log = console.log.bind(console)

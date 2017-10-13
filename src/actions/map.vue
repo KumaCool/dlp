@@ -2,9 +2,7 @@
   <el-row class="map" v-loading="loading">
     <el-col :id="id" :span="24"></el-col>
     <el-col :span="24">
-      <repair v-model="repair"
-              @to-point="toPoint"
-              @repair-switch="repairSwitch"></repair>
+      <tools></tools>
     </el-col>
   </el-row>
 </template>
@@ -14,7 +12,7 @@ import L from 'leaflet'
 import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/dist/MarkerCluster.css'
 import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster'
-import repair from './repair'
+import tools from './map-tools'
 
 let log = console.log.bind(console)
 // let intervalId
@@ -275,7 +273,7 @@ export default {
         if (this.buttonTypes[k]) active = 'layer-active'
         overlay[`<div class="layer-switch switch-icon ${active}"><i class="icon-switch-${buttonIconClass[k]}"></i>${k}</div>`] = v[k]
       })
-      let layer = L.control.layers('', overlay, {collapsed: false}).addTo(this.map)
+      let layer = L.control.layers('', overlay, {collapsed: false, position: 'bottomright'}).addTo(this.map)
       this.$set(this.layers, buttonName, layer)
     },
     /**
@@ -425,6 +423,6 @@ export default {
       // }
     }
   },
-  components: {repair}
+  components: {tools}
 }
 </script>
