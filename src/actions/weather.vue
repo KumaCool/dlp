@@ -32,7 +32,7 @@ let log = console.log.bind(console)
 
 export default {
   created () {
-    this.getData('/json.shtml', {city: '铜陵'}).then(v => {
+    this.getData('api/weather', {city: '铜陵'}).then(v => {
       this.location = {name: v.city}
       let dayList = []
       for (var i = 0; i < 4; i++) {
@@ -89,7 +89,7 @@ export default {
       if (url === undefined || url === '' || typeof params !== 'object') return this.$message({message: 'Weather.getData: 传入参数不正确', type: 'error'})
       let option = {
         // baseURL: '/weather',
-        baseURL: '/sojson',
+        // baseURL: '/sojson',
         // baseURL: 'https://bird.ioliu.cn/v2?url=http://www.sojson.com/open/api/weather',
         params: {
           key: 'fcldhx7li1dlr7az',

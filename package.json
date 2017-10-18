@@ -19,6 +19,8 @@
     "leaflet": "^1.2.0",
     "leaflet.markercluster": "^1.1.0",
     "mapbox-gl": "^0.39.1",
+    "proj4": "^2.4.4",
+    "proj4leaflet": "^1.0.2",
     "socket.io-client": "^2.0.3",
     "vue": "^2.3.3",
     "vue-axios": "^2.0.2",

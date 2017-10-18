@@ -2,7 +2,8 @@
   <el-row class="map" v-loading="loading">
     <el-col :id="id" :span="24"></el-col>
     <el-col :span="24">
-      <tools></tools>
+      <tools @to-point="toPoint"
+             @repair-switch="repairSwitch"></tools>
     </el-col>
   </el-row>
 </template>
@@ -11,18 +12,42 @@ import '../../node_modules/leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/dist/MarkerCluster.css'
 import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/dist/MarkerCluster.Default.css'
+// import Esri from 'esri-leaflet'
+import 'proj4leaflet'
 import 'leaflet.markercluster'
 import tools from './map-tools'
 
 let log = console.log.bind(console)
-// let intervalId
 export default {
   mounted () {
     // 初始化地图
+    let crs = new L.Proj.CRS('EPSG:2437', '+proj=tmerc +lat_0=0 +lon_0=120 +k=1 +x_0=500000 +y_0=0 +ellps=krass +units=m +no_defs', {
+      origin: [-5123300.0 + 50, 1.00023E7 - 80],
+      resolutions: [
+        198.43789687579377,
+        132.2919312505292,
+        66.1459656252646,
+        33.0729828126323,
+        16.933367200067735,
+        8.466683600033868,
+        4.233341800016934,
+        2.116670900008467,
+        1.0583354500042335,
+        0.5291677250021167
+      ]
+    })
     this.map = new L.Map(this.id, {
-      attributionControl: false
-    }).setView([30.921775877611857, 117.77711665257813], 12)
-    L.tileLayer('https://api.mapbox.com/styles/v1/mayahw/cj7043o68chyg2ro3pzfy0qru/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWF5YWh3IiwiYSI6IlhnVzlOb0EifQ.S_tK2JCpZMDshhJN5KNCYQ').addTo(this.map)
+      attributionControl: false,
+      crs: crs,
+      minZoom: this.zoom.min,
+      maxZoom: this.zoom.max
+    }).setView([0.22650415004670005, 116.01382401454075], 2)
+    L.tileLayer('http://116.62.225.78:6080/arcgis/rest/services/BASEMAP/MapServer/tile/{z}/{y}/{x}').addTo(this.map)
+    // log(esri)
+    // Esri.basemapLayer('Streets').addTo(this.map)
+    // Esri.tiledMapLayer({
+    //   url: 'http://116.62.225.78:6080/arcgis/rest/services/BASEMAP_V/MapServer'
+    // }).addTo(this.map)
 
     // 初始化聚合层
     this.layerData('污水管点', 'blue')
@@ -72,11 +97,11 @@ export default {
       let zoom = this.map.getZoom()
       this.$set(this.buttonTypes, layerName, true)
       this.layerButton(this.markers, 'basis')
-      if (e.layer.layerType === 'line' && zoom < 16) {
-        this.map.setZoom(16)
-      } else if (e.layer.layerType === 'point' && zoom < 14) {
-        this.map.setZoom(14)
-      } else if (zoom >= 14) this.map.setZoom(zoom)
+      if (e.layer.layerType === 'line' && zoom < this.zoom.max - 1) {
+        this.map.setZoom(this.zoom.max - 1)
+      } else if (e.layer.layerType === 'point' && zoom < this.zoom.max - 3) {
+        this.map.setZoom(this.zoom.max - 3)
+      } else if (zoom >= this.zoom.max - 3) this.map.setZoom(zoom)
     })
     // 图层控制按钮关闭触发事件
     this.map.on('overlayremove', e => {
@@ -89,9 +114,10 @@ export default {
   },
   data () {
     return {
+      zoom: {max: 8, min: 0}, // 地图缩放范围
       loading: false, // 加载开关
-      raw: 3857, // arcgis 坐标系
-      geo: 4326, // geo 坐标系
+      raw: 3857, // arcgis 参考空间
+      geo: 4326, // geo 参考空间
       repair: [], // 报修数据
       repairShow: false, // 报修开关
       id: 'map', // 地图documentId
@@ -118,7 +144,7 @@ export default {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }
       if (Number.isInteger(url)) {
-        url = 'http://116.62.225.78:6080/arcgis/rest/services/tongling/MapServer/' + url + '/query'
+        url = 'http://116.62.225.78:6080/arcgis/rest/services/BASEMAP/MapServer/' + url + '/query'
         option.params = {
           geometry: this.bound.map(v => v).toString(),
           geometryType: 'esriGeometryEnvelope',
@@ -166,7 +192,7 @@ export default {
         case 'point':
           if (this.markers[layerName] === undefined) {
             this.$set(this.markers, layerName, L.markerClusterGroup({ // 初始化聚合对象
-              disableClusteringAtZoom: 17,
+              disableClusteringAtZoom: this.zoom.max,
               maxClusterRadius: 30, // 聚合距离
               spiderfyOnMaxZoom: false,
               chunkedLoading: true
@@ -283,8 +309,9 @@ export default {
      * @param  {object} data      数据
      */
     toPoint: function (point, layerName, data) {
+      console.log('sss')
       point = L.latLng(point)
-      this.map.setView(point, 18)
+      this.map.setView(point, this.zoom.max)
     },
     /**
      * 判断图层是否属于该坐标
@@ -373,8 +400,8 @@ export default {
     // 根据地图变动更新数据
     bound (v) {
       // let zoom = this.map.getZoom()
-      let pointJsonId = [1],
-          lineJsonId = [5]
+      let pointJsonId = [2], // 点数据组
+          lineJsonId = [5] // 线数据组
 
       Object.keys(this.buttonTypes).forEach(k => {
         // log(this.buttonTypes[k])

@@ -15,12 +15,33 @@ const store = {
     window: [], // 窗口组件
     windowFull: {url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
     permission: '', // 用户权限
+    repair: [], // 报修数据
     socket: io('ws://116.62.225.78:8380/', {
       path: 'pusher'
     })
     /* eslint-enable */
   },
   getters: {
+    // 转换报修数据内容
+    repairFormat: state => {
+      let arr = state.repair.map(v => {
+        switch (v.problemType) {
+          case 1:
+            v.problemType = '积水点'
+            break
+          case 2:
+            v.problemType = '隐患'
+            break
+          case 3:
+            v.problemType = '违章'
+            break
+        }
+        v.submitTime = new Date(v.submitTime).toLocaleString()
+        return v
+      })
+      return arr
+    },
+
     // 格式化栏目数据,变更成树结构
     columnTree: state => {
       /**
