@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 
-import mutations from '@/store/mutations'
-import actions from '@/store/actions'
+import mutations from './mutations'
+import actions from './actions'
+
+import loginStore from './modules/loginStore'
 
 Vue.use(Vuex)
 
@@ -15,10 +17,8 @@ const store = {
     window: [], // 窗口组件
     windowFull: {url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
     permission: '', // 用户权限
-    repair: [], // 报修数据
-    socket: io('ws://116.62.225.78:8380/', {
-      path: 'pusher'
-    })
+    repair: [] // 报修数据
+    // socket: io.connect('http://116.62.225.78:9002')
     /* eslint-enable */
   },
   getters: {
@@ -65,7 +65,10 @@ const store = {
     }
   },
   mutations,
-  actions
+  actions,
+  modules: {
+    loginStore
+  }
 }
 
 export default new Vuex.Store(store)
