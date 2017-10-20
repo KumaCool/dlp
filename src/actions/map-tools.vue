@@ -19,15 +19,15 @@
                 @repair-switch="repairSwitch"></repair>
       </el-popover>
       <el-button-group>
-        <el-button>城市：铜陵</el-button>
+        <el-button @click="toPoint([0.22650415004670005, 116.01382401454075])">城市：铜陵</el-button>
         <el-button v-popover:weather>天气</el-button>
       </el-button-group>
-      <el-badge :value="3"
+      <el-badge :value="$store.state.repair.length"
                 :max="99">
         <el-button v-popover:repair>报修</el-button>
       </el-badge>
     </el-col>
-  </el-row> 
+  </el-row>
 </template>
 <script>
 import repair from './repair'
@@ -35,7 +35,7 @@ import weather from './weather'
 // let log = console.log.bind(console)
 export default {
   created () {
-    // let test = new WebSocket('ws://116.62.225.78:8380/pusher')
+    // let test = new WebSocket('ws://116.62.225.78:9002')
     // log(test.readyState)
     // test.onopen = function (evt) {
     //   log(evt)

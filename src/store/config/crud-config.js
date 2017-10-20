@@ -243,7 +243,7 @@ const config = {
       response: '/webconfig/updateConfig',
       data: {
         name: {name: '网站名称', formType: 'text'},
-        logo: {name: '网站LOGO', formType: 'text'},
+        // logo: {name: '网站LOGO', formType: 'text'},
         primeWin: {name: '主窗口', formType: 'text'}
       }
     }

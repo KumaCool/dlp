@@ -30,13 +30,6 @@
                            label="提交时间"
                            width="190"></el-table-column>
         </el-table>
-<!--         <el-alert v-for="(v, index) in data"
-                  :key="index"
-                  :title="v.problemDesc"
-                  type="warning"
-                  show-icon
-                  @click.native="toPoint(index)"></el-alert> -->
-        <!-- <el-button plain @click="notify">xxx</el-button> -->
       </el-col>
     </el-row>
   </el-row>
@@ -65,7 +58,7 @@ export default {
       // if (dataIndex === undefined) return this.$message({message: 'Repair.toPoint: 必须是个整数', type: 'error'})
       // let point = this.value[dataIndex].latlng.split(',')
       // point.splice(2, point.length)
-      this.$emit('to-point', row.latlng)
+      this.$emit('to-point', row.latlng.split(','))
     },
     repairSwitch: function () {
       this.$emit('repair-switch', this.show)

@@ -45,8 +45,9 @@ export default {
     L.tileLayer('http://116.62.225.78:6080/arcgis/rest/services/BASEMAP/MapServer/tile/{z}/{y}/{x}').addTo(this.map)
     // log(esri)
     // Esri.basemapLayer('Streets').addTo(this.map)
+    // Esri.basemapLayer('Gray').addTo(this.map)
     // Esri.tiledMapLayer({
-    //   url: 'http://116.62.225.78:6080/arcgis/rest/services/BASEMAP_V/MapServer'
+    //   url: 'http://116.62.225.78:6080/arcgis/rest/services/BASEMAP/MapServer'
     // }).addTo(this.map)
 
     // 初始化聚合层
@@ -309,7 +310,6 @@ export default {
      * @param  {object} data      数据
      */
     toPoint: function (point, layerName, data) {
-      console.log('sss')
       point = L.latLng(point)
       this.map.setView(point, this.zoom.max)
     },

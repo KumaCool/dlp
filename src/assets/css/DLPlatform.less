@@ -301,35 +301,30 @@
     background: #333;
     color: red;
   }
-  // 地图报修消息提示层
-  .repair{
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding: 0 5px;
-    width: auto;
-    z-index: 400;
-    .component{
-      border: none;
-    }
-    .el-switch{
-      float: right;
-    }
-    .el-alert{
-      margin: 5px auto;
-    }
-    .el-alert__content{
-      padding: 0 20px 0 8px;
-      .el-alert__title{
-        display: inherit;
-      }
-    }
-  }
+  // 工具栏
   .map-tools{
     position: absolute;
     top: 20px;
     right: 20px;
     z-index: 400;
+  }
+}
+// 地图报修组件
+.repair{
+  .component{
+    border: none;
+  }
+  .el-switch{
+    margin-bottom: 10px;
+  }
+  .el-alert{
+    margin: 5px auto;
+  }
+  .el-alert__content{
+    padding: 0 20px 0 8px;
+    .el-alert__title{
+      display: inherit;
+    }
   }
 }
 
@@ -356,6 +351,9 @@
     letter-spacing: 1px;
     .el-col{
       border-right: 1px #FFF solid;
+      span{
+        display: block;
+      }
     }
     .el-col:last-of-type{
       border-right: none;
