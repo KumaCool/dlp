@@ -6,7 +6,7 @@
                :model="form"
                :rules="rules"
                label-width="80px"
-               @keyup.enter.native="onSubmit('form')">
+               @keyup.enter.native="onSubmit">
         <el-form-item prop="usercode" label="账号">
           <el-input v-model="form.usercode" placeholder="账号"></el-input>
         </el-form-item>
@@ -17,7 +17,7 @@
           <el-checkbox v-model="form.checked">记住密码</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit('form')">登录</el-button>
+          <el-button type="primary" @click="onSubmit">登录</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -25,21 +25,6 @@
 </template>
 
 <script>
-let log = console.log.bind(console)
-
-/**
- * 获取cookie
- * @param  {string} name cookie名
- * @return {string}      返回匹配的cookie值
- */
-function getCookie (name) {
-  let arr = document.cookie.split('; ')
-  for (var i = 0; i < arr.length; i++) {
-    let temp = arr[i].split('=')
-    if (temp[0] === name) return unescape(temp[1])
-  }
-}
-
 export default {
   name: 'login',
   data () {
@@ -56,7 +41,7 @@ export default {
     }
   },
   created () {
-    this.ajax('/per/col/ac/get')
+    // this.ajax('/per/col/ac/get')
   },
   methods: {
     /**
@@ -64,61 +49,12 @@ export default {
      * @param  {string} formName 用于触发验证的表单数据名称
      */
     onSubmit: function (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.ajax('/sys/login', {
-            method: 'post',
-            params: this.form
-          }, response => {
-            // 记住密码
-            if (this.form.checked) {
-              let date = new Date()
-              date.setTime(date.getTime() + 30 * 24 * 3.6e+6) // 30天
-              document.cookie = `DSSESIONID=${escape(getCookie('DSSESIONID'))};expires=${date.toGMTString()}`
-            }
-            this.$message({message: response.rtnStr, type: 'success'})
-            this.ajax('/per/col/ac/get')
-          })
-        } else return false
-      })
-    },
-    /**
-     * ajax简单的封装主要用于登录后拉取数据
-     * @param  {string} url        请求地址
-     * @param  {function} callback 回调,第一参数为ajax返回的数据
-     */
-    ajax: function (url, option = {}, callback) {
-      option.url = url
-      this.$http.request(option).then(response => {
-        if (response.status !== 200) return this.$message({message: `页面错误: ${response.status}`, type: 'error'})
-        if (response.data.rtnCode === 200 && callback === undefined) {
-          this.$store.commit('set_state', {
-            columnData: response.data.data.columnList,
-            permission: response.data.data.permissionList
-          })
-        } else if (response.data.rtnCode === 200 && callback !== undefined) {
-          callback(response.data)
-        } else if (callback !== undefined) return this.$message({message: response.data.rtnStr, type: 'error'})
-      }).then(() => { // XXX: 代码需要优化
-        this.$http.get('webconfig/queryConfig?id=1').then(response => {
-          this.$store.commit('set_state', {website: response.data.data})
-          document.title = this.$store.state.website.name
-          this.$store.commit('firstWindow')
-        })
-      }).catch(error => {
-        this.$message({message: error, type: 'error'})
-        log(error)
-      })
+      this.$store.dispatch('login', this.form)
     }
   }
 }
 </script>
-
-<style lang="less" scoped>
-  // .login {
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 50%;
-  //   transform: translate(-50%, -50%);
-  // }
+<style lang="less">
+  @import '../assets/css/style';
+  @import '../assets/css/DLPlatform';
 </style>

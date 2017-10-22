@@ -1,4 +1,13 @@
+import { webconfigAPI } from '@/api'
+
 export default {
+  webconfig ({commit, state}) {
+    webconfigAPI().then(res => {
+      commit('set_state', {website: res})
+      // commit('firstWindow')
+      document.title = state.website.name
+    })
+  },
   /**
    * 打开窗口组件预先判断该组件是否已经打开
    * @param  {string} comName   要打开的组件名

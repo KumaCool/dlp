@@ -15,13 +15,26 @@ const store = {
     website: {}, // 网站配置
     columnData: '', // 栏目数据
     window: [], // 窗口组件
-    windowFull: {url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
+    // windowFull: {url: 'map'}, // 全屏组件名, 第二参数为是否显示标题
     permission: '', // 用户权限
     repair: [] // 报修数据
     // socket: io.connect('http://116.62.225.78:9002')
     /* eslint-enable */
   },
   getters: {
+    // 初次显示的全屏窗口组件
+    windowFull: state => {
+      if (Array.isArray(state.columnData)) {
+        let com
+        state.columnData.some(v => {
+          if (state.website.primeWin === v.url) {
+            com = v
+            return true
+          }
+        })
+        return com
+      }
+    },
     // 转换报修数据内容
     repairFormat: state => {
       let arr = state.repair.map(v => {

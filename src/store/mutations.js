@@ -8,17 +8,17 @@ export default {
       state[k] = obj[k]
     }
   },
-  // 初次显示的全屏窗口组件
-  firstWindow: state => {
-    if (Array.isArray(state.columnData)) {
-      state.columnData.some(v => {
-        if (state.website.primeWin === v.url) {
-          state.windowFull = v
-          return true
-        }
-      })
-    }
-  },
+  // // 初次显示的全屏窗口组件
+  // firstWindow: state => {
+  //   if (Array.isArray(state.columnData)) {
+  //     state.columnData.some(v => {
+  //       if (state.website.primeWin === v.url) {
+  //         state.windowFull = v
+  //         return true
+  //       }
+  //     })
+  //   }
+  // },
   /**
    * 打开窗口组件
    * @param  {string} comName   要打开的组件名

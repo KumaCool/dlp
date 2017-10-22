@@ -1,5 +1,6 @@
 <template>
-  <el-menu :default-active="$store.state.windowFull.id + '#' + $store.state.windowFull.url"
+  <el-menu v-if="windowFull"
+           :default-active="windowFull.id + '#' + windowFull.url"
            class="left-menu el-menu-vertical-demo"
            :collapse="false"
            :unique-opened="true"
@@ -8,11 +9,14 @@
   </el-menu>
 </template>
 <script>
-import {mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import itemMenu from '@/components/item-menu'
 
 export default {
   props: ['data'],
+  computed: {
+    ...mapGetters(['windowFull'])
+  },
   methods: {
     ...mapActions(['openWindow'])
   },

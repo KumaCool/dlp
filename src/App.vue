@@ -1,5 +1,5 @@
 <template>
-  <el-row class="H100 app" v-if="$store.state.columnData !== ''">
+  <el-row class="H100 app">
     <el-row class="app-head">
       <el-col :span="24" class="head-bg">
         <span class="head-logo"><img src="./assets/images/logo.png"></span>
@@ -17,12 +17,12 @@
         <left-menu :data="$store.getters.columnTree"></left-menu>
       </el-col>
       <el-col :span="20" class="app-window">
-        <com-middle v-if="$store.state.windowFull !== {}"
+        <com-middle v-if="$store.getters.windowFull"
                     window="full"
-                    :name="$store.state.windowFull.url"
-                    :className="$store.state.windowFull.style"
-                    :title="$store.state.windowFull.name"
-                    :showTitle="$store.state.windowFull.showTitle === 1"></com-middle>
+                    :name="$store.getters.windowFull.url"
+                    :className="$store.getters.windowFull.style"
+                    :title="$store.getters.windowFull.name"
+                    :showTitle="$store.getters.windowFull.showTitle === 1"></com-middle>
         <template v-for="(item, index) in windowCom">
           <com-middle window="small"
                       :index="index"
@@ -39,14 +39,12 @@
       </el-col>
     </el-row>
   </el-row>
-  <login v-else></login>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import {mapMutations} from 'vuex'
 
 import leftMenu from '@/actions/menu'
-import login from '@/actions/login'
 
 export default {
   name: 'app',
@@ -71,7 +69,7 @@ export default {
   methods: {
     ...mapMutations(['closeWindow', 'windowChecked'])
   },
-  components: {leftMenu, login}
+  components: { leftMenu }
 }
 </script>
 <style lang="less">

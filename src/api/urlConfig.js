@@ -1,4 +1,7 @@
-const serverDLP = 'http://116.62.225.78:8380'
+const serverDLP = ''
+
+// 网站配置
+export const webconfig = serverDLP + '/webconfig/queryConfig'
 
 // 登录
 export const login = serverDLP + '/sys/login'
@@ -8,3 +11,6 @@ export const per = {
   // 获取用户权限栏目功能关系
   relation: serverDLP + '/per/col/ac/get'
 }
+
+// 天气
+export const weather = serverDLP + '/api/weather'
