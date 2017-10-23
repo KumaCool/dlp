@@ -35,13 +35,12 @@
   </el-row>
 </template>
 <script>
+import {mapState} from 'vuex'
+
 export default {
-  created () {
-    this.$http.get('/inspect/repair').then(response => {
-      if (response.status === 200) {
-        this.$store.commit('setState', {repair: response.data.data.paginationList})
-      }
-    })
+  beforeCreate () {
+    this.$store.dispatch('repairStore/repair')
+    console.log(this.repairList)
   },
   data () {
     return {
@@ -49,6 +48,7 @@ export default {
     }
   },
   methods: {
+    ...mapState(['repairList']),
     /**
      * 触发父级组件跳转到地图相关坐标并删除该报修提示
      * @param  {integer} dataIndex 数据下标

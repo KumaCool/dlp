@@ -15,6 +15,6 @@ export default (code, info) => {
     default:
       msg = `该状态码(${code})还未进行配置!`
   }
-  if (msg !== undefined) console.info(msg)
+  if (msg !== undefined) console.warn(msg)
   return new Promise(() => {})
 }
