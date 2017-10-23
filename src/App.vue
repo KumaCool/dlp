@@ -14,15 +14,17 @@
     </el-row>
     <el-row class="app-main">
       <el-col :span="4" class="app-left-menu">
-        <left-menu :data="$store.getters.columnTree"></left-menu>
+        <left-menu :data="columnTree"
+                   :defaultActive="menuDefaultActive"
+                   @select="openWindow"></left-menu>
       </el-col>
       <el-col :span="20" class="app-window">
-        <com-middle v-if="$store.getters.windowFull"
+        <com-middle v-if="windowFull"
                     window="full"
-                    :name="$store.getters.windowFull.url"
-                    :className="$store.getters.windowFull.style"
-                    :title="$store.getters.windowFull.name"
-                    :showTitle="$store.getters.windowFull.showTitle === 1"></com-middle>
+                    :name="windowFull.url"
+                    :className="windowFull.style"
+                    :title="windowFull.name"
+                    :showTitle="windowFull.showTitle === 1"></com-middle>
         <template v-for="(item, index) in windowCom">
           <com-middle window="small"
                       :index="index"
@@ -42,7 +44,7 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 
 import leftMenu from '@/actions/menu'
 
@@ -57,6 +59,13 @@ export default {
     document.getElementById('app').style.display = 'block'
   },
   computed: {
+    ...mapGetters([
+      'windowFull',
+      'columnTree'
+    ]),
+    menuDefaultActive: function () {
+      if (this.windowFull) return this.windowFull.id + '#' + this.windowFull.url
+    },
     url: function () { // 路由用,暂无用的方法
       let path = new Array(this.windowCom.length)
       this.windowCom.forEach(function (v) {
@@ -67,7 +76,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['closeWindow', 'windowChecked'])
+    ...mapMutations([
+      'openWindow',
+      'closeWindow',
+      'windowChecked'
+    ])
   },
   components: { leftMenu }
 }

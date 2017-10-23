@@ -24,7 +24,7 @@ Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
   store.dispatch('webconfig')
-  store.dispatch('perRelation')
+  store.dispatch('loginStore/perRelation')
   next()
 })
 // router.afterEach((to, from, next) => {

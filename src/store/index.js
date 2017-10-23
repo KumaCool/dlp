@@ -6,6 +6,8 @@ import mutations from './mutations'
 import actions from './actions'
 
 import loginStore from './modules/loginStore'
+import weatherStore from './modules/weatherStore'
+import repairStore from './modules/repairStore'
 
 Vue.use(Vuex)
 
@@ -80,7 +82,9 @@ const store = {
   mutations,
   actions,
   modules: {
-    loginStore
+    loginStore,
+    weatherStore,
+    repairStore
   }
 }
 

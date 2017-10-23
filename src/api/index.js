@@ -15,15 +15,15 @@ axios.defaults.withCredentials = true
 axios.interceptors.response.use(
   config => {
     let data = config.data,
-        url = axios.defaults.baseURL + config.config.url
+        url = config.config.url
     // 过滤白名单
-    if (whiteLists.some(v => v === url)) return data
+    if (whiteLists.some(v => axios.defaults.baseURL + v === url)) return data
     // 接口验证
     if (data.rtnCode === undefined) return console.error('远程接口格式不正确')
-    return data.rtnCode === 200 ? data.data : statusCode(data.rtnCode)
+    return data.rtnCode === 200 ? data.data : statusCode(data.rtnCode, data.rtnStr)
   },
-  () => {
-    console.log(arguments)
+  (err) => {
+    return statusCode(err.response.status, err.response.data)
   }
 )
 
@@ -32,7 +32,7 @@ export function webconfigAPI () {
 }
 
 export function loginAPI (data) {
-  return axios.post(url.login, data, {params: data}) // XXX: 传参需要改回POST方式
+  return axios.post(url.login, data)
 }
 
 export const perAPI = {
@@ -41,6 +41,10 @@ export const perAPI = {
   }
 }
 
-export function weatherAPI () {
-  return axios(url.weather)
+export function weatherAPI (city) {
+  return axios(url.weather, {params: {city}})
+}
+
+export function repairAPI () {
+  return axios(url.repair)
 }

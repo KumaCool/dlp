@@ -1,13 +1,7 @@
+import {setState} from './fn'
+
 export default {
-  /**
-   * 设置 state 的值
-   * @param  {object} obj   要设置的state对象
-   */
-  set_state: (state, obj) => {
-    for (var k in obj) {
-      state[k] = obj[k]
-    }
-  },
+  setState,
   // // 初次显示的全屏窗口组件
   // firstWindow: state => {
   //   if (Array.isArray(state.columnData)) {

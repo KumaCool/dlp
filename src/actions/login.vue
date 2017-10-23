@@ -48,8 +48,9 @@ export default {
      * 登录提交
      * @param  {string} formName 用于触发验证的表单数据名称
      */
-    onSubmit: function (formName) {
-      this.$store.dispatch('login', this.form)
+    onSubmit: function () {
+      // console.log(this)
+      this.$store.dispatch('loginStore/login', this.form)
     }
   }
 }

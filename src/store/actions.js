@@ -3,7 +3,7 @@ import { webconfigAPI } from '@/api'
 export default {
   webconfig ({commit, state}) {
     webconfigAPI().then(res => {
-      commit('set_state', {website: res})
+      commit('setState', {website: res})
       // commit('firstWindow')
       document.title = state.website.name
     })

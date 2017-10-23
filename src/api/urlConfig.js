@@ -14,3 +14,6 @@ export const per = {
 
 // 天气
 export const weather = serverDLP + '/api/weather'
+
+// 报修查询
+export const repair = serverDLP + '/inspect/repair'

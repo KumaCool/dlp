@@ -74,7 +74,7 @@ export default {
     request: function (param) { // 拉取列表数据
       param = param !== undefined ? {params: param} : {}
       this.$http.get(this.config.request, param).then(response => {
-        this.$store.commit('set_state', {columnData: response.data.data})
+        this.$store.commit('setState', {columnData: response.data.data})
         this.dataset = this.$store.getters.columnTree
         // 触发事件
         this.fnForeach()

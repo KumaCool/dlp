@@ -1,4 +1,6 @@
+import {setState} from '../fn'
 import {loginAPI, perAPI} from '@/api'
+// import * as TYPE from '../commitType/loginType'
 import router from '@/router'
 
 const state = {
@@ -6,16 +8,14 @@ const state = {
 }
 
 const mutations = {
-  set_token (state, value) {
-    state.token = value
-  }
+  setState
 }
 
 const actions = {
   login ({commit}, data) {
     loginAPI(data).then(() => {
       const token = getCookie('thor')
-      commit('set_token')
+      commit('setState', {token: token})
       // 记住密码 XXX: 可以单独提取成cookie方法
       if (data.checked) {
         let date = new Date()
@@ -25,12 +25,12 @@ const actions = {
       router.push('/')
     })
   },
-  perRelation ({state, commit}) {
+  perRelation ({commit}) {
     perAPI.relation().then(res => {
-      commit('set_state', {
+      commit('setState', {
         columnData: res.columnList,
         permission: res.permissionList
-      })
+      }, {root: true})
     })
   }
 }
@@ -49,6 +49,7 @@ function getCookie (name) {
 }
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions

@@ -39,7 +39,7 @@ export default {
   created () {
     this.$http.get('/inspect/repair').then(response => {
       if (response.status === 200) {
-        this.$store.commit('set_state', {repair: response.data.data.paginationList})
+        this.$store.commit('setState', {repair: response.data.data.paginationList})
       }
     })
   },
