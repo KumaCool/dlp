@@ -18,7 +18,7 @@
 </template>
 <script>
 // let log = console.log.bind(console)
-import crud from '@/store/config/crud-config'
+import crud from '@/api/crudConfig'
 
 export default {
   props: ['com-param'],

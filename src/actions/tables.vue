@@ -76,16 +76,22 @@ export default {
       }
       this.request(param)
     },
-    request: function (param) { // 拉取列表数据
-      param = param !== undefined ? {params: param} : {}
-      this.$http.get(this.config.request, param).then(response => {
-        if (response.data.rtnCode === 200) {
-          this.dataset = response.data.data.paginationList
-          this.configVerify(this.config.data, this.dataset[0])
-        }
-        // 触发事件
-        this.fnForeach()
-      })
+    request: function (params = {}) { // 拉取列表数据
+      const obj = {
+        api: this.config.request,
+        params,
+        configData: this.config.data
+      }
+      this.$store.dispatch('crudStore/select', obj)
+      // param = param !== undefined ? {params: param} : {}
+      // this.$http.get(this.config.request, param).then(response => {
+      //   if (response.data.rtnCode === 200) {
+      //     this.dataset = response.data.data.paginationList
+      //     this.configVerify(this.config.data, this.dataset[0])
+      //   }
+      //   // 触发事件
+      //   this.fnForeach()
+      // })
     }
   }
 }

@@ -20,6 +20,7 @@ export default {
   openWindow: (state, comName) => {
     let length = state.window.length
     for (var k of state.columnData) {
+      console.log(k.url)
       if (k.url === comName && k.winProperty !== 'full') {
         state.window.push({
           name: comName,
@@ -31,7 +32,8 @@ export default {
         })
         return
       } else if (k.url === comName) {
-        state.windowFull = k
+        state.website.primeWin = k
+        console.log(k)
         // 打开全屏组件时清空窗口组件
         state.window.splice(0, length)
         return

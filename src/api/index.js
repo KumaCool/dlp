@@ -48,3 +48,38 @@ export function weatherAPI (city) {
 export function repairAPI () {
   return axios(url.repair)
 }
+
+export const mapAPI = {
+  data (id, params = {}) {
+    let option = {
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      params: {
+        geometryType: 'esriGeometryEnvelope',
+        // outFields: 'Name,Strasse,权属单,探测时',
+        f: 'geojson',
+        ...params
+      }
+    }
+    return axios(url.map.data(id), option)
+  }
+}
+
+export const crudAPI = {
+  select (api, params = {}) {
+    return axios(apiPath(api), params)
+  }
+}
+
+/**
+ * 把以[.]格式的字符串转换成urlConfig中的真实对象
+ * @param  {string} value urlConfig中对象的字符串形式
+ * @return {string}       返回对应的对象URL值
+ */
+function apiPath (value) {
+  value = value.split('.')
+  let path = url
+  value.forEach(v => {
+    path = path[v]
+  })
+  return path
+}

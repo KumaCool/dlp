@@ -7,7 +7,7 @@ import actions from './actions'
 
 import loginStore from './modules/loginStore'
 import weatherStore from './modules/weatherStore'
-import repairStore from './modules/repairStore'
+import mapStore from './modules/mapStore'
 
 Vue.use(Vuex)
 
@@ -84,7 +84,7 @@ const store = {
   modules: {
     loginStore,
     weatherStore,
-    repairStore
+    mapStore
   }
 }
 

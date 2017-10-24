@@ -33,7 +33,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([
+    ...mapState('weatherStore', [
       'location',
       'dayList',
       'today'

@@ -16,6 +16,7 @@ import '../../node_modules/_leaflet.markercluster@1.1.0@leaflet.markercluster/di
 import 'proj4leaflet'
 import 'leaflet.markercluster'
 import tools from './map-tools'
+import axios from 'axios'
 
 let log = console.log.bind(console)
 export default {
@@ -24,16 +25,18 @@ export default {
     let crs = new L.Proj.CRS('EPSG:2437', '+proj=tmerc +lat_0=0 +lon_0=120 +k=1 +x_0=500000 +y_0=0 +ellps=krass +units=m +no_defs', {
       origin: [-5123300.0 + 50, 1.00023E7 - 80],
       resolutions: [
-        198.43789687579377,
-        132.2919312505292,
+        79.37515875031751,
         66.1459656252646,
-        33.0729828126323,
-        16.933367200067735,
-        8.466683600033868,
-        4.233341800016934,
+        39.687579375158755,
+        31.750063500127002,
+        15.875031750063501,
+        7.9375158750317505,
+        3.9687579375158752,
         2.116670900008467,
         1.0583354500042335,
-        0.5291677250021167
+        0.5291677250021167,
+        0.26458386250105836,
+        0.13229193125052918
       ]
     })
     this.map = new L.Map(this.id, {
@@ -42,7 +45,7 @@ export default {
       minZoom: this.zoom.min,
       maxZoom: this.zoom.max
     }).setView([0.22650415004670005, 116.01382401454075], 2)
-    L.tileLayer('http://116.62.225.78:6080/arcgis/rest/services/BASEMAP/MapServer/tile/{z}/{y}/{x}').addTo(this.map)
+    L.tileLayer('http://116.62.225.78:6080/arcgis/rest/services/BASEMAP_NEW/MapServer/tile/{z}/{y}/{x}').addTo(this.map)
     // log(esri)
     // Esri.basemapLayer('Streets').addTo(this.map)
     // Esri.basemapLayer('Gray').addTo(this.map)
@@ -115,7 +118,7 @@ export default {
   },
   data () {
     return {
-      zoom: {max: 8, min: 0}, // 地图缩放范围
+      zoom: {max: 11, min: 0}, // 地图缩放范围
       loading: false, // 加载开关
       raw: 3857, // arcgis 参考空间
       geo: 4326, // geo 参考空间
@@ -155,9 +158,9 @@ export default {
           ...params
         }
       }
-      let _self = this
+      // let _self = this
       return new Promise(function (resolve) {
-        _self.$http.get(url, option).then(response => {
+        axios.get(url, option).then(response => {
           if (response.status === 200) {
             resolve(response.data)
           }
@@ -213,6 +216,7 @@ export default {
      * @param  {string} layerName 报修类型相关的图层名称
      */
     layerRepair: function (layerName) {
+      if (!this.repairShow) return
       // log('layerRepair')
       if (this.layers.repair === undefined) {
         this.$set(this.layers, 'repair', L.layerGroup())
@@ -434,9 +438,10 @@ export default {
         this.layers.repair.clearLayers()
         // clearInterval(intervalId)
       } else {
-        this.getData('/inspect/repair').then(data => {
-          this.repair = data.data.paginationList
-        }).then(() => this.layerRepair())
+        this.layerRepair()
+        // this.getData('/inspect/repair').then(data => {
+        //   this.repair = data.data.paginationList
+        // }).then(() => this.layerRepair())
       }
       // if (!v) {
       //   this.layers.repair.clearLayers()

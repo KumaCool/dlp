@@ -14,7 +14,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-table :data="$store.getters.repairFormat"
+        <el-table :data="repairList"
                   border
                   style="width: 100%"
                   @row-click="toPoint">
@@ -39,16 +39,17 @@ import {mapState} from 'vuex'
 
 export default {
   beforeCreate () {
-    this.$store.dispatch('repairStore/repair')
-    console.log(this.repairList)
+    this.$store.dispatch('mapStore/repair')
   },
   data () {
     return {
       show: true
     }
   },
+  computed: {
+    ...mapState('mapStore', ['repairList'])
+  },
   methods: {
-    ...mapState(['repairList']),
     /**
      * 触发父级组件跳转到地图相关坐标并删除该报修提示
      * @param  {integer} dataIndex 数据下标
