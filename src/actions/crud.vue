@@ -99,16 +99,21 @@ export default {
      * 删除选中的数据
      * @param  {object} val 选中的数据
      */
-    del: function (val) {
-      let config = crud[this.comParam].delete
-      let param = {}
-      for (var k in config.data) {
-        param[k] = val[k]
+    del: function (params) {
+      const obj = {
+        api: crud[this.comParam].delete.response,
+        params
       }
-      this.$http.post(config.response, param).then(response => {
-        this.config.forms = ''
-        this.listStatus = !this.listStatus
-      })
+      this.$store.dispatch('crudStore/post', obj)
+      // let config = crud[this.comParam].delete
+      // let param = {}
+      // for (var k in config.data) {
+      //   param[k] = val[k]
+      // }
+      // this.$http.post(config.response, param).then(response => {
+      //   this.config.forms = ''
+      //   this.listStatus = !this.listStatus
+      // })
     }
   },
   components: {

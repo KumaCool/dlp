@@ -64,7 +64,7 @@ export default {
       'columnTree'
     ]),
     menuDefaultActive: function () {
-      // if (this.windowFull) return this.windowFull.id + '#' + this.windowFull.url
+      if (this.windowFull) return this.windowFull.id + '#' + this.windowFull.url
     },
     url: function () { // 路由用,暂无用的方法
       let path = new Array(this.windowCom.length)

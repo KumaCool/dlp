@@ -29,7 +29,8 @@
   </el-row>
 </template>
 <script>
-// let log = console.log.bind(console)
+import {mapState} from 'vuex'
+
 /**
  * CRUD下的表单操作组件
  * 用于数据以常规的表单形式添加与修改
@@ -42,10 +43,15 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      dataset: {}, // 表单数据
+      // dataset: {}, // 表单数据
       dictionary: {} // 字典数据
     }
   },
+  computed: mapState('crudStore', {
+    // ...mapState('crudStore', ['dataForm'])
+    dataset: 'dataForm'
+    // })
+  }),
   methods: {
     com: function (fileName) {
       try {
@@ -59,23 +65,21 @@ export default {
       }
     },
     onSubmit: function () { // 表单提交
-      this.$http.post(this.config.response, this.dataset).then(response => {
-        let type = 'error'
-        if (response.data.rtnCode === 200) {
-          type = 'success'
-          this.$emit('update')
-        }
-        this.$message({message: response.data.rtnStr, type: type})
-      })
+      const obj = {
+        api: this.config.response,
+        params: this.dataset
+      }
+      this.$store.dispatch('crudStore/post', obj)
+      this.$emit('update') // FIXME: 异步操作导致没有更新,需要改进
     },
     request: function () { // 请求表单数据
       if (this.config.request !== undefined) {
-        this.$http.get(this.config.request, {params: this.config.param}).then(response => {
-          if (response.data.rtnCode === 200) {
-            this.dataset = response.data.data
-            this.configVerify(this.config.data, this.dataset)
-          }
-        })
+        const obj = {
+          api: this.config.request,
+          params: this.config.param,
+          configData: this.config.data
+        }
+        this.$store.dispatch('crudStore/forms', obj)
       } else {
         // 初始化表单
         let data = {}

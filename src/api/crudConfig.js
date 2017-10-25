@@ -35,8 +35,8 @@ const config = {
   'user': {
     list: {
       com: 'tables',
-      request: '/user/query/page/criteria',
-      select: '/user/query/page/criteria',
+      request: 'user.select',
+      select: 'user.select',
       selectValue: ['username'],
       data: {
         usercode: {name: '帐号'},
@@ -45,8 +45,8 @@ const config = {
       }
     },
     edit: {
-      request: '/user/getUser',
-      response: '/user/updateUser',
+      request: 'user.query',
+      response: 'user.update',
       data: {
         usercode: {name: '帐号', formType: 'text'},
         username: {name: '用户名', formType: 'text'},
@@ -55,7 +55,7 @@ const config = {
       }
     },
     created: {
-      response: '/user/addUser',
+      response: 'user.create',
       data: {
         usercode: {name: '帐号', formType: 'text'},
         username: {name: '用户名', formType: 'text'},
@@ -64,7 +64,7 @@ const config = {
       }
     },
     delete: {
-      response: '/user/deleteUser',
+      response: 'user.del',
       data: {
         id: []
       }
@@ -74,16 +74,16 @@ const config = {
   'column': {
     list: {
       com: 'column-tree',
-      request: '/column/user/list',
-      select: '/user/query/page/criteria',
+      request: 'column.select',
+      select: 'column.select',
       selectValue: ['username'],
       data: {
         name: {name: '名称'}
       }
     },
     edit: {
-      request: '/column/get',
-      response: '/column/updateColumn',
+      request: 'column.query',
+      response: 'column.update',
       data: {
         name: {name: '栏目名', formType: 'text'},
         parentId: {name: '所属栏目', formType: ['select', '0', '一级菜单'], dictionary: ['selectList', '/column/user/list', 'name']},
@@ -95,7 +95,7 @@ const config = {
       }
     },
     created: {
-      response: '/column/addColumn',
+      response: 'column.create',
       data: {
         name: {name: '栏目名', formType: 'text'},
         parentId: {name: '所属栏目', formType: ['select', '0', '一级菜单'], dictionary: ['selectList', '/column/user/list', 'name']},
@@ -106,7 +106,7 @@ const config = {
       }
     },
     delete: {
-      response: '/column/deleteColumn',
+      response: 'column.del',
       data: {
         id: []
       }

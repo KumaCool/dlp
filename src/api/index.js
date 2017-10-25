@@ -66,7 +66,11 @@ export const mapAPI = {
 
 export const crudAPI = {
   select (api, params = {}) {
-    return axios(apiPath(api), params)
+    // console.log(params)
+    return axios(apiPath(api), {params})
+  },
+  post (api, data = {}) {
+    return axios.post(apiPath(api), data)
   }
 }
 

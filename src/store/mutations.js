@@ -18,9 +18,12 @@ export default {
    * @param  {string} comName   要打开的组件名
    */
   openWindow: (state, comName) => {
+    // 格式化
+    let index = comName.indexOf('#') + 1
+    if (index > 0) comName = comName.slice(index)
+
     let length = state.window.length
     for (var k of state.columnData) {
-      console.log(k.url)
       if (k.url === comName && k.winProperty !== 'full') {
         state.window.push({
           name: comName,
@@ -32,8 +35,7 @@ export default {
         })
         return
       } else if (k.url === comName) {
-        state.website.primeWin = k
-        console.log(k)
+        state.website.primeWin = comName
         // 打开全屏组件时清空窗口组件
         state.window.splice(0, length)
         return

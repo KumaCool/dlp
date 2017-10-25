@@ -17,7 +17,7 @@
   </el-row>
 </template>
 <script>
-// let log = console.log.bind(console)
+import {mapState} from 'vuex'
 import tree from '@/components/tree'
 /**
  * CRUD下的栏目显示组件
@@ -31,16 +31,17 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      dataset: [], // 列表数据
+      // dataset: [], // 列表数据
       selectValue: '',
       deleteTable: {} // 预删除数据
     }
   },
-  computed: {
+  computed: mapState('crudStore', {
+    dataset: 'dataList',
     tableColumn: function () { // 列表栏目
       return this.config.data
     }
-  },
+  }),
   methods: {
     props: function () {
       return {
@@ -71,14 +72,20 @@ export default {
       }
       this.request(param)
     },
-    request: function (param) { // 拉取列表数据
-      param = param !== undefined ? {params: param} : {}
-      this.$http.get(this.config.request, param).then(response => {
-        this.$store.commit('setState', {columnData: response.data.data})
-        this.dataset = this.$store.getters.columnTree
-        // 触发事件
-        this.fnForeach()
-      })
+    request: function (params) { // 拉取列表数据
+      const obj = {
+        api: this.config.request,
+        params,
+        configData: this.config.data
+      }
+      this.$store.dispatch('crudStore/column', obj)
+      // param = param !== undefined ? {params: param} : {}
+      // this.$http.get(this.config.request, param).then(response => {
+      //   this.$store.commit('setState', {columnData: response.data.data})
+      //   this.dataset = this.$store.getters.columnTree
+      //   // 触发事件
+      //   this.fnForeach()
+      // })
     }
   },
   components: {tree}

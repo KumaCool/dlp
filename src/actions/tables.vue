@@ -28,7 +28,8 @@
   </el-row>
 </template>
 <script>
-// let log = console.log.bind(console)
+import {mapState} from 'vuex'
+
 /**
  * CRUD下的表格操作组件
  * 用于数据以常规的表格形式操作或显示
@@ -42,16 +43,23 @@ export default {
   data () {
     return {
       selectValue: '',
-      dataset: [], // 列表数据
+      // dataset: [], // 列表数据
       deleteTable: {}, // 预删除数据
       dictionary: {} // 字典数据
     }
   },
-  computed: {
+  computed: mapState('crudStore', {
+    dataset: 'dataList',
     tableColumn: function () { // 列表栏目
       return this.config.data
     }
-  },
+  }),
+  // computed: {
+  //   ...mapState('crudStore', ['dataset']),
+  //   tableColumn: function () { // 列表栏目
+  //     return this.config.data
+  //   }
+  // },
   methods: {
     add: function () { // 触发父组件添加事件
       this.$emit('to-form', 'created')
@@ -82,16 +90,8 @@ export default {
         params,
         configData: this.config.data
       }
-      this.$store.dispatch('crudStore/select', obj)
-      // param = param !== undefined ? {params: param} : {}
-      // this.$http.get(this.config.request, param).then(response => {
-      //   if (response.data.rtnCode === 200) {
-      //     this.dataset = response.data.data.paginationList
-      //     this.configVerify(this.config.data, this.dataset[0])
-      //   }
-      //   // 触发事件
-      //   this.fnForeach()
-      // })
+      this.$store.dispatch('crudStore/tables', obj)
+      this.fnForeach()
     }
   }
 }

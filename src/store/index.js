@@ -8,6 +8,7 @@ import actions from './actions'
 import loginStore from './modules/loginStore'
 import weatherStore from './modules/weatherStore'
 import mapStore from './modules/mapStore'
+import crudStore from './modules/crudStore'
 
 Vue.use(Vuex)
 
@@ -37,6 +38,16 @@ const store = {
         return com
       }
     },
+    // comUrlFormat: state => {
+    //   return comUrl => {
+    //     if (Array.isArray(comUrl)) {
+    //       return comUrl.splice(2).join('#')
+    //     } else if (typeof comUrl === 'string') {
+    //       comUrl.slice(comUrl.indexOf('#'))
+    //       console.log(comUrl)
+    //     }
+    //   }
+    // },
     // 转换报修数据内容
     repairFormat: state => {
       let arr = state.repair.map(v => {
@@ -84,7 +95,8 @@ const store = {
   modules: {
     loginStore,
     weatherStore,
-    mapStore
+    mapStore,
+    crudStore
   }
 }
 

@@ -1,3 +1,5 @@
+// XXX: 后期需要重构到API类中.
+import axios from 'axios'
 export default {
   created () {
     this.request()
@@ -27,18 +29,15 @@ export default {
      * @param  {string} key    该属性的名称
      */
     selectList: function (config, key) {
-      this.$http.get(config.dictionary[1]).then(response => {
-        let result = response.data
-        if (result.rtnCode === 200) {
-          let data = result.data.paginationList !== undefined ? result.data.paginationList : result.data
-          let dataList = data.map(val => {
-            return {
-              value: val.id,
-              label: val[config.dictionary[2]]
-            }
-          })
-          this.$set(this.dictionary, key, dataList)
-        }
+      axios(config.dictionary[1]).then(res => {
+        const data = res.paginationList !== undefined ? res.paginationList : res
+        let dataList = data.map(val => {
+          return {
+            value: val.id,
+            label: val[config.dictionary[2]]
+          }
+        })
+        this.$set(this.dictionary, key, dataList)
       })
     },
     /**
@@ -47,18 +46,15 @@ export default {
      * @param  {string} key    该属性的名称
      */
     fieldChange: function (config, key) {
-      this.$http.get(config.dictionary[1]).then(response => {
-        let result = response.data
-        if (result.rtnCode === 200) {
-          let data = result.data.paginationList !== undefined ? result.data.paginationList : result.data
-          let fields = {}
-          data.forEach(val => {
-            fields[val.id] = val[config.dictionary[2]]
-          })
-          // this.$set(this.dictionary, key, fields)
-          for (var k in this.dataset) {
-            this.$set(this.dataset[k], key, fields[this.dataset[k][config.dictionary[3]]])
-          }
+      axios(config.dictionary[1]).then(res => {
+        const data = res.paginationList !== undefined ? res.paginationList : res.data
+        let fields = {}
+        data.forEach(val => {
+          fields[val.id] = val[config.dictionary[2]]
+        })
+        // this.$set(this.dictionary, key, fields)
+        for (var k in this.dataset) {
+          this.$set(this.dataset[k], key, fields[this.dataset[k][config.dictionary[3]]])
         }
       })
     },

@@ -27,7 +27,7 @@ module.exports = {
     'one-var': 0,
     // 缩进设置
     'indent': [2, 2, {
-      'VariableDeclarator': {"var": 2, "let": 2, "const": 3},
+      'VariableDeclarator': {'var': 2, 'let': 2, 'const': 3},
       'SwitchCase': 1
     }]
   }

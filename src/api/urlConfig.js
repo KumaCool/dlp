@@ -37,3 +37,11 @@ export const user = {
   create: serverDLP + '/user/addUser',
   del: serverDLP + '/user/deleteUser'
 }
+
+export const column = {
+  select: serverDLP + '/column/user/list',
+  update: serverDLP + '/column/updateColumn',
+  query: serverDLP + '/column/get',
+  create: serverDLP + '/column/addColumn',
+  del: serverDLP + '/column/deleteColumn'
+}
